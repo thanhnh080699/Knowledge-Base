@@ -1,0 +1,42 @@
+import vine from '@vinejs/vine'
+
+/**
+ * Shared rules for slug
+ */
+const slug = () =>
+  vine
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(/^[a-z0-9-]+$/)
+
+/**
+ * Validator to use when creating a tag
+ */
+export const createTagValidator = vine.compile(
+  vine.object({
+    name: vine.string().trim().maxLength(50),
+    slug: slug().unique({ table: 'tags', column: 'slug' }),
+  })
+)
+
+/**
+ * Validator to use when updating a tag
+ */
+export const updateTagValidator = vine.compile(
+  vine.object({
+    params: vine.object({
+      id: vine.string().uuid(),
+    }),
+    name: vine.string().trim().maxLength(50).optional(),
+    slug: slug()
+      .unique({
+        table: 'tags',
+        column: 'slug',
+        filter: (db, _value, field) => {
+          db.whereNot('id', field.data.params.id)
+        },
+      })
+      .optional(),
+  })
+)
