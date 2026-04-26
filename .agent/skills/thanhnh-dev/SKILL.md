@@ -164,6 +164,16 @@ thanhnh.id.vn/
   - **Atomic Minimalism** — Luôn dùng `Button`, `Input`, `Label`, `Tag`, `Typography` từ `src/components/ui`.
   - **Dark Mode**: Mọi thành phần phải hiển thị tốt ở cả Light và Dark mode.
   - **Port mặc định**: `3002`.
+  - **Settings Module Layout** — Màn hình `/dashboard/settings` PHẢI là trang danh sách setting theo phong cách Botble:
+    - Có breadcrumb dạng `Dashboard / Settings` ở đầu trang.
+    - Chia setting thành các section card lớn như `Common`, `Localization`, `Ecommerce`; mỗi section có header riêng và grid item 3 cột trên desktop.
+    - Mỗi setting item gồm icon trong ô vuông nền nhạt, title màu xanh, description màu muted; toàn bộ item là link đến màn hình setting detail.
+    - Không hiển thị form chỉnh sửa trực tiếp ở trang list setting.
+  - **Settings Detail Layout** — Các màn hình setting detail như `/dashboard/settings/overview` PHẢI chia form thành từng block ngang giống Botble:
+    - Mỗi block dùng layout hai cột `lg:grid-cols-[280px_1fr]`: cột trái là title + description của block, cột phải là card form.
+    - Form card dùng `rounded-xl border bg-surface shadow-sm p-5`, các field xếp dọc với `Label`, control, help text.
+    - Nút hành động chính đặt cuối trang trong cột phải, gồm `Save settings` và `Reset` khi cần.
+    - Không dùng sidebar phụ cho setting detail nếu màn hình là form cấu hình; ưu tiên block rõ ràng như `License`, `General Information`, `Website Identity`.
 
 ### CDN (Golang)
 - Module name: `thanhnh/cdn` (cần refactor từ `meditour/cdn`).

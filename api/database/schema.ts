@@ -75,7 +75,7 @@ export class ContactRequestSchema extends BaseModel {
 }
 
 export class NewsletterSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'id', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'id', 'isActive', 'updatedAt'] as const
   $columns = NewsletterSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -83,6 +83,8 @@ export class NewsletterSchema extends BaseModel {
   declare email: string
   @column({ isPrimary: true })
   declare id: string
+  @column()
+  declare isActive: boolean | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }
@@ -92,19 +94,21 @@ export class PermissionRoleSchema extends BaseModel {
   $columns = PermissionRoleSchema.$columns
   @column.dateTime()
   declare deletedAt: DateTime | null
-  @column({ isPrimary: true })
-  declare permissionId: string
   @column()
-  declare roleId: number
+  declare permissionId: string | null
+  @column()
+  declare roleId: number | null
 }
 
 export class PermissionSchema extends BaseModel {
-  static $columns = ['createdAt', 'deletedAt', 'id', 'module', 'name', 'slug', 'updatedAt'] as const
+  static $columns = ['createdAt', 'deletedAt', 'description', 'id', 'module', 'name', 'slug', 'updatedAt'] as const
   $columns = PermissionSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column.dateTime()
   declare deletedAt: DateTime | null
+  @column()
+  declare description: string | null
   @column({ isPrimary: true })
   declare id: string
   @column()
@@ -250,6 +254,31 @@ export class ServiceSchema extends BaseModel {
   declare priceRange: string | null
   @column()
   declare slug: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class SettingSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'id', 'label', 'settingGroup', 'settingKey', 'settingValue', 'sortOrder', 'type', 'updatedAt'] as const
+  $columns = SettingSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare label: string
+  @column()
+  declare settingGroup: string
+  @column()
+  declare settingKey: string
+  @column()
+  declare settingValue: any | null
+  @column()
+  declare sortOrder: number
+  @column()
+  declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

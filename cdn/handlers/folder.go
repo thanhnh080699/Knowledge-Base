@@ -43,9 +43,11 @@ func CreateFolderHandler(c *gin.Context) {
 	// Usually not necessary for explicit folder creation.
 
 	c.JSON(http.StatusOK, gin.H{
-		"message":   "Folder created successfully",
-		"path":      cleanPath,
-		"full_path": fullPath,
+		"message": "Folder created successfully",
+		"data": gin.H{
+			"path":      cleanPath,
+			"full_path": fullPath,
+		},
 	})
 }
 
@@ -166,8 +168,10 @@ func RenameFolderHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message":  "Folder renamed successfully",
-		"old_path": oldPath,
-		"new_path": newPath,
+		"message": "Folder renamed successfully",
+		"data": gin.H{
+			"old_path": oldPath,
+			"new_path": newPath,
+		},
 	})
 }

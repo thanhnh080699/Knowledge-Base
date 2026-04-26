@@ -16,6 +16,7 @@ export const controllers = {
   Projects: () => import('#controllers/projects_controller'),
   Roles: () => import('#controllers/roles_controller'),
   Services: () => import('#controllers/services_controller'),
+  Settings: () => import('#controllers/settings_controller'),
   Tags: () => import('#controllers/tags_controller'),
   Users: () => import('#controllers/users_controller'),
 }

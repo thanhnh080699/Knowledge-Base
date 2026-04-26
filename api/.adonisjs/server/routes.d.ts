@@ -84,6 +84,8 @@ export type ScannedRoutes = {
     'admin.media.folders.create': { paramsTuple?: []; params?: {} }
     'admin.media.folders.rename': { paramsTuple?: []; params?: {} }
     'admin.media.folders.delete': { paramsTuple?: []; params?: {} }
+    'settings.show_group': { paramsTuple: [ParamValue]; params: {'group': ParamValue} }
+    'settings.update_group': { paramsTuple: [ParamValue]; params: {'group': ParamValue} }
   }
   GET: {
     'auth.me': { paramsTuple?: []; params?: {} }
@@ -133,6 +135,7 @@ export type ScannedRoutes = {
     'permissions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.media.index': { paramsTuple?: []; params?: {} }
     'admin.media.show': { paramsTuple?: []; params?: {} }
+    'settings.show_group': { paramsTuple: [ParamValue]; params: {'group': ParamValue} }
   }
   HEAD: {
     'auth.me': { paramsTuple?: []; params?: {} }
@@ -182,6 +185,7 @@ export type ScannedRoutes = {
     'permissions.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.media.index': { paramsTuple?: []; params?: {} }
     'admin.media.show': { paramsTuple?: []; params?: {} }
+    'settings.show_group': { paramsTuple: [ParamValue]; params: {'group': ParamValue} }
   }
   POST: {
     'auth.login': { paramsTuple?: []; params?: {} }
@@ -209,6 +213,7 @@ export type ScannedRoutes = {
     'admin.media.update': { paramsTuple?: []; params?: {} }
     'admin.media.move': { paramsTuple?: []; params?: {} }
     'admin.media.folders.rename': { paramsTuple?: []; params?: {} }
+    'settings.update_group': { paramsTuple: [ParamValue]; params: {'group': ParamValue} }
   }
   PATCH: {
     'posts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

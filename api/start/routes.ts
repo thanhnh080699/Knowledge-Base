@@ -23,6 +23,7 @@ import usersRoutes from './routes/users.js'
 import rolesRoutes from './routes/roles.js'
 import permissionsRoutes from './routes/permissions.js'
 import mediaRoutes from './routes/media.js'
+import settingsRoutes from './routes/settings.js'
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -55,5 +56,6 @@ router
     rolesRoutes()
     permissionsRoutes()
     mediaRoutes()
+    settingsRoutes()
   })
   .prefix('/api')

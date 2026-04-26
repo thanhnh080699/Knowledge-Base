@@ -8,7 +8,7 @@ import { Tag } from '@/components/ui/tag'
 import { useMediaDetail } from '@/hooks/queries/use-media'
 import { ArrowLeft, Copy, ExternalLink, FileImage, RotateCcw } from 'lucide-react'
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:8081'
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:3002'
 
 export default function MediaDetailPage() {
   const searchParams = useSearchParams()

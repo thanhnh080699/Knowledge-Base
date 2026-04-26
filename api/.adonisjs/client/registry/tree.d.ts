@@ -118,4 +118,8 @@ export interface ApiDefinition {
       }
     }
   }
+  settings: {
+    showGroup: typeof routes['settings.show_group']
+    updateGroup: typeof routes['settings.update_group']
+  }
 }

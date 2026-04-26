@@ -967,4 +967,28 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/media_controller').default['deleteFolder']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'settings.show_group': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/admin/settings/:group'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { group: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/setting').showSettingsGroupValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/settings_controller').default['showGroup']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/settings_controller').default['showGroup']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'settings.update_group': {
+    methods: ["PUT"]
+    pattern: '/api/admin/settings/:group'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/setting').updateSettingsGroupValidator)>>
+      paramsTuple: [ParamValue]
+      params: { group: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/setting').updateSettingsGroupValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/settings_controller').default['updateGroup']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/settings_controller').default['updateGroup']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }

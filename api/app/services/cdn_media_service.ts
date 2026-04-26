@@ -5,7 +5,7 @@ type QueryParams = Record<string, string | number | boolean | undefined | null>
 type JsonPayload = Record<string, unknown>
 
 export default class CdnMediaService {
-  private baseUrl = (env.get('CDN_URL') || 'http://localhost:8081').replace(/\/$/, '')
+  private baseUrl = (env.get('CDN_URL') || 'http://localhost:3002').replace(/\/$/, '')
   private apiKey = env.get('CDN_API_KEY') || 'thanhnh_cdn_secret_key'
 
   async get<T>(path: string, params: QueryParams = {}) {

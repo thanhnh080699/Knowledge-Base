@@ -39,6 +39,10 @@ export const ACL_MODULES = {
     name: 'Newsletters',
     permissions: ['read', 'delete'],
   },
+  SETTINGS: {
+    name: 'Settings',
+    permissions: ['manage'],
+  },
 } as const
 
 export type AclModule = keyof typeof ACL_MODULES

@@ -58,6 +58,8 @@ func main() {
 	{
 		api.POST("/upload", handlers.SingleUploadHandler)
 		api.POST("/uploads", handlers.MultiUploadHandler)
+		api.GET("/media", handlers.ListMediaHandler)
+		api.GET("/media/detail", handlers.GetMediaDetailHandler)
 		// Folder management
 		api.POST("/folder", handlers.CreateFolderHandler)
 		api.PUT("/folder", handlers.RenameFolderHandler)

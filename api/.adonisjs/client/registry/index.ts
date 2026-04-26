@@ -486,6 +486,18 @@ const routes = {
     tokens: [{"old":"/api/admin/media/folders","type":0,"val":"api","end":""},{"old":"/api/admin/media/folders","type":0,"val":"admin","end":""},{"old":"/api/admin/media/folders","type":0,"val":"media","end":""},{"old":"/api/admin/media/folders","type":0,"val":"folders","end":""}],
     types: placeholder as Registry['admin.media.folders.delete']['types'],
   },
+  'settings.show_group': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/admin/settings/:group',
+    tokens: [{"old":"/api/admin/settings/:group","type":0,"val":"api","end":""},{"old":"/api/admin/settings/:group","type":0,"val":"admin","end":""},{"old":"/api/admin/settings/:group","type":0,"val":"settings","end":""},{"old":"/api/admin/settings/:group","type":1,"val":"group","end":""}],
+    types: placeholder as Registry['settings.show_group']['types'],
+  },
+  'settings.update_group': {
+    methods: ["PUT"],
+    pattern: '/api/admin/settings/:group',
+    tokens: [{"old":"/api/admin/settings/:group","type":0,"val":"api","end":""},{"old":"/api/admin/settings/:group","type":0,"val":"admin","end":""},{"old":"/api/admin/settings/:group","type":0,"val":"settings","end":""},{"old":"/api/admin/settings/:group","type":1,"val":"group","end":""}],
+    types: placeholder as Registry['settings.update_group']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

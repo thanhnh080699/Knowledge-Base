@@ -34,7 +34,7 @@ import {
   Upload,
 } from 'lucide-react'
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:8081'
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:3002'
 const SELECT_CLASS =
   'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
@@ -182,7 +182,7 @@ export default function MediaPage() {
               <span className="text-sm text-[var(--app-muted)]">Loading media...</span>
             </div>
           ) : (
-            <div className="grid min-h-[360px] grid-cols-2 gap-4 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
+            <div className="grid min-h-[360px] items-start grid-cols-3 gap-3 p-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10">
               {folders.map((item) => (
                 <FolderTile
                   key={item.path}
@@ -229,15 +229,14 @@ export default function MediaPage() {
 
 function FolderTile({ folder, onOpen, onRename, onDelete }: { folder: MediaFolder; onOpen: () => void; onRename: () => void; onDelete: () => void }) {
   return (
-    <div className="group relative rounded-lg border border-transparent p-3 text-center transition-colors hover:border-[var(--app-border)] hover:bg-[var(--app-surface-hover)]">
-      <button type="button" className="flex w-full flex-col items-center gap-2" onClick={onOpen} title={folder.path}>
-        <span className="flex h-20 w-24 items-center justify-center rounded-md bg-[var(--app-warning-soft-bg)] text-[var(--app-warning-soft-fg)]">
-          <Folder className="h-12 w-12" />
+    <div className="group relative flex flex-col items-center rounded-lg border border-transparent p-2 text-center transition-all duration-200 hover:border-[var(--app-border)] hover:bg-[var(--app-surface-hover)] hover:shadow-sm">
+      <button type="button" className="flex w-full flex-col items-center gap-1.5" onClick={onOpen} title={folder.path}>
+        <span className="flex h-14 w-16 items-center justify-center rounded-md bg-[var(--app-warning-soft-bg)] text-[var(--app-warning-soft-fg)]">
+          <Folder className="h-8 w-8" />
         </span>
-        <span className="line-clamp-2 min-h-10 w-full break-words text-sm font-medium text-[var(--app-muted-strong)]">
+        <span className="line-clamp-2 w-full break-words text-xs font-medium leading-4 text-[var(--app-muted-strong)]">
           {folder.name}
         </span>
-        <span className="text-xs text-[var(--app-muted)]">{folder.file_count} files</span>
       </button>
       <div className="absolute right-2 top-2 hidden items-center gap-1 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-1 shadow-sm group-hover:flex">
         <Button variant="ghost" size="icon" className="h-7 w-7" title="Rename folder" onClick={onRename}>
@@ -257,17 +256,17 @@ function MediaTile({ file, selected, onSelect, onDelete }: { file: MediaAsset; s
   return (
     <div
       className={[
-        'group relative rounded-lg border p-3 text-center transition-colors',
+        'group relative flex flex-col items-center rounded-lg border p-2 text-center transition-all duration-200',
         selected
-          ? 'border-[var(--app-border-strong)] bg-[var(--app-surface-hover)]'
-          : 'border-transparent hover:border-[var(--app-border)] hover:bg-[var(--app-surface-hover)]',
+          ? 'border-[var(--app-border-strong)] bg-[var(--app-surface-hover)] shadow-sm'
+          : 'border-transparent hover:border-[var(--app-border)] hover:bg-[var(--app-surface-hover)] hover:shadow-sm',
       ].join(' ')}
     >
-      <button type="button" className="absolute left-2 top-2 z-10 rounded bg-[var(--app-surface)] shadow-sm" onClick={onSelect} title="Select file">
+      <div className="absolute left-2 top-2 z-10 rounded bg-[var(--app-surface)] shadow-sm" title="Select file">
         <Checkbox checked={selected} onChange={onSelect} />
-      </button>
+      </div>
       <Link href={`/dashboard/media/detail?path=${encodeURIComponent(file.path)}`} className="flex w-full flex-col items-center gap-2" title={file.path}>
-        <div className="flex h-20 w-24 items-center justify-center overflow-hidden rounded-md border border-[var(--app-border)] bg-[var(--app-surface-muted)]">
+        <div className="flex h-14 w-16 items-center justify-center overflow-hidden rounded-md border border-[var(--app-border)] bg-[var(--app-surface-muted)]">
           {isImage ? (
             <Image
               src={absoluteCdnUrl(file.variants?.thumbnail || file.url)}
@@ -278,15 +277,11 @@ function MediaTile({ file, selected, onSelect, onDelete }: { file: MediaAsset; s
               className="h-full w-full object-cover"
             />
           ) : (
-            <File className="h-12 w-12 text-slate-400" />
+            <File className="h-8 w-8 text-slate-400" />
           )}
         </div>
-        <span className="line-clamp-2 min-h-10 w-full break-words text-sm font-medium text-[var(--app-muted-strong)]">
+        <span className="line-clamp-2 w-full break-words text-xs font-medium leading-4 text-[var(--app-muted-strong)]">
           {file.original_name}
-        </span>
-        <span className="text-xs text-[var(--app-muted)]">
-          {file.width && file.height ? `${file.width} x ${file.height} • ` : ''}
-          {formatBytes(file.size)}
         </span>
       </Link>
       <Button
@@ -313,14 +308,35 @@ function UploadModal({ isOpen, folder, onClose, onSubmit }: { isOpen: boolean; f
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Upload Media" description="Files will be processed via API before being saved to the CDN.">
-      <div className="space-y-4">
-        <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface-muted)] px-3 py-2 text-sm text-[var(--app-muted)]">
-          Destination: <span className="font-mono text-[var(--app-muted-strong)]">{folder || 'root'}</span>
+    <Modal isOpen={isOpen} onClose={onClose} title="Upload Media">
+      <div className="space-y-6">
+        <div className="relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-[var(--app-border)] bg-[var(--app-surface-muted)] p-10 text-center transition-colors hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-hover)]">
+          <input 
+            type="file" 
+            accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.mp4,.mov,.avi,.webm,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+            className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+            onChange={(event) => setFile(event.target.files?.[0] || null)} 
+          />
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--app-surface)] shadow-sm">
+              <Upload className="h-8 w-8 text-[var(--app-muted-strong)]" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-base font-semibold text-[var(--app-muted-strong)]">
+                {file ? file.name : 'Drop your files here'}
+              </p>
+              {!file && (
+                <p className="text-sm text-[var(--app-muted)]">
+                  or <span className="text-[var(--app-primary)] font-medium">browse files</span>
+                </p>
+              )}
+            </div>
+            <p className="mt-2 text-xs text-[var(--app-muted)]">
+              Destination: <span className="font-mono">{folder || 'root'}</span>
+            </p>
+          </div>
         </div>
-        <Field label="File">
-          <Input type="file" onChange={(event) => setFile(event.target.files?.[0] || null)} />
-        </Field>
+
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={submit} disabled={!file}>
@@ -436,11 +452,4 @@ function absoluteCdnUrl(path: string) {
   if (!path) return ''
   if (path.startsWith('http://') || path.startsWith('https://')) return path
   return `${CDN_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
-}
-
-function formatBytes(size: number) {
-  if (!size) return '0 B'
-  const units = ['B', 'KB', 'MB', 'GB']
-  const index = Math.min(Math.floor(Math.log(size) / Math.log(1024)), units.length - 1)
-  return `${(size / 1024 ** index).toFixed(index === 0 ? 0 : 1)} ${units[index]}`
 }
