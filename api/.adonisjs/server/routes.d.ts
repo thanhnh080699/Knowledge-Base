@@ -86,6 +86,7 @@ export type ScannedRoutes = {
     'admin.media.folders.delete': { paramsTuple?: []; params?: {} }
     'settings.show_group': { paramsTuple: [ParamValue]; params: {'group': ParamValue} }
     'settings.update_group': { paramsTuple: [ParamValue]; params: {'group': ParamValue} }
+    'settings.send_test_email': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'auth.me': { paramsTuple?: []; params?: {} }
@@ -201,6 +202,7 @@ export type ScannedRoutes = {
     'roles.store': { paramsTuple?: []; params?: {} }
     'admin.media.upload': { paramsTuple?: []; params?: {} }
     'admin.media.folders.create': { paramsTuple?: []; params?: {} }
+    'settings.send_test_email': { paramsTuple?: []; params?: {} }
   }
   PUT: {
     'posts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

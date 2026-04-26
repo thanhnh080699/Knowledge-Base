@@ -33,3 +33,13 @@ export interface UpdateSettingInput {
 export interface UpdateSettingsGroupPayload {
   settings: UpdateSettingInput[]
 }
+
+export interface SendTestEmailPayload {
+  recipient: string
+}
+
+export interface SendTestEmailResult {
+  messageId: string
+  accepted: string[]
+  rejected: string[]
+}

@@ -991,4 +991,16 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/settings_controller').default['updateGroup']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'settings.send_test_email': {
+    methods: ["POST"]
+    pattern: '/api/admin/settings/email/test'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/setting').sendTestEmailValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/setting').sendTestEmailValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/settings_controller').default['sendTestEmail']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/settings_controller').default['sendTestEmail']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }

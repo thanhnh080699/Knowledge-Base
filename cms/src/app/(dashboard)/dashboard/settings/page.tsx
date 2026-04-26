@@ -46,45 +46,15 @@ const sections: SettingSection[] = [
     items: [
       {
         title: 'General',
-        description: 'View and update your general settings and activate license',
+        description: 'View and update your general settings',
         href: '/dashboard/settings/overview',
         icon: Settings,
       },
       {
         title: 'Email',
-        description: 'View and update your email settings and email templates',
+        description: 'View and update your email settings',
         href: '/dashboard/settings/email',
         icon: Mail,
-      },
-      {
-        title: 'Email templates',
-        description: 'Email templates using HTML and system variables.',
-        href: '/dashboard/settings/email-templates',
-        icon: MailCheck,
-      },
-      {
-        title: 'Email rules',
-        description: 'Configure email rules for validation',
-        href: '/dashboard/settings/email-rules',
-        icon: Bell,
-      },
-      {
-        title: 'Phone Number',
-        description: 'Configure phone number field settings',
-        href: '/dashboard/settings/phone-number',
-        icon: Phone,
-      },
-      {
-        title: 'Media',
-        description: 'View and update your media settings',
-        href: '/dashboard/settings/media',
-        icon: Folder,
-      },
-      {
-        title: 'Permalink',
-        description: 'View and update your permalink settings',
-        href: '/dashboard/settings/permalink',
-        icon: Link2,
       },
       {
         title: 'Languages',
@@ -105,24 +75,6 @@ const sections: SettingSection[] = [
         icon: Code2,
       },
       {
-        title: 'Cache',
-        description: 'Configure caching for optimized speed',
-        href: '/dashboard/settings/cache',
-        icon: Box,
-      },
-      {
-        title: 'Datatables',
-        description: 'Settings for datatables',
-        href: '/dashboard/settings/datatables',
-        icon: Database,
-      },
-      {
-        title: 'Website Tracking',
-        description: 'Choose analytics and tracking method for your website',
-        href: '/dashboard/settings/website-tracking',
-        icon: Globe2,
-      },
-      {
         title: 'Optimize',
         description: 'Minify HTML output, inline CSS and remove comments',
         href: '/dashboard/settings/optimize',
@@ -133,76 +85,6 @@ const sections: SettingSection[] = [
         description: 'Manage sitemap configuration',
         href: '/dashboard/settings/sitemap',
         icon: Share2,
-      },
-    ],
-  },
-  {
-    title: 'Localization',
-    items: [
-      {
-        title: 'Locales',
-        description: 'View, download and import locales',
-        href: '/dashboard/settings/locales',
-        icon: Globe2,
-      },
-      {
-        title: 'Theme Translations',
-        description: 'Manage the theme translations',
-        href: '/dashboard/settings/theme-translations',
-        icon: Languages,
-      },
-      {
-        title: 'Other Translations',
-        description: 'Manage the other translations for admin and plugins',
-        href: '/dashboard/settings/other-translations',
-        icon: Brush,
-      },
-    ],
-  },
-  {
-    title: 'Ecommerce',
-    items: [
-      {
-        title: 'General',
-        description: 'Store name, company info, contact details and notifications',
-        href: '/dashboard/settings/ecommerce',
-        icon: SlidersHorizontal,
-      },
-      {
-        title: 'Currencies',
-        description: 'Currency formats, exchange rates and separators',
-        href: '/dashboard/settings/currencies',
-        icon: CircleDollarSign,
-      },
-      {
-        title: 'Store locators',
-        description: 'View and update the lists of your chains',
-        href: '/dashboard/settings/store-locators',
-        icon: MapPin,
-      },
-      {
-        title: 'Products',
-        description: 'Stock display, SKU generation and product specifications',
-        href: '/dashboard/settings/products',
-        icon: Package,
-      },
-      {
-        title: 'Product Search',
-        description: 'Search behavior, filters and price range filtering',
-        href: '/dashboard/settings/product-search',
-        icon: Search,
-      },
-      {
-        title: 'Digital Products',
-        description: 'Downloadable products, license codes and guest checkout',
-        href: '/dashboard/settings/digital-products',
-        icon: Monitor,
-      },
-      {
-        title: 'Checkout',
-        description: 'Checkout flow, validation and order placement settings',
-        href: '/dashboard/settings/checkout',
-        icon: ShoppingCart,
       },
     ],
   },

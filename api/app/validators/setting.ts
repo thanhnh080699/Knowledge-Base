@@ -34,7 +34,7 @@ export const updateSettingsGroupValidator = vine.compile(
       .array(
         vine.object({
           key: settingKey(),
-          value: vine.any(),
+          value: vine.any().optional(),
           type: settingType().optional(),
           label: vine.string().trim().maxLength(255).optional(),
           description: vine.string().trim().nullable().optional(),
@@ -42,5 +42,11 @@ export const updateSettingsGroupValidator = vine.compile(
         })
       )
       .minLength(1),
+  })
+)
+
+export const sendTestEmailValidator = vine.compile(
+  vine.object({
+    recipient: vine.string().email().normalizeEmail(),
   })
 )

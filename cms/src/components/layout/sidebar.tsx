@@ -19,9 +19,12 @@ import {
   Mail,
   Package,
   Image,
+  Palette,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useState } from 'react';
+import { useSettingsGroup } from '@/hooks/queries/use-settings';
+import { absoluteCdnUrl } from '@/lib/utils';
 
 type NavItem = {
   name: string;
@@ -98,6 +101,9 @@ export function Sidebar() {
     );
   };
 
+  const { data: appearance } = useSettingsGroup('admin-appearance');
+  const adminLogo = appearance?.values?.admin_logo as string;
+
   return (
     <div
       className={cn(
@@ -108,10 +114,16 @@ export function Sidebar() {
       <div className="flex h-16 items-center border-b border-[var(--app-sidebar-border)] px-4">
         {isOpen && (
           <div className="flex items-center gap-2 flex-1">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--app-brand-badge-bg)]">
-              <span className="text-xl font-bold text-[var(--app-brand-badge-text)]">T</span>
-            </div>
-            <span className="text-lg font-bold tracking-tight text-[var(--app-sidebar-text-strong)]">Thanhnh.</span>
+            {adminLogo ? (
+              <img src={absoluteCdnUrl(adminLogo)} alt="Logo" className="h-8 w-auto object-contain" />
+            ) : (
+              <>
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--app-brand-badge-bg)]">
+                  <span className="text-xl font-bold text-[var(--app-brand-badge-text)]">T</span>
+                </div>
+                <span className="text-lg font-bold tracking-tight text-[var(--app-sidebar-text-strong)]">Thanhnh.</span>
+              </>
+            )}
           </div>
         )}
         <Button 

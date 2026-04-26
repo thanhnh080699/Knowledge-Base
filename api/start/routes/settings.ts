@@ -8,6 +8,7 @@ export default function settingsRoutes() {
     .group(() => {
       router.get('settings/:group', [SettingsController, 'showGroup'])
       router.put('settings/:group', [SettingsController, 'updateGroup'])
+      router.post('settings/email/test', [SettingsController, 'sendTestEmail'])
     })
     .prefix('admin')
     .use(middleware.auth())

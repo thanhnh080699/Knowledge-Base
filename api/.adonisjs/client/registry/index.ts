@@ -498,6 +498,12 @@ const routes = {
     tokens: [{"old":"/api/admin/settings/:group","type":0,"val":"api","end":""},{"old":"/api/admin/settings/:group","type":0,"val":"admin","end":""},{"old":"/api/admin/settings/:group","type":0,"val":"settings","end":""},{"old":"/api/admin/settings/:group","type":1,"val":"group","end":""}],
     types: placeholder as Registry['settings.update_group']['types'],
   },
+  'settings.send_test_email': {
+    methods: ["POST"],
+    pattern: '/api/admin/settings/email/test',
+    tokens: [{"old":"/api/admin/settings/email/test","type":0,"val":"api","end":""},{"old":"/api/admin/settings/email/test","type":0,"val":"admin","end":""},{"old":"/api/admin/settings/email/test","type":0,"val":"settings","end":""},{"old":"/api/admin/settings/email/test","type":0,"val":"email","end":""},{"old":"/api/admin/settings/email/test","type":0,"val":"test","end":""}],
+    types: placeholder as Registry['settings.send_test_email']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

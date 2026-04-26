@@ -174,6 +174,7 @@ thanhnh.id.vn/
     - Form card dùng `rounded-xl border bg-surface shadow-sm p-5`, các field xếp dọc với `Label`, control, help text.
     - Nút hành động chính đặt cuối trang trong cột phải, gồm `Save settings` và `Reset` khi cần.
     - Không dùng sidebar phụ cho setting detail nếu màn hình là form cấu hình; ưu tiên block rõ ràng như `License`, `General Information`, `Website Identity`.
+  - **Settings Assets** — Toàn bộ ảnh cấu hình hệ thống (Logo, Favicon, ...) PHẢI được upload vào thư mục `settings` trên CDN để quản lý tập trung.
 
 ### CDN (Golang)
 - Module name: `thanhnh/cdn` (cần refactor từ `meditour/cdn`).

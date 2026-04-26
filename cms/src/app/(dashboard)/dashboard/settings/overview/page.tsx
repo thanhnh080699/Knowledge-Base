@@ -67,18 +67,6 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'timezone',
-    settingGroup: OVERVIEW_GROUP,
-    settingKey: 'timezone',
-    settingValue: 'Asia/Ho_Chi_Minh',
-    type: 'select',
-    label: 'Timezone',
-    description: 'Default timezone for publishing and administrative timestamps.',
-    sortOrder: 50,
-    createdAt: '',
-    updatedAt: '',
-  },
-  {
     id: 'date_format',
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'date_format',
@@ -173,16 +161,6 @@ export default function OverviewSettingsPage() {
           <span className="text-[var(--app-muted-strong)]">General</span>
         </div>
 
-        <SettingBlock title="License" description="Setup license code">
-          <div className="space-y-4">
-            <p className="text-sm text-blue-600">Licensed to thanhnh.id.vn. Activated since Apr 26 2026.</p>
-            <Button className="gap-2 bg-amber-500 text-white hover:bg-amber-600">
-              <X className="h-4 w-4" />
-              Deactivate license
-            </Button>
-          </div>
-        </SettingBlock>
-
         <SettingBlock title="General Information" description="View and update site information">
           {isLoading ? (
             <div className="flex min-h-60 items-center justify-center">
@@ -194,23 +172,6 @@ export default function OverviewSettingsPage() {
           ) : (
             <div className="space-y-5">
               <SettingField setting={findSetting(settings, 'admin_email')} value={values.admin_email} onChange={updateValue} />
-              <SettingField setting={findSetting(settings, 'timezone')} value={values.timezone} onChange={updateValue} />
-              <div>
-                <Label>Front site language direction</Label>
-                <div className="mt-3 flex flex-wrap gap-5 text-sm text-[var(--app-muted-strong)]">
-                  <label className="inline-flex items-center gap-2">
-                    <input type="radio" defaultChecked className="h-4 w-4" />
-                    Left to Right
-                  </label>
-                  <label className="inline-flex items-center gap-2">
-                    <input type="radio" className="h-4 w-4" />
-                    Right to Left
-                  </label>
-                </div>
-                <p className="mt-3 text-xs leading-5 text-[var(--app-muted)]">
-                  To set up the site language, please go to <span className="text-blue-600">Languages</span> page.
-                </p>
-              </div>
               <SettingField setting={findSetting(settings, 'date_format')} value={values.date_format} onChange={updateValue} label="Date format" />
               <SettingField setting={findSetting(settings, 'maintenance_mode')} value={values.maintenance_mode} onChange={updateValue} />
               <label className="flex items-start gap-3 text-sm text-[var(--app-muted-strong)]">

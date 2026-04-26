@@ -102,7 +102,7 @@ func SingleUploadHandler(c *gin.Context) {
 		OriginalName: file.Filename,
 		FileName:     fileName,
 		Path:         relativePath,
-		Url:          utils.GetPathUrl(relativePath),
+		Url:          utils.GetFullUrl(relativePath),
 		Size:         file.Size,
 		MimeType:     mimeType,
 	}
@@ -173,7 +173,7 @@ func MultiUploadHandler(c *gin.Context) {
 			OriginalName: file.Filename,
 			FileName:     fileName,
 			Path:         relativePath,
-			Url:          utils.GetPathUrl(relativePath),
+			Url:          utils.GetFullUrl(relativePath),
 			Size:         file.Size,
 			MimeType:     mimeType,
 		}

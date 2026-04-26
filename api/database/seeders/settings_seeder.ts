@@ -77,9 +77,95 @@ const overviewSettings: DefaultSetting[] = [
   },
 ]
 
+const emailSettings: DefaultSetting[] = [
+  {
+    settingGroup: 'email',
+    settingKey: 'mailer',
+    settingValue: 'smtp',
+    type: 'select',
+    label: 'Mailer',
+    description: 'Email delivery driver used by the API.',
+    sortOrder: 10,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'smtp_host',
+    settingValue: '',
+    type: 'string',
+    label: 'SMTP host',
+    description: 'SMTP server hostname.',
+    sortOrder: 20,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'smtp_port',
+    settingValue: 587,
+    type: 'number',
+    label: 'SMTP port',
+    description: 'SMTP server port. Common values are 587 for TLS and 465 for SSL.',
+    sortOrder: 30,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'smtp_username',
+    settingValue: '',
+    type: 'string',
+    label: 'SMTP username',
+    description: 'SMTP account username.',
+    sortOrder: 40,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'smtp_password',
+    settingValue: '',
+    type: 'string',
+    label: 'SMTP password',
+    description: 'SMTP account password or app password.',
+    sortOrder: 50,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'smtp_encryption',
+    settingValue: 'tls',
+    type: 'select',
+    label: 'Encryption',
+    description: 'Connection security used by the SMTP server.',
+    sortOrder: 60,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'from_address',
+    settingValue: 'admin@thanhnh.id.vn',
+    type: 'email',
+    label: 'From address',
+    description: 'Sender email address displayed to recipients.',
+    sortOrder: 70,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'from_name',
+    settingValue: 'ThanhNh CMS',
+    type: 'string',
+    label: 'From name',
+    description: 'Sender name displayed to recipients.',
+    sortOrder: 80,
+  },
+  {
+    settingGroup: 'email',
+    settingKey: 'reply_to',
+    settingValue: '',
+    type: 'email',
+    label: 'Reply-to address',
+    description: 'Optional reply-to email address.',
+    sortOrder: 90,
+  },
+]
+
 export default class SettingsSeeder extends BaseSeeder {
   async run() {
-    for (const setting of overviewSettings) {
+    const settings = [...overviewSettings, ...emailSettings]
+
+    for (const setting of settings) {
       await Setting.updateOrCreate(
         {
           settingGroup: setting.settingGroup,
@@ -89,6 +175,6 @@ export default class SettingsSeeder extends BaseSeeder {
       )
     }
 
-    console.log(`[Settings] Synced ${overviewSettings.length} overview settings`)
+    console.log(`[Settings] Synced ${settings.length} settings`)
   }
 }

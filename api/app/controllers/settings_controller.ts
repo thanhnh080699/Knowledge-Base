@@ -1,6 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Setting, { type SettingValue } from '#models/setting'
-import { showSettingsGroupValidator, updateSettingsGroupValidator } from '#validators/setting'
+import EmailService from '#services/email_service'
+import {
+  sendTestEmailValidator,
+  showSettingsGroupValidator,
+  updateSettingsGroupValidator,
+} from '#validators/setting'
 
 function formatGroupPayload(group: string, settings: Setting[]) {
   return {
@@ -14,6 +19,8 @@ function formatGroupPayload(group: string, settings: Setting[]) {
 }
 
 export default class SettingsController {
+  private emailService = new EmailService()
+
   /**
    * @show
    * @tag SETTINGS
@@ -48,6 +55,7 @@ export default class SettingsController {
     })
 
     for (const item of payload.settings) {
+      const settingValue = item.value === undefined ? null : (item.value as SettingValue)
       const setting = await Setting.query()
         .where('setting_group', payload.params.group)
         .where('setting_key', item.key)
@@ -55,7 +63,7 @@ export default class SettingsController {
 
       if (setting) {
         setting.merge({
-          settingValue: item.value as SettingValue,
+          settingValue,
           type: item.type ?? setting.type,
           label: item.label ?? setting.label,
           description: item.description === undefined ? setting.description : item.description,
@@ -68,7 +76,7 @@ export default class SettingsController {
       await Setting.create({
         settingGroup: payload.params.group,
         settingKey: item.key,
-        settingValue: item.value as SettingValue,
+        settingValue,
         type: item.type ?? 'string',
         label: item.label ?? item.key,
         description: item.description ?? null,
@@ -82,5 +90,29 @@ export default class SettingsController {
       .orderBy('setting_key', 'asc')
 
     return response.ok({ data: formatGroupPayload(payload.params.group, settings) })
+  }
+
+  /**
+   * @sendTestEmail
+   * @tag SETTINGS
+   * @description Send a test email using saved email settings
+   * @requestBody { recipient: "user@example.com" }
+   * @responseBody 200 - { data: { messageId: string, accepted: string[], rejected: string[] } }
+   */
+  async sendTestEmail({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(sendTestEmailValidator)
+
+    try {
+      const result = await this.emailService.sendTestEmail(payload.recipient)
+
+      return response.ok({
+        data: result,
+        message: 'Test email sent successfully',
+      })
+    } catch (error) {
+      return response.badRequest({
+        message: error instanceof Error ? error.message : 'Unable to send test email',
+      })
+    }
   }
 }

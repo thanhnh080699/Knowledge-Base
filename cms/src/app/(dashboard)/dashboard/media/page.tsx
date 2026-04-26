@@ -33,8 +33,8 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react'
+import { absoluteCdnUrl } from '@/lib/utils'
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:3002'
 const SELECT_CLASS =
   'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
@@ -448,8 +448,3 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-function absoluteCdnUrl(path: string) {
-  if (!path) return ''
-  if (path.startsWith('http://') || path.startsWith('https://')) return path
-  return `${CDN_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
-}
