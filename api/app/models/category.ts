@@ -1,11 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { withUuid } from '#models/helpers/uuid_mixin'
-import { compose } from '@adonisjs/core/helpers'
 
-export default class Category extends compose(BaseModel, withUuid) {
+export default class Category extends BaseModel {
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
 
   @column()
   declare name: string

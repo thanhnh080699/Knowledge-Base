@@ -3,7 +3,7 @@ import { BaseSchema } from '@adonisjs/lucid/schema'
 export default class extends BaseSchema {
   async up() {
     this.schema.createTable('contact_requests', (table) => {
-      table.uuid('id').primary()
+      table.increments('id').primary()
       table.string('name').notNullable()
       table.string('email').notNullable()
       table.string('subject').nullable()
@@ -14,7 +14,7 @@ export default class extends BaseSchema {
     })
 
     this.schema.createTable('newsletters', (table) => {
-      table.uuid('id').primary()
+      table.increments('id').primary()
       table.string('email').notNullable().unique()
       table.boolean('is_active').defaultTo(true)
       table.timestamp('created_at')

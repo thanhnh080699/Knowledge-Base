@@ -37,7 +37,7 @@ export function useUpdateCategory() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ id, payload }: { id: string; payload: UpdateCategoryPayload }) => {
+    mutationFn: async ({ id, payload }: { id: number; payload: UpdateCategoryPayload }) => {
       try {
         const { data } = await api.put<ApiItemResponse<Category>>(`/admin/categories/${id}`, payload)
         return data.data
@@ -56,7 +56,7 @@ export function useDeleteCategory() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       try {
         await api.delete(`/admin/categories/${id}`)
       } catch (error) {
@@ -93,7 +93,7 @@ export function useUpdateTag() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ id, payload }: { id: string; payload: UpdateTagPayload }) => {
+    mutationFn: async ({ id, payload }: { id: number; payload: UpdateTagPayload }) => {
       try {
         const { data } = await api.put<ApiItemResponse<Tag>>(`/admin/tags/${id}`, payload)
         return data.data
@@ -112,7 +112,7 @@ export function useDeleteTag() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       try {
         await api.delete(`/admin/tags/${id}`)
       } catch (error) {

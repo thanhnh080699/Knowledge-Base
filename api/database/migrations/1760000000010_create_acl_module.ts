@@ -13,7 +13,7 @@ export default class extends BaseSchema {
     })
 
     this.schema.createTable('permissions', (table) => {
-      table.uuid('id').primary()
+      table.increments('id').primary()
       table.string('name', 255).notNullable().unique()
       table.string('slug', 255).notNullable().unique()
       table.string('module', 255).notNullable()
@@ -33,7 +33,12 @@ export default class extends BaseSchema {
 
     this.schema.createTable('permission_roles', (table) => {
       table.integer('role_id').unsigned().references('id').inTable('roles').onDelete('CASCADE')
-      table.uuid('permission_id').references('id').inTable('permissions').onDelete('CASCADE')
+      table
+        .integer('permission_id')
+        .unsigned()
+        .references('id')
+        .inTable('permissions')
+        .onDelete('CASCADE')
       table.unique(['role_id', 'permission_id'])
       table.timestamp('deleted_at').nullable().index()
     })

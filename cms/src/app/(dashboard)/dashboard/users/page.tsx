@@ -15,7 +15,7 @@ import type { EntityStatusFilter } from '@/types/acl'
 import { Filter, Pencil, Plus, RotateCcw, Search, Trash2, UserRound } from 'lucide-react'
 
 interface DeleteState {
-  ids: string[]
+  ids: number[]
   title: string
   description: string
 }
@@ -26,8 +26,8 @@ const FILTER_SELECT_CLASS =
 export default function UsersPage() {
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<EntityStatusFilter>('active')
-  const [roleId, setRoleId] = useState('')
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [roleId, setRoleId] = useState<number | ''>('')
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
@@ -62,7 +62,7 @@ export default function UsersPage() {
     setSelectedIds(users.map((user) => user.id))
   }
 
-  function toggleOne(userId: string) {
+  function toggleOne(userId: number) {
     setSelectedIds((current) =>
       current.includes(userId) ? current.filter((id) => id !== userId) : [...current, userId]
     )
@@ -162,7 +162,11 @@ export default function UsersPage() {
                 <option value="deleted">Deleted</option>
                 <option value="all">All</option>
               </select>
-              <select className={FILTER_SELECT_CLASS} value={roleId} onChange={(event) => setRoleId(event.target.value)}>
+              <select
+                className={FILTER_SELECT_CLASS}
+                value={roleId}
+                onChange={(event) => setRoleId(event.target.value ? Number(event.target.value) : '')}
+              >
                 <option value="">All roles</option>
                 {roles.map((role) => (
                   <option key={role.id} value={role.id}>

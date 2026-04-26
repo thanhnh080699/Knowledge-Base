@@ -46,7 +46,7 @@ test.group('Permissions', () => {
         slug: `tours.manage.${Date.now()}`,
         module: 'tours',
       })
-    const createdPermission = createResponse.body().data as { id: string }
+    const createdPermission = createResponse.body().data as { id: number }
 
     createResponse.assertStatus(201)
     const permissionId = createdPermission.id
@@ -83,7 +83,7 @@ test.group('Permissions', () => {
       .loginAs(admin)
 
     deletedResponse.assertStatus(200)
-    const deletedPermissions = deletedResponse.body().data as Array<{ id: string }>
+    const deletedPermissions = deletedResponse.body().data as Array<{ id: number }>
     assert.isTrue(deletedPermissions.some((item) => item.id === permission.id))
   })
 })

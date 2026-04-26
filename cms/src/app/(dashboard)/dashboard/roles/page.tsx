@@ -14,7 +14,7 @@ import type { AclRole, CreateRolePayload, EntityStatusFilter, UpdateRolePayload 
 import { Filter, Pencil, Plus, RotateCcw, Search, Shield, Trash2 } from 'lucide-react'
 
 interface DeleteState {
-  ids: string[]
+  ids: number[]
   title: string
   description: string
 }
@@ -25,8 +25,8 @@ const FILTER_SELECT_CLASS =
 export default function RolesPage() {
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<EntityStatusFilter>('active')
-  const [permissionId, setPermissionId] = useState('')
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [permissionId, setPermissionId] = useState<number | ''>('')
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingRole, setEditingRole] = useState<AclRole | null>(null)
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
@@ -59,7 +59,7 @@ export default function RolesPage() {
     setSelectedIds(roles.map((role) => role.id))
   }
 
-  function toggleOne(roleId: string) {
+  function toggleOne(roleId: number) {
     setSelectedIds((current) =>
       current.includes(roleId) ? current.filter((id) => id !== roleId) : [...current, roleId]
     )
@@ -157,7 +157,13 @@ export default function RolesPage() {
                 <option value="deleted">Deleted</option>
                 <option value="all">All</option>
               </select>
-              <select className={FILTER_SELECT_CLASS} value={permissionId} onChange={(event) => setPermissionId(event.target.value)}>
+              <select
+                className={FILTER_SELECT_CLASS}
+                value={permissionId}
+                onChange={(event) =>
+                  setPermissionId(event.target.value ? Number(event.target.value) : '')
+                }
+              >
                 <option value="">All permissions</option>
                 {permissions.map((permission) => (
                   <option key={permission.id} value={permission.id}>

@@ -56,8 +56,8 @@ test.group('Roles', () => {
         permissionIds: [usersPermission.id],
       })
     const createdRole = createResponse.body().data as {
-      id: string
-      permissions: Array<{ id: string }>
+      id: number
+      permissions: Array<{ id: number }>
     }
 
     createResponse.assertStatus(201)
@@ -91,7 +91,7 @@ test.group('Roles', () => {
       .qs({ status: 'deleted' })
       .loginAs(admin)
     deletedResponse.assertStatus(200)
-    const deletedRoles = deletedResponse.body().data as Array<{ id: string }>
+    const deletedRoles = deletedResponse.body().data as Array<{ id: number }>
     assert.isTrue(deletedRoles.some((item) => item.id === role.id))
   })
 })

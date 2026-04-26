@@ -31,7 +31,7 @@ export const createServiceValidator = vine.compile(
 export const updateServiceValidator = vine.compile(
   vine.object({
     params: vine.object({
-      id: vine.string().uuid(),
+      id: vine.number(),
     }),
     name: vine.string().trim().minLength(3).maxLength(100).optional(),
     slug: slug()

@@ -23,7 +23,7 @@ interface FormState {
   name: string
   slug: string
   description: string
-  permissionIds: string[]
+  permissionIds: number[]
 }
 
 const initialState: FormState = {
@@ -68,7 +68,7 @@ export function RoleFormModal({
     }, {})
   }, [permissions])
 
-  function togglePermission(permissionId: string) {
+  function togglePermission(permissionId: number) {
     setForm((current) => ({
       ...current,
       permissionIds: current.permissionIds.includes(permissionId)

@@ -13,7 +13,7 @@ export const createRoleValidator = vine.compile(
     slug: slug().unique({ table: 'roles', column: 'slug' }),
     description: vine.string().trim().maxLength(255).optional(),
     permissionIds: vine
-      .array(vine.string().uuid().exists({ table: 'permissions', column: 'id' }))
+      .array(vine.number().exists({ table: 'permissions', column: 'id' }))
       .optional(),
   })
 )
@@ -35,7 +35,7 @@ export const updateRoleValidator = vine.compile(
       .optional(),
     description: vine.string().trim().maxLength(255).nullable().optional(),
     permissionIds: vine
-      .array(vine.string().uuid().exists({ table: 'permissions', column: 'id' }))
+      .array(vine.number().exists({ table: 'permissions', column: 'id' }))
       .optional(),
   })
 )

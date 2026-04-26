@@ -1,7 +1,7 @@
 import type { EntityStatusFilter, Permission } from './acl'
 
 export interface Role {
-  id: string
+  id: number
   name: string
   slug: string
   description: string | null
@@ -10,7 +10,7 @@ export interface Role {
 }
 
 export interface User {
-  id: string
+  id: number
   fullName: string | null
   email: string
   status: 'active' | 'inactive'
@@ -23,21 +23,21 @@ export interface User {
 export interface UserFilters {
   q?: string
   status?: EntityStatusFilter
-  roleId?: string
+  roleId?: number
 }
 
 export interface CreateUserPayload {
   fullName?: string
   email: string
   password: string
-  roleIds?: string[]
+  roleIds?: number[]
 }
 
 export interface UpdateUserPayload {
   fullName?: string
   email?: string
   password?: string
-  roleIds?: string[]
+  roleIds?: number[]
 }
 
 export interface UsersMeta {

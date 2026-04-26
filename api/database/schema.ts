@@ -44,7 +44,7 @@ export class CategorySchema extends BaseModel {
   @column()
   declare icon: string | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare name: string
   @column()
@@ -61,7 +61,7 @@ export class ContactRequestSchema extends BaseModel {
   @column()
   declare email: string
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare message: string
   @column()
@@ -82,7 +82,7 @@ export class NewsletterSchema extends BaseModel {
   @column()
   declare email: string
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare isActive: boolean | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
@@ -95,7 +95,7 @@ export class PermissionRoleSchema extends BaseModel {
   @column.dateTime()
   declare deletedAt: DateTime | null
   @column()
-  declare permissionId: string | null
+  declare permissionId: number | null
   @column()
   declare roleId: number | null
 }
@@ -110,7 +110,7 @@ export class PermissionSchema extends BaseModel {
   @column()
   declare description: string | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare module: string
   @column()
@@ -125,16 +125,16 @@ export class PostTagSchema extends BaseModel {
   static $columns = ['postId', 'tagId'] as const
   $columns = PostTagSchema.$columns
   @column()
-  declare postId: string | null
+  declare postId: number | null
   @column()
-  declare tagId: string | null
+  declare tagId: number | null
 }
 
 export class PostSchema extends BaseModel {
   static $columns = ['categoryId', 'content', 'coverImage', 'createdAt', 'excerpt', 'id', 'seriesId', 'slug', 'status', 'title', 'updatedAt'] as const
   $columns = PostSchema.$columns
   @column()
-  declare categoryId: string | null
+  declare categoryId: number | null
   @column()
   declare content: string
   @column()
@@ -144,9 +144,9 @@ export class PostSchema extends BaseModel {
   @column()
   declare excerpt: string | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
-  declare seriesId: string | null
+  declare seriesId: number | null
   @column()
   declare slug: string
   @column()
@@ -169,7 +169,7 @@ export class ProjectSchema extends BaseModel {
   @column()
   declare featured: boolean | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare repoUrl: string | null
   @column()
@@ -224,7 +224,7 @@ export class SeriesSchema extends BaseModel {
   @column()
   declare description: string | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare name: string
   @column()
@@ -247,7 +247,7 @@ export class ServiceSchema extends BaseModel {
   @column()
   declare features: any | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare name: string
   @column()
@@ -266,7 +266,7 @@ export class SettingSchema extends BaseModel {
   @column()
   declare description: string | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare label: string
   @column()
@@ -289,7 +289,7 @@ export class TagSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
   @column()
   declare name: string
   @column()

@@ -3,7 +3,7 @@ import type { Role } from './user'
 export type EntityStatusFilter = 'active' | 'deleted' | 'all'
 
 export interface Permission {
-  id: string
+  id: number
   name: string
   slug: string
   module: string
@@ -14,7 +14,7 @@ export interface Permission {
 }
 
 export interface AclRole {
-  id: string
+  id: number
   name: string
   slug: string
   description: string | null
@@ -22,13 +22,13 @@ export interface AclRole {
   updatedAt: string | null
   deletedAt: string | null
   permissions?: Permission[]
-  users?: Array<{ id: string; fullName: string | null; email: string }>
+  users?: Array<{ id: number; fullName: string | null; email: string }>
 }
 
 export interface RoleFilters {
   q?: string
   status?: EntityStatusFilter
-  permissionId?: string
+  permissionId?: number
 }
 
 export interface PermissionFilters {
@@ -45,14 +45,14 @@ export interface CreateRolePayload {
   name: string
   slug: string
   description?: string
-  permissionIds?: string[]
+  permissionIds?: number[]
 }
 
 export interface UpdateRolePayload {
   name?: string
   slug?: string
   description?: string | null
-  permissionIds?: string[]
+  permissionIds?: number[]
 }
 
 export interface CreatePermissionPayload {

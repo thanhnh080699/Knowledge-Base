@@ -3,7 +3,7 @@ export type SettingValue = string | number | boolean | Record<string, unknown> |
 export type SettingType = 'string' | 'text' | 'email' | 'url' | 'boolean' | 'number' | 'select' | 'json'
 
 export interface Setting {
-  id: string
+  id: number
   settingGroup: string
   settingKey: string
   settingValue: SettingValue

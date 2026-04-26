@@ -33,7 +33,7 @@ export function useUpdatePermission() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ id, payload }: { id: string; payload: UpdatePermissionPayload }) => {
+    mutationFn: async ({ id, payload }: { id: number; payload: UpdatePermissionPayload }) => {
       try {
         const { data } = await api.put<ApiItemResponse<Permission>>(`/admin/permissions/${id}`, payload)
         return data.data
@@ -55,7 +55,7 @@ export function useDeletePermission() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       try {
         await api.delete(`/admin/permissions/${id}`)
       } catch (error) {

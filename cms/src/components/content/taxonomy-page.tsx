@@ -40,7 +40,7 @@ interface TaxonomyPageProps {
 }
 
 interface DeleteState {
-  ids: string[]
+  ids: number[]
   title: string
   description: string
 }
@@ -51,7 +51,7 @@ function isCategory(item: TaxonomyItem): item is Category {
 
 export function TaxonomyPage({ kind }: TaxonomyPageProps) {
   const [query, setQuery] = useState('')
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<TaxonomyItem | null>(null)
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
@@ -92,7 +92,7 @@ export function TaxonomyPage({ kind }: TaxonomyPageProps) {
     setSelectedIds(items.map((item) => item.id))
   }
 
-  function toggleOne(itemId: string) {
+  function toggleOne(itemId: number) {
     setSelectedIds((current) =>
       current.includes(itemId) ? current.filter((id) => id !== itemId) : [...current, itemId]
     )

@@ -1,5 +1,5 @@
 export interface Category {
-  id: string
+  id: number
   name: string
   slug: string
   description: string | null
@@ -10,7 +10,7 @@ export interface Category {
 }
 
 export interface Tag {
-  id: string
+  id: number
   name: string
   slug: string
   createdAt: string | null

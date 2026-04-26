@@ -31,7 +31,7 @@ export function useUpdateRole() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ id, payload }: { id: string; payload: UpdateRolePayload }) => {
+    mutationFn: async ({ id, payload }: { id: number; payload: UpdateRolePayload }) => {
       try {
         const { data } = await api.put<ApiItemResponse<AclRole>>(`/admin/roles/${id}`, payload)
         return data.data
@@ -52,7 +52,7 @@ export function useDeleteRole() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       try {
         await api.delete(`/admin/roles/${id}`)
       } catch (error) {

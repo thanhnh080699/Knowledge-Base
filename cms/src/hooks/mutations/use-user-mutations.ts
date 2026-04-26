@@ -31,7 +31,7 @@ export function useUpdateUser() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ id, payload }: { id: string; payload: UpdateUserPayload }) => {
+    mutationFn: async ({ id, payload }: { id: number; payload: UpdateUserPayload }) => {
       try {
         const { data } = await api.put<ApiItemResponse<User>>(`/admin/users/${id}`, payload)
         return data.data
@@ -52,7 +52,7 @@ export function useDeleteUser() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       try {
         await api.delete(`/admin/users/${id}`)
       } catch (error) {
@@ -71,7 +71,7 @@ export function useForceDeleteUser() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       try {
         await api.delete(`/admin/users/${id}/force`)
       } catch (error) {

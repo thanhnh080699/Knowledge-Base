@@ -9,8 +9,8 @@ export default class PostsController {
    * @tag POSTS
    * @paramQuery page - Current page number - example: 1
    * @paramQuery limit - Number of records per page - example: 10
-   * @paramQuery categoryId - Filter by category ID - example: uuid
-   * @paramQuery tagId - Filter by tag ID - example: uuid
+   * @paramQuery categoryId - Filter by category ID - example: 1
+   * @paramQuery tagId - Filter by tag ID - example: 1
    * @paramQuery status - Filter by status - example: DRAFT
    * @responseBody 200 - <Post[]>.paginate
    */
@@ -58,11 +58,11 @@ export default class PostsController {
 
     const post = new Post()
     post.fill(payload)
-    
+
     // Ensure foreign keys are null if undefined
     post.categoryId = payload.categoryId || null
     post.seriesId = payload.seriesId || null
-    
+
     await post.save()
 
     if (tagIds) {
@@ -99,18 +99,23 @@ export default class PostsController {
    * @update
    * @description Update an existing post
    * @tag POSTS
-   * @paramPath id - The post ID - example: uuid
+   * @paramPath id - The post ID - example: 1
    * @requestBody <Post>
    * @responseBody 200 - { data: <Post> }
    */
   async update({ params, request, response }: HttpContext) {
     const post = await Post.findOrFail(params.id)
-    const { tagIds, params: _params, ...payload } = await request.validateUsing(updatePostValidator, {
+    const {
+      tagIds,
+      params: validatorParams,
+      ...payload
+    } = await request.validateUsing(updatePostValidator, {
       meta: { params },
     })
+    void validatorParams
 
     post.merge(payload)
-    
+
     if (payload.categoryId !== undefined) {
       post.categoryId = payload.categoryId || null
     }
@@ -135,7 +140,7 @@ export default class PostsController {
    * @destroy
    * @description Delete a post
    * @tag POSTS
-   * @paramPath id - The post ID - example: uuid
+   * @paramPath id - The post ID - example: 1
    * @responseBody 204 - No content
    */
   async destroy({ params, response }: HttpContext) {

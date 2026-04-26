@@ -29,7 +29,7 @@ export const createCategoryValidator = vine.compile(
 export const updateCategoryValidator = vine.compile(
   vine.object({
     params: vine.object({
-      id: vine.string().uuid(),
+      id: vine.number(),
     }),
     name: vine.string().trim().maxLength(100).optional(),
     slug: slug()

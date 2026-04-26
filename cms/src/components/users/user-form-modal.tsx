@@ -24,7 +24,7 @@ interface FormState {
   fullName: string
   email: string
   password: string
-  roleIds: string[]
+  roleIds: number[]
 }
 
 const initialState: FormState = {
@@ -117,7 +117,7 @@ export function UserFormModal({
     }
   }
 
-  function toggleRole(roleId: string) {
+  function toggleRole(roleId: number) {
     setForm((current) => ({
       ...current,
       roleIds: current.roleIds.includes(roleId)

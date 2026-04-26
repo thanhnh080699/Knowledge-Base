@@ -1,7 +1,5 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { withUuid } from '#models/helpers/uuid_mixin'
-import { compose } from '@adonisjs/core/helpers'
 
 export type SettingValue = string | number | boolean | Record<string, unknown> | unknown[] | null
 
@@ -21,9 +19,9 @@ function parseSettingValue(value: unknown): SettingValue {
   }
 }
 
-export default class Setting extends compose(BaseModel, withUuid) {
+export default class Setting extends BaseModel {
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
 
   @column()
   declare settingGroup: string

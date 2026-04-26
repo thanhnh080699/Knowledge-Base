@@ -21,9 +21,9 @@ export const createPostValidator = vine.compile(
     excerpt: vine.string().trim().optional(),
     coverImage: vine.string().trim().optional(),
     status: vine.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
-    categoryId: vine.string().uuid().exists({ table: 'categories', column: 'id' }).optional(),
-    seriesId: vine.string().uuid().exists({ table: 'series', column: 'id' }).optional(),
-    tagIds: vine.array(vine.string().uuid().exists({ table: 'tags', column: 'id' })).optional(),
+    categoryId: vine.number().exists({ table: 'categories', column: 'id' }).optional(),
+    seriesId: vine.number().exists({ table: 'series', column: 'id' }).optional(),
+    tagIds: vine.array(vine.number().exists({ table: 'tags', column: 'id' })).optional(),
   })
 )
 
@@ -33,7 +33,7 @@ export const createPostValidator = vine.compile(
 export const updatePostValidator = vine.compile(
   vine.object({
     params: vine.object({
-      id: vine.string().uuid(),
+      id: vine.number(),
     }),
     title: vine.string().trim().minLength(3).maxLength(255).optional(),
     slug: slug()
@@ -49,8 +49,8 @@ export const updatePostValidator = vine.compile(
     excerpt: vine.string().trim().optional(),
     coverImage: vine.string().trim().optional(),
     status: vine.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
-    categoryId: vine.string().uuid().exists({ table: 'categories', column: 'id' }).optional(),
-    seriesId: vine.string().uuid().exists({ table: 'series', column: 'id' }).optional(),
-    tagIds: vine.array(vine.string().uuid().exists({ table: 'tags', column: 'id' })).optional(),
+    categoryId: vine.number().exists({ table: 'categories', column: 'id' }).optional(),
+    seriesId: vine.number().exists({ table: 'series', column: 'id' }).optional(),
+    tagIds: vine.array(vine.number().exists({ table: 'tags', column: 'id' })).optional(),
   })
 )

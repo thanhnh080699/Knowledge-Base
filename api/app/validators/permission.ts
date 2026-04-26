@@ -18,7 +18,7 @@ export const createPermissionValidator = vine.compile(
 export const updatePermissionValidator = vine.compile(
   vine.object({
     params: vine.object({
-      id: vine.string().uuid(),
+      id: vine.number(),
     }),
     name: vine.string().trim().minLength(2).maxLength(50).optional(),
     slug: slug()

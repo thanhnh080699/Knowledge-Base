@@ -32,7 +32,7 @@ export const createProjectValidator = vine.compile(
 export const updateProjectValidator = vine.compile(
   vine.object({
     params: vine.object({
-      id: vine.string().uuid(),
+      id: vine.number(),
     }),
     title: vine.string().trim().minLength(3).maxLength(255).optional(),
     slug: slug()

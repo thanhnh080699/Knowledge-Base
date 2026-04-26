@@ -1,15 +1,13 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, belongsTo, manyToMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
-import { withUuid } from '#models/helpers/uuid_mixin'
-import { compose } from '@adonisjs/core/helpers'
 import Category from '#models/category'
 import Series from '#models/series'
 import Tag from '#models/tag'
 
-export default class Post extends compose(BaseModel, withUuid) {
+export default class Post extends BaseModel {
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
 
   @column()
   declare title: string
@@ -30,10 +28,10 @@ export default class Post extends compose(BaseModel, withUuid) {
   declare status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'
 
   @column()
-  declare categoryId: string | null
+  declare categoryId: number | null
 
   @column()
-  declare seriesId: string | null
+  declare seriesId: number | null
 
   @belongsTo(() => Category)
   declare category: BelongsTo<typeof Category>

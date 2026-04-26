@@ -64,7 +64,7 @@ test.group('Users', () => {
         password: 'password123',
         roleIds: [adminRole.id],
       })
-    const body = response.body() as { data: { roles: Array<{ id: string }> } }
+    const body = response.body() as { data: { roles: Array<{ id: number }> } }
 
     response.assertStatus(201)
     assert.equal(body.data.roles.length, 1)
@@ -84,7 +84,7 @@ test.group('Users', () => {
 
     const activeResponse = await client.get('/api/admin/users').loginAs(admin)
     activeResponse.assertStatus(200)
-    const activeUsers = activeResponse.body().data as Array<{ id: string }>
+    const activeUsers = activeResponse.body().data as Array<{ id: number }>
     assert.isFalse(activeUsers.some((item) => item.id === user.id))
 
     const deletedResponse = await client
@@ -93,7 +93,7 @@ test.group('Users', () => {
       .loginAs(admin)
 
     deletedResponse.assertStatus(200)
-    const deletedUsers = deletedResponse.body().data as Array<{ id: string }>
+    const deletedUsers = deletedResponse.body().data as Array<{ id: number }>
     assert.isTrue(deletedUsers.some((item) => item.id === user.id))
   })
 })

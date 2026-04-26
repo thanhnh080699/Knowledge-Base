@@ -26,7 +26,7 @@ export const createTagValidator = vine.compile(
 export const updateTagValidator = vine.compile(
   vine.object({
     params: vine.object({
-      id: vine.string().uuid(),
+      id: vine.number(),
     }),
     name: vine.string().trim().maxLength(50).optional(),
     slug: slug()
