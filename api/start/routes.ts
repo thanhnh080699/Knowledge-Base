@@ -16,6 +16,8 @@ import authRoutes from './routes/auth.js'
 import postsRoutes from './routes/posts.js'
 import categoriesRoutes from './routes/categories.js'
 import tagsRoutes from './routes/tags.js'
+import pagesRoutes from './routes/pages.js'
+import menusRoutes from './routes/menus.js'
 import projectsRoutes from './routes/projects.js'
 import servicesRoutes from './routes/services.js'
 import contactsRoutes from './routes/contacts.js'
@@ -55,6 +57,8 @@ router
     postsRoutes()
     categoriesRoutes()
     tagsRoutes()
+    pagesRoutes()
+    menusRoutes()
     projectsRoutes()
     servicesRoutes()
     contactsRoutes()

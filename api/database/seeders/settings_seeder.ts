@@ -302,6 +302,45 @@ const sitemapSettings: DefaultSetting[] = [
   },
 ]
 
+const googleAnalyticsSettings: DefaultSetting[] = [
+  {
+    settingGroup: 'google_analytics',
+    settingKey: 'google_analytics_enabled',
+    settingValue: false,
+    type: 'boolean',
+    label: 'Enable Google Analytics',
+    description: 'Whether to enable Google Analytics tracking on the public website.',
+    sortOrder: 10,
+  },
+  {
+    settingGroup: 'google_analytics',
+    settingKey: 'google_analytics_measurement_id',
+    settingValue: '',
+    type: 'string',
+    label: 'Measurement ID',
+    description: 'The GA4 Measurement ID (G-XXXXXXXXXX).',
+    sortOrder: 20,
+  },
+  {
+    settingGroup: 'google_analytics',
+    settingKey: 'google_analytics_property_id',
+    settingValue: '',
+    type: 'string',
+    label: 'Property ID',
+    description: 'The GA4 Property ID for reporting (found in Admin > Property Settings).',
+    sortOrder: 30,
+  },
+  {
+    settingGroup: 'google_analytics',
+    settingKey: 'google_analytics_service_account',
+    settingValue: {},
+    type: 'json',
+    label: 'Service Account JSON',
+    description: 'The Google Service Account JSON key for reporting API access.',
+    sortOrder: 40,
+  },
+]
+
 export default class SettingsSeeder extends BaseSeeder {
   async run() {
     const settings = [
@@ -309,6 +348,7 @@ export default class SettingsSeeder extends BaseSeeder {
       ...emailSettings,
       ...contactSettings,
       ...sitemapSettings,
+      ...googleAnalyticsSettings,
     ]
 
     for (const setting of settings) {

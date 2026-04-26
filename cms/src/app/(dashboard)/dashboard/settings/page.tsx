@@ -80,6 +80,17 @@ const sections: SettingSection[] = [
       },
     ],
   },
+  {
+    title: 'Others',
+    items: [
+      {
+        title: 'Google Analytics',
+        description: 'Connect and track Google Analytics directly in CMS',
+        href: '/dashboard/settings/others/google-analytics',
+        icon: Globe2,
+      },
+    ],
+  },
 ]
 
 export default function SettingsPage() {

@@ -1,30 +1,29 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import type { LucideIcon } from 'lucide-react';
-import { useSidebarStore } from '@/stores/sidebar';
-import { cn } from '@/lib/utils';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { LucideIcon } from "lucide-react";
+import { useSidebarStore } from "@/stores/sidebar";
+import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   FileText,
   FolderOpen,
   Settings,
   Menu,
-  MessageSquare,
   Briefcase,
   ChevronDown,
   Shield,
   Tag,
-  Mail,
   Package,
   Image,
-  Palette,
-} from 'lucide-react';
-import { Button } from '../ui/button';
-import { useState } from 'react';
-import { useSettingsGroup } from '@/hooks/queries/use-settings';
-import { absoluteCdnUrl } from '@/lib/utils';
+  Navigation,
+  Files,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import { useSettingsGroup } from "@/hooks/queries/use-settings";
+import { absoluteCdnUrl } from "@/lib/utils";
 
 type NavItem = {
   name: string;
@@ -40,45 +39,43 @@ type NavGroup = {
 
 const navigation: NavGroup[] = [
   {
-    group: 'DASHBOARD',
+    group: "DASHBOARD",
+    items: [{ name: "Dashboard", href: "/dashboard", icon: LayoutDashboard }],
+  },
+  {
+    group: "CONTENT",
     items: [
-      { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+      { name: "Posts", href: "/dashboard/posts", icon: FileText },
+      { name: "Pages", href: "/dashboard/pages", icon: Files },
+      { name: "Categories", href: "/dashboard/categories", icon: FolderOpen },
+      { name: "Tags", href: "/dashboard/tags", icon: Tag },
+      { name: "Menus", href: "/dashboard/menus", icon: Navigation },
     ],
   },
   {
-    group: 'CONTENT',
+    group: "MEDIA MANAGER",
+    items: [{ name: "Media Library", href: "/dashboard/media", icon: Image }],
+  },
+  {
+    group: "PORTFOLIO",
     items: [
-      { name: 'Posts', href: '/dashboard/posts', icon: FileText },
-      { name: 'Categories', href: '/dashboard/categories', icon: FolderOpen },
-      { name: 'Tags', href: '/dashboard/tags', icon: Tag },
+      { name: "Projects", href: "/dashboard/projects", icon: Package },
+      { name: "Services", href: "/dashboard/services", icon: Briefcase },
     ],
   },
   {
-    group: 'MEDIA MANAGER',
-    items: [
-      { name: 'Media Library', href: '/dashboard/media', icon: Image },
-    ],
-  },
-  {
-    group: 'PORTFOLIO',
-    items: [
-      { name: 'Projects', href: '/dashboard/projects', icon: Package },
-      { name: 'Services', href: '/dashboard/services', icon: Briefcase },
-    ],
-  },
-  {
-    group: 'SYSTEM',
+    group: "SYSTEM",
     items: [
       {
-        name: 'Users & ACL',
+        name: "Users & ACL",
         icon: Shield,
         children: [
-          { name: 'Users', href: '/dashboard/users' },
-          { name: 'Roles', href: '/dashboard/roles' },
-          { name: 'Permissions', href: '/dashboard/permissions' },
+          { name: "Users", href: "/dashboard/users" },
+          { name: "Roles", href: "/dashboard/roles" },
+          { name: "Permissions", href: "/dashboard/permissions" },
         ],
       },
-      { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+      { name: "Settings", href: "/dashboard/settings", icon: Settings },
     ],
   },
 ];
@@ -86,53 +83,61 @@ const navigation: NavGroup[] = [
 export function Sidebar() {
   const pathname = usePathname();
   const { isOpen, toggle } = useSidebarStore();
-  const [openMenus, setOpenMenus] = useState<string[]>(['Users & ACL']);
+  const [openMenus, setOpenMenus] = useState<string[]>(["Users & ACL"]);
 
   const toggleMenu = (name: string) => {
     setOpenMenus((prev) =>
-      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]
+      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name],
     );
   };
 
-  const { data: appearance } = useSettingsGroup('admin-appearance');
+  const { data: appearance } = useSettingsGroup("admin-appearance");
   const adminLogo = appearance?.values?.admin_logo as string;
 
   return (
     <div
       className={cn(
         "flex flex-col border-r border-[var(--app-sidebar-border)] bg-[var(--app-sidebar-bg)] text-[var(--app-sidebar-text)] transition-all duration-300",
-        isOpen ? "w-64" : "w-16"
+        isOpen ? "w-64" : "w-16",
       )}
     >
       <div className="flex h-16 items-center border-b border-[var(--app-sidebar-border)] px-4">
         {isOpen && (
           <div className="flex items-center gap-2 flex-1">
             {adminLogo ? (
-              <img src={absoluteCdnUrl(adminLogo)} alt="Logo" className="h-8 w-auto object-contain" />
+              <img
+                src={absoluteCdnUrl(adminLogo)}
+                alt="Logo"
+                className="h-8 w-auto object-contain"
+              />
             ) : (
               <>
                 <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--app-brand-badge-bg)]">
-                  <span className="text-xl font-bold text-[var(--app-brand-badge-text)]">T</span>
+                  <span className="text-xl font-bold text-[var(--app-brand-badge-text)]">
+                    T
+                  </span>
                 </div>
-                <span className="text-lg font-bold tracking-tight text-[var(--app-sidebar-text-strong)]">Thanhnh.</span>
+                <span className="text-lg font-bold tracking-tight text-[var(--app-sidebar-text-strong)]">
+                  Thanhnh.
+                </span>
               </>
             )}
           </div>
         )}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={toggle} 
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggle}
           className={cn(
             "text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-item-hover-bg)] hover:text-[var(--app-sidebar-item-hover-text)]",
             !isOpen && "mx-auto",
-            isOpen && "ml-auto"
+            isOpen && "ml-auto",
           )}
         >
           <Menu className="h-5 w-5" />
         </Button>
       </div>
-      
+
       <nav className="flex-1 px-3 py-4 overflow-y-auto space-y-6">
         {navigation.map((group) => (
           <div key={group.group} className="space-y-1">
@@ -145,7 +150,10 @@ export function Sidebar() {
               {group.items.map((item) => {
                 const hasChildren = !!item.children;
                 const isMenuOpen = openMenus.includes(item.name);
-                const isActive = item.href ? (pathname === item.href || pathname.startsWith(`${item.href}/`)) : item.children?.some(c => pathname === c.href);
+                const isActive = item.href
+                  ? pathname === item.href ||
+                    pathname.startsWith(`${item.href}/`)
+                  : item.children?.some((c) => pathname === c.href);
 
                 return (
                   <div key={item.name} className="space-y-1">
@@ -157,11 +165,19 @@ export function Sidebar() {
                           isActive
                             ? "bg-[var(--app-sidebar-item-active-bg)] text-[var(--app-sidebar-item-active-text)]"
                             : "hover:bg-[var(--app-sidebar-item-hover-bg)] hover:text-[var(--app-sidebar-item-hover-text)]",
-                          !isOpen && "justify-center px-2"
+                          !isOpen && "justify-center px-2",
                         )}
                         title={!isOpen ? item.name : undefined}
                       >
-                        <item.icon className={cn("h-5 w-5 shrink-0", isOpen && "mr-3", isActive ? "text-[var(--app-sidebar-item-active-text)]" : "text-[var(--app-sidebar-icon)] group-hover:text-[var(--app-sidebar-item-hover-text)]")} />
+                        <item.icon
+                          className={cn(
+                            "h-5 w-5 shrink-0",
+                            isOpen && "mr-3",
+                            isActive
+                              ? "text-[var(--app-sidebar-item-active-text)]"
+                              : "text-[var(--app-sidebar-icon)] group-hover:text-[var(--app-sidebar-item-hover-text)]",
+                          )}
+                        />
                         {isOpen && <span>{item.name}</span>}
                       </Link>
                     ) : (
@@ -172,14 +188,29 @@ export function Sidebar() {
                           isActive
                             ? "bg-[var(--app-sidebar-item-active-bg)] text-[var(--app-sidebar-item-active-text)]"
                             : "hover:bg-[var(--app-sidebar-item-hover-bg)] hover:text-[var(--app-sidebar-item-hover-text)]",
-                          !isOpen && "justify-center px-2"
+                          !isOpen && "justify-center px-2",
                         )}
                       >
-                        <item.icon className={cn("h-5 w-5 shrink-0", isOpen && "mr-3", isActive ? "text-[var(--app-sidebar-item-active-text)]" : "text-[var(--app-sidebar-icon)] group-hover:text-[var(--app-sidebar-item-hover-text)]")} />
+                        <item.icon
+                          className={cn(
+                            "h-5 w-5 shrink-0",
+                            isOpen && "mr-3",
+                            isActive
+                              ? "text-[var(--app-sidebar-item-active-text)]"
+                              : "text-[var(--app-sidebar-icon)] group-hover:text-[var(--app-sidebar-item-hover-text)]",
+                          )}
+                        />
                         {isOpen && (
                           <>
-                            <span className="flex-1 text-left">{item.name}</span>
-                            <ChevronDown className={cn("h-4 w-4 transition-transform", isMenuOpen && "rotate-180")} />
+                            <span className="flex-1 text-left">
+                              {item.name}
+                            </span>
+                            <ChevronDown
+                              className={cn(
+                                "h-4 w-4 transition-transform",
+                                isMenuOpen && "rotate-180",
+                              )}
+                            />
                           </>
                         )}
                       </button>
@@ -197,7 +228,7 @@ export function Sidebar() {
                                 "block rounded-md px-3 py-1.5 text-xs transition-colors",
                                 isChildActive
                                   ? "bg-[var(--app-sidebar-item-active-bg)] text-[var(--app-sidebar-item-active-text)]"
-                                  : "text-[var(--app-sidebar-subitem-text)] hover:text-[var(--app-sidebar-item-hover-text)]"
+                                  : "text-[var(--app-sidebar-subitem-text)] hover:text-[var(--app-sidebar-item-hover-text)]",
                               )}
                             >
                               {child.name}
@@ -215,13 +246,17 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-[var(--app-sidebar-border)] p-4">
-        <div className={cn("flex items-center gap-3", !isOpen && "justify-center")}>
+        <div
+          className={cn("flex items-center gap-3", !isOpen && "justify-center")}
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--app-sidebar-avatar-bg)] text-xs font-bold text-[var(--app-sidebar-avatar-text)]">
             N
           </div>
           {isOpen && (
             <div className="flex-1 min-w-0">
-              <p className="truncate text-sm font-medium text-[var(--app-sidebar-text-strong)]">Logout</p>
+              <p className="truncate text-sm font-medium text-[var(--app-sidebar-text-strong)]">
+                Logout
+              </p>
             </div>
           )}
         </div>

@@ -115,4 +115,31 @@ export default class SettingsController {
       })
     }
   }
+
+  /**
+   * @getPublicSettings
+   * @tag SETTINGS
+   * @description Get public settings for the frontend
+   * @responseBody 200 - { data: object }
+   */
+  async getPublicSettings({ response }: HttpContext) {
+    const publicKeys = [
+      'site_name',
+      'site_description',
+      'site_url',
+      'google_analytics_enabled',
+      'google_analytics_measurement_id',
+      'admin_logo',
+      'admin_favicon',
+    ]
+
+    const settings = await Setting.query().whereIn('setting_key', publicKeys)
+
+    const values = settings.reduce<Record<string, SettingValue>>((carry, setting) => {
+      carry[setting.settingKey] = setting.settingValue
+      return carry
+    }, {})
+
+    return response.ok({ data: values })
+  }
 }

@@ -23,6 +23,14 @@ export const ACL_MODULES = {
     name: 'Tags',
     permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
+  PAGES: {
+    name: 'Pages',
+    permissions: ['create', 'read', 'update', 'delete', 'publish', 'manage'],
+  },
+  MENUS: {
+    name: 'Menus',
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
+  },
   PROJECTS: {
     name: 'Projects',
     permissions: ['create', 'read', 'update', 'delete', 'manage'],
