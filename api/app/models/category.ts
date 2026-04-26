@@ -15,10 +15,10 @@ export default class Category extends BaseModel {
   declare description: string | null
 
   @column()
-  declare icon: string | null
+  declare image: string | null
 
   @column()
-  declare color: string | null
+  declare icon: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

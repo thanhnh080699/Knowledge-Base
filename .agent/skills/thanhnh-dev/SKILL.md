@@ -107,6 +107,13 @@ thanhnh.id.vn/
 - **Luôn có file test**: Mọi feature mới hoặc bug fix ĐỀU PHẢI có file test tương ứng.
 - **Pass Test trước khi Commit**: KHÔNG commit hoặc push code nếu chưa pass toàn bộ test suite của project đó.
 
+### 🖼️ Media & Upload Standards (Toàn dự án)
+- **Centralized Upload**: Mọi hành động upload file ĐỀU PHẢI thông qua API Media chuyên dụng (`/admin/media/upload`).
+- **Business Controllers**: Các business controller (như `CategoriesController`, `PostsController`) TUYỆT ĐỐI KHÔNG xử lý file upload trực tiếp. Chúng chỉ nhận chuỗi URL/Path từ frontend.
+- **Two-Step Upload Flow**: Frontend thực hiện upload file lên Media API trước → nhận về URL → sau đó mới gửi URL này kèm theo payload nghiệp vụ đến business API.
+- **Image Display**: Luôn dùng helper `absoluteCdnUrl` (trong CMS) hoặc logic tương đương để hiển thị ảnh. Helper này chịu trách nhiệm gắn thêm CDN URL nếu đường dẫn trong DB là tương đối.
+- **CDN Folder**: Phân loại ảnh theo module tương ứng (ví dụ: `Categories`, `Posts`, `Settings`) khi upload để quản lý tập trung.
+
 ### API (AdonisJS v6)
 - **MariaDB Local**: host: `192.168.11.254`, user: `thanhnh.id.vn`, pass: `thanhnh.id.vn`, db: `thanhnh.id.vn`.
 - **UUID** — Dùng `beforeCreate` hook + `randomUUID()` (Node.js built-in). Không dùng auto-increment ID.

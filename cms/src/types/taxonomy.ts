@@ -4,7 +4,7 @@ export interface Category {
   slug: string
   description: string | null
   icon: string | null
-  color: string | null
+  image: string | null
   createdAt: string | null
   updatedAt: string | null
 }
@@ -28,7 +28,7 @@ export interface CreateCategoryPayload {
   slug: string
   description?: string
   icon?: string
-  color?: string
+  image?: string | File
 }
 
 export type UpdateCategoryPayload = Partial<CreateCategoryPayload>

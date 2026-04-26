@@ -8,11 +8,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Modal } from '@/components/ui/modal'
 import { UserFormModal } from '@/components/users/user-form-modal'
 import { useUsers, useUsersMeta } from '@/hooks/queries/use-users'
-import { useCreateUser, useDeleteUser, useUpdateUser, useForceDeleteUser } from '@/hooks/mutations/use-user-mutations'
+import { useCreateUser, useDeleteUser, useUpdateUser, useForceDeleteUser, useChangePassword } from '@/hooks/mutations/use-user-mutations'
 import { formatDateTime, formatDisplayId } from '@/lib/admin-format'
 import type { CreateUserPayload, UpdateUserPayload, User } from '@/types/user'
 import type { EntityStatusFilter } from '@/types/acl'
-import { Filter, Pencil, Plus, RotateCcw, Search, Trash2, UserRound } from 'lucide-react'
+import { Filter, Key, Pencil, Plus, RotateCcw, Search, Trash2, UserRound } from 'lucide-react'
 
 interface DeleteState {
   ids: number[]
@@ -30,6 +30,8 @@ export default function UsersPage() {
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [changingPasswordUser, setChangingPasswordUser] = useState<User | null>(null)
+  const [newPassword, setNewPassword] = useState('')
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
 
   const filters = useMemo(
@@ -47,6 +49,7 @@ export default function UsersPage() {
   const updateUser = useUpdateUser()
   const deleteUser = useDeleteUser()
   const forceDeleteUser = useForceDeleteUser()
+  const changePassword = useChangePassword()
 
   const roles = meta?.roles ?? []
   const trashCount = meta?.trashCount ?? 0
@@ -105,6 +108,19 @@ export default function UsersPage() {
 
     setSelectedIds((current) => current.filter((id) => !deleteState.ids.includes(id)))
     setDeleteState(null)
+  }
+
+  async function handleChangePassword() {
+    if (!changingPasswordUser || !newPassword.trim()) {
+      return
+    }
+
+    await changePassword.mutateAsync({
+      id: changingPasswordUser.id,
+      password: newPassword,
+    })
+    setChangingPasswordUser(null)
+    setNewPassword('')
   }
 
   return (
@@ -267,6 +283,15 @@ export default function UsersPage() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="h-8 w-8 text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)] hover:text-amber-600"
+                            disabled={!!user.deletedAt}
+                            onClick={() => setChangingPasswordUser(user)}
+                          >
+                            <Key className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             className="h-8 w-8 text-[var(--app-muted)] hover:bg-[var(--app-danger-hover-bg)] hover:text-[var(--app-danger-soft-fg)]"
                             onClick={() =>
                               setDeleteState({
@@ -331,6 +356,46 @@ export default function UsersPage() {
           <Button variant="destructive" isLoading={deleteUser.isPending || forceDeleteUser.isPending} onClick={handleDeleteConfirmed}>
             Delete
           </Button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!changingPasswordUser}
+        onClose={() => {
+          setChangingPasswordUser(null)
+          setNewPassword('')
+        }}
+        title="Change Password"
+        description={`Set a new password for ${changingPasswordUser?.email}. All current sessions for this user will be terminated.`}
+      >
+        <div className="mt-4 space-y-4">
+          <div className="space-y-2">
+            <Input
+              type="password"
+              placeholder="Enter new password (min 4 characters)"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoFocus
+            />
+          </div>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setChangingPasswordUser(null)
+                setNewPassword('')
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              isLoading={changePassword.isPending}
+              disabled={newPassword.length < 4}
+              onClick={handleChangePassword}
+            >
+              Update Password
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>

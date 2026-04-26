@@ -211,7 +211,7 @@ export function UserFormModal({
             <Typography variant="muted" className="mt-0">
               User will receive all permissions from the selected roles.
             </Typography>
-            <div className="flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2 max-h-[250px] overflow-y-auto pr-2 scrollbar-thin">
               {selectedPermissions.length > 0 ? selectedPermissions.map((permission) => (
                 <Tag key={permission.slug} variant="secondary">
                   {permission.slug}

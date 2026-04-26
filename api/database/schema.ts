@@ -33,10 +33,8 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class CategorySchema extends BaseModel {
-  static $columns = ['color', 'createdAt', 'description', 'icon', 'id', 'name', 'slug', 'updatedAt'] as const
+  static $columns = ['createdAt', 'description', 'icon', 'id', 'image', 'name', 'slug', 'updatedAt'] as const
   $columns = CategorySchema.$columns
-  @column()
-  declare color: string | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
@@ -45,6 +43,8 @@ export class CategorySchema extends BaseModel {
   declare icon: string | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare image: string | null
   @column()
   declare name: string
   @column()

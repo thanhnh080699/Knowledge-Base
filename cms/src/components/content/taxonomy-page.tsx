@@ -26,6 +26,7 @@ import type {
   UpdateTagPayload,
 } from '@/types/taxonomy'
 import { FolderOpen, Pencil, Plus, RotateCcw, Search, TagIcon, Trash2 } from 'lucide-react'
+import { absoluteCdnUrl } from '@/lib/utils'
 
 type TaxonomyKind = 'category' | 'tag'
 type TaxonomyItem = Category | Tag
@@ -206,7 +207,7 @@ export function TaxonomyPage({ kind }: TaxonomyPageProps) {
                   <TableHead>Name</TableHead>
                   <TableHead>Slug</TableHead>
                   {kind === 'category' ? <TableHead>Description</TableHead> : null}
-                  {kind === 'category' ? <TableHead>Color</TableHead> : null}
+                  {kind === 'category' ? <TableHead>Image</TableHead> : null}
                   <TableHead>Created At</TableHead>
                   <TableHead className="pr-6 text-right">Actions</TableHead>
                 </TableRow>
@@ -252,16 +253,16 @@ export function TaxonomyPage({ kind }: TaxonomyPageProps) {
                       ) : null}
                       {isCategory(item) ? (
                         <TableCell>
-                          {item.color ? (
-                            <div className="flex items-center gap-2 text-xs text-[var(--app-muted)]">
-                              <span
-                                className="h-4 w-4 rounded border border-[var(--app-border)]"
-                                style={{ backgroundColor: item.color }}
+                          {item.image ? (
+                            <div className="relative h-10 w-10 overflow-hidden rounded border border-[var(--app-border)]">
+                              <img
+                                src={absoluteCdnUrl(item.image)}
+                                alt={item.name}
+                                className="h-full w-full object-cover"
                               />
-                              {item.color}
                             </div>
                           ) : (
-                            <span className="text-sm text-[var(--app-muted)]">Unset</span>
+                            <span className="text-sm text-[var(--app-muted)]">No Image</span>
                           )}
                         </TableCell>
                       ) : null}

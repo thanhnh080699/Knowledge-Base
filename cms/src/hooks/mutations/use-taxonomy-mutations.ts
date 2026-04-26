@@ -20,7 +20,24 @@ export function useCreateCategory() {
   return useMutation({
     mutationFn: async (payload: CreateCategoryPayload) => {
       try {
-        const { data } = await api.post<ApiItemResponse<Category>>('/admin/categories', payload)
+        let imageUrl = typeof payload.image === 'string' ? payload.image : undefined
+
+        if (payload.image instanceof File) {
+          const form = new FormData()
+          form.append('file', payload.image)
+          form.append('folder', 'Categories')
+          const { data: uploadData } = await api.post<ApiItemResponse<{ url: string }>>(
+            '/admin/media/upload',
+            form,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          )
+          imageUrl = uploadData.data.url
+        }
+
+        const { data } = await api.post<ApiItemResponse<Category>>('/admin/categories', {
+          ...payload,
+          image: imageUrl,
+        })
         return data.data
       } catch (error) {
         throw new Error(handleApiError(error, 'Không thể tạo danh mục'))
@@ -39,7 +56,24 @@ export function useUpdateCategory() {
   return useMutation({
     mutationFn: async ({ id, payload }: { id: number; payload: UpdateCategoryPayload }) => {
       try {
-        const { data } = await api.put<ApiItemResponse<Category>>(`/admin/categories/${id}`, payload)
+        let imageUrl = typeof payload.image === 'string' ? payload.image : undefined
+
+        if (payload.image instanceof File) {
+          const form = new FormData()
+          form.append('file', payload.image)
+          form.append('folder', 'Categories')
+          const { data: uploadData } = await api.post<ApiItemResponse<{ url: string }>>(
+            '/admin/media/upload',
+            form,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          )
+          imageUrl = uploadData.data.url
+        }
+
+        const { data } = await api.put<ApiItemResponse<Category>>(`/admin/categories/${id}`, {
+          ...payload,
+          image: imageUrl,
+        })
         return data.data
       } catch (error) {
         throw new Error(handleApiError(error, 'Không thể cập nhật danh mục'))

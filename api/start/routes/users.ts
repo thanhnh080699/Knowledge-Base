@@ -11,6 +11,9 @@ export default function usersRoutes() {
         .delete('users/:id/force', [UsersController, 'forceDestroy'])
         .use(middleware.acl({ permission: 'users.manage' }))
       router
+        .post('users/:id/change-password', [UsersController, 'changePassword'])
+        .use(middleware.acl({ permission: 'users.manage' }))
+      router
         .get('users/meta', [UsersController, 'meta'])
         .use(middleware.acl({ permission: 'users.manage' }))
       router

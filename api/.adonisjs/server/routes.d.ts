@@ -57,6 +57,7 @@ export type ScannedRoutes = {
     'contacts.index_requests': { paramsTuple?: []; params?: {} }
     'contacts.index_newsletters': { paramsTuple?: []; params?: {} }
     'users.force_destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.change_password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.meta': { paramsTuple?: []; params?: {} }
     'users.index': { paramsTuple?: []; params?: {} }
     'users.create': { paramsTuple?: []; params?: {} }
@@ -198,6 +199,7 @@ export type ScannedRoutes = {
     'services.store': { paramsTuple?: []; params?: {} }
     'contacts.store_request': { paramsTuple?: []; params?: {} }
     'contacts.subscribe_newsletter': { paramsTuple?: []; params?: {} }
+    'users.change_password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.store': { paramsTuple?: []; params?: {} }
     'roles.store': { paramsTuple?: []; params?: {} }
     'admin.media.upload': { paramsTuple?: []; params?: {} }

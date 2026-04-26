@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import Role from '#models/role'
-import { createUserValidator, updateUserValidator } from '#validators/user'
+import { createUserValidator, updateUserValidator, changePasswordValidator } from '#validators/user'
 import hash from '@adonisjs/core/services/hash'
 import { DateTime } from 'luxon'
 
@@ -122,15 +122,9 @@ export default class UsersController {
    */
   async update({ params, request, response }: HttpContext) {
     const user = await User.query().where('id', params.id).whereNull('deleted_at').firstOrFail()
-    const {
-      roleIds,
-      password,
-      params: paramsMeta,
-      ...payload
-    } = await request.validateUsing(updateUserValidator, {
+    const { roleIds, password, ...payload } = await request.validateUsing(updateUserValidator, {
       meta: { params },
     })
-    void paramsMeta
 
     user.merge(payload)
     if (password) {
@@ -181,6 +175,30 @@ export default class UsersController {
     }
 
     await user.delete()
+    return response.noContent()
+  }
+
+  /**
+   * @changePassword
+   * @tag USERS
+   * @description Change user password and invalidate all sessions
+   * @paramPath id - The user ID
+   * @requestBody { password: <string> }
+   * @responseBody 204 - No content
+   */
+  async changePassword({ params, request, response }: HttpContext) {
+    const user = await User.query().where('id', params.id).whereNull('deleted_at').firstOrFail()
+    const { password } = await request.validateUsing(changePasswordValidator)
+
+    user.password = password
+    await user.save()
+
+    // Invalidate all sessions
+    const tokens = await User.accessTokens.all(user)
+    for (const token of tokens) {
+      await User.accessTokens.delete(user, token.identifier)
+    }
+
     return response.noContent()
   }
 }

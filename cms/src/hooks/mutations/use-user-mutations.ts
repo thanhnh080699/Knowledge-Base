@@ -85,3 +85,21 @@ export function useForceDeleteUser() {
     },
   })
 }
+
+export function useChangePassword() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ id, password }: { id: number; password: string }) => {
+      try {
+        await api.post(`/admin/users/${id}/change-password`, { password })
+      } catch (error) {
+        throw new Error(handleApiError(error, 'Không thể đổi mật khẩu'))
+      }
+    },
+    onSuccess: () => {
+      toast.success('Đổi mật khẩu thành công. Các phiên đăng nhập cũ đã được đăng xuất.')
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+    },
+  })
+}

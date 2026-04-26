@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Modal } from '@/components/ui/modal'
-import { slugify } from '@/lib/utils'
+import { slugify, absoluteCdnUrl } from '@/lib/utils'
 import type {
   Category,
   CreateCategoryPayload,
@@ -14,6 +14,7 @@ import type {
   UpdateCategoryPayload,
   UpdateTagPayload,
 } from '@/types/taxonomy'
+import { ImageIcon, X } from 'lucide-react'
 
 type TaxonomyKind = 'category' | 'tag'
 type TaxonomyItem = Category | Tag
@@ -38,7 +39,8 @@ interface FormState {
   slug: string
   description: string
   icon: string
-  color: string
+  image: string
+  imageFile?: File | null
 }
 
 const emptyForm: FormState = {
@@ -46,7 +48,8 @@ const emptyForm: FormState = {
   slug: '',
   description: '',
   icon: '',
-  color: '',
+  image: '',
+  imageFile: null,
 }
 
 function isCategory(item?: TaxonomyItem | null): item is Category {
@@ -64,6 +67,8 @@ export function TaxonomyFormModal({
 }: TaxonomyFormModalProps) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [error, setError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [preview, setPreview] = useState<string | null>(null)
 
   useEffect(() => {
     if (!isOpen) {
@@ -71,18 +76,21 @@ export function TaxonomyFormModal({
     }
 
     if (mode === 'edit' && item) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+      const isCat = isCategory(item)
       setForm({
         name: item.name,
         slug: item.slug,
-        description: isCategory(item) ? item.description ?? '' : '',
-        icon: isCategory(item) ? item.icon ?? '' : '',
-        color: isCategory(item) ? item.color ?? '' : '',
+        description: isCat ? item.description ?? '' : '',
+        icon: isCat ? item.icon ?? '' : '',
+        image: isCat ? item.image ?? '' : '',
+        imageFile: null,
       })
+      setPreview(isCat ? item.image : null)
       return
     }
 
     setForm(emptyForm)
+    setPreview(null)
   }, [isOpen, item, mode])
 
   function updateName(name: string) {
@@ -91,6 +99,26 @@ export function TaxonomyFormModal({
       name,
       slug: mode === 'create' ? slugify(name) : current.slug,
     }))
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (file) {
+      setForm((current) => ({ ...current, imageFile: file }))
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  function removeImage() {
+    setForm((current) => ({ ...current, imageFile: null, image: '' }))
+    setPreview(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -113,7 +141,7 @@ export function TaxonomyFormModal({
             ...basePayload,
             description: form.description.trim() || undefined,
             icon: form.icon.trim() || undefined,
-            color: form.color.trim() || undefined,
+            image: form.imageFile || form.image || undefined,
           }
         : basePayload
 
@@ -170,8 +198,8 @@ export function TaxonomyFormModal({
                 id="category-description"
                 value={form.description}
                 onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-                className="min-h-24 w-full rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--app-border-strong)]"
-                placeholder="Mô tả ngắn cho danh mục"
+                className="min-h-32 w-full rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--app-border-strong)]"
+                placeholder="Nhập mô tả cho danh mục"
               />
             </div>
             <div className="grid gap-4 md:grid-cols-2">
@@ -185,13 +213,41 @@ export function TaxonomyFormModal({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="category-color">Màu</Label>
-                <Input
-                  id="category-color"
-                  value={form.color}
-                  onChange={(event) => setForm((current) => ({ ...current, color: event.target.value }))}
-                  placeholder="#2563eb"
-                />
+                <Label>Ảnh đại diện</Label>
+                <div className="flex items-center gap-4">
+                  <div
+                    className="group relative flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-[var(--app-border)] bg-[var(--app-surface-muted)] transition-all hover:border-[var(--app-accent-soft-fg)]"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    {preview ? (
+                      <img src={absoluteCdnUrl(preview)} alt="Preview" className="h-full w-full object-cover" />
+                    ) : (
+                      <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                      <span className="text-[10px] font-medium text-white">Thay đổi</span>
+                    </div>
+                  </div>
+                  {preview && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 gap-2 text-[var(--app-danger-soft-fg)] hover:bg-[var(--app-danger-soft-bg)]"
+                      onClick={removeImage}
+                    >
+                      <X className="h-4 w-4" />
+                      Xóa ảnh
+                    </Button>
+                  )}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </div>
               </div>
             </div>
           </>
