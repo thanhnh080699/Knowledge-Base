@@ -1,43 +1,43 @@
 export const ACL_MODULES = {
   USERS: {
     name: 'Users',
-    permissions: ['create', 'read', 'update', 'delete'],
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
   ROLES: {
     name: 'Roles',
-    permissions: ['create', 'read', 'update', 'delete'],
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
   PERMISSIONS: {
     name: 'Permissions',
-    permissions: ['read'],
+    permissions: ['read', 'manage'],
   },
   POSTS: {
     name: 'Posts',
-    permissions: ['create', 'read', 'update', 'delete', 'publish'],
+    permissions: ['create', 'read', 'update', 'delete', 'publish', 'manage'],
   },
   CATEGORIES: {
     name: 'Categories',
-    permissions: ['create', 'read', 'update', 'delete'],
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
   TAGS: {
     name: 'Tags',
-    permissions: ['create', 'read', 'update', 'delete'],
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
   PROJECTS: {
     name: 'Projects',
-    permissions: ['create', 'read', 'update', 'delete'],
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
   SERVICES: {
     name: 'Services',
-    permissions: ['create', 'read', 'update', 'delete'],
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
   CONTACTS: {
     name: 'Contacts',
-    permissions: ['read', 'delete'],
+    permissions: ['read', 'delete', 'manage'],
   },
   NEWSLETTERS: {
     name: 'Newsletters',
-    permissions: ['read', 'delete'],
+    permissions: ['read', 'delete', 'manage'],
   },
   SETTINGS: {
     name: 'Settings',
