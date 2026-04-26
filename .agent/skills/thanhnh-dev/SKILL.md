@@ -182,6 +182,7 @@ thanhnh.id.vn/
     - Nút hành động chính đặt cuối trang trong cột phải, gồm `Save settings` và `Reset` khi cần.
     - Không dùng sidebar phụ cho setting detail nếu màn hình là form cấu hình; ưu tiên block rõ ràng như `License`, `General Information`, `Website Identity`.
   - **Settings Assets** — Toàn bộ ảnh cấu hình hệ thống (Logo, Favicon, ...) PHẢI được upload vào thư mục `settings` trên CDN để quản lý tập trung.
+  - **Modal/Popup Scroll Standard** — Mọi popup/modal trong CMS PHẢI dùng component modal dùng chung có `max-height` theo viewport và vùng nội dung `overflow-y-auto`. Khi viewport thấp do DevTools/F12 hoặc màn hình nhỏ, modal không được bị cắt mất header/footer/action; người dùng phải cuộn được nội dung bên trong popup. Không khóa cứng chiều cao popup theo `h-screen`, `fixed height`, hoặc center-only layout không có scroll container.
 
 ### CDN (Golang)
 - Module name: `thanhnh/cdn` (cần refactor từ `meditour/cdn`).

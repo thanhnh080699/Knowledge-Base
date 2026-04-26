@@ -8,5 +8,7 @@ export default function authRoutes() {
     router.post('login', [AuthController, 'login'])
     router.post('logout', [AuthController, 'logout']).use(middleware.auth())
     router.get('me', [AuthController, 'me']).use(middleware.auth())
+    router.put('profile', [AuthController, 'updateProfile']).use(middleware.auth())
+    router.put('change-password', [AuthController, 'changePassword']).use(middleware.auth())
   }).prefix('auth')
 }

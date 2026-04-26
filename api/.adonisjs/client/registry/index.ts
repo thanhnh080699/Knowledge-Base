@@ -24,6 +24,18 @@ const routes = {
     tokens: [{"old":"/api/auth/me","type":0,"val":"api","end":""},{"old":"/api/auth/me","type":0,"val":"auth","end":""},{"old":"/api/auth/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['auth.me']['types'],
   },
+  'auth.update_profile': {
+    methods: ["PUT"],
+    pattern: '/api/auth/profile',
+    tokens: [{"old":"/api/auth/profile","type":0,"val":"api","end":""},{"old":"/api/auth/profile","type":0,"val":"auth","end":""},{"old":"/api/auth/profile","type":0,"val":"profile","end":""}],
+    types: placeholder as Registry['auth.update_profile']['types'],
+  },
+  'auth.change_password': {
+    methods: ["PUT"],
+    pattern: '/api/auth/change-password',
+    tokens: [{"old":"/api/auth/change-password","type":0,"val":"api","end":""},{"old":"/api/auth/change-password","type":0,"val":"auth","end":""},{"old":"/api/auth/change-password","type":0,"val":"change-password","end":""}],
+    types: placeholder as Registry['auth.change_password']['types'],
+  },
   'posts.public.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/posts',
@@ -323,6 +335,12 @@ const routes = {
     pattern: '/api/admin/users/:id/force',
     tokens: [{"old":"/api/admin/users/:id/force","type":0,"val":"api","end":""},{"old":"/api/admin/users/:id/force","type":0,"val":"admin","end":""},{"old":"/api/admin/users/:id/force","type":0,"val":"users","end":""},{"old":"/api/admin/users/:id/force","type":1,"val":"id","end":""},{"old":"/api/admin/users/:id/force","type":0,"val":"force","end":""}],
     types: placeholder as Registry['users.force_destroy']['types'],
+  },
+  'users.change_password': {
+    methods: ["POST"],
+    pattern: '/api/admin/users/:id/change-password',
+    tokens: [{"old":"/api/admin/users/:id/change-password","type":0,"val":"api","end":""},{"old":"/api/admin/users/:id/change-password","type":0,"val":"admin","end":""},{"old":"/api/admin/users/:id/change-password","type":0,"val":"users","end":""},{"old":"/api/admin/users/:id/change-password","type":1,"val":"id","end":""},{"old":"/api/admin/users/:id/change-password","type":0,"val":"change-password","end":""}],
+    types: placeholder as Registry['users.change_password']['types'],
   },
   'users.meta': {
     methods: ["GET","HEAD"],

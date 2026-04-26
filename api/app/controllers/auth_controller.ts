@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
-import { loginValidator } from '#validators/auth'
+import { loginValidator, updateProfileValidator, changePasswordValidator } from '#validators/auth'
+import Hash from '@adonisjs/core/services/hash'
 
 export default class AuthController {
   /**
@@ -65,4 +66,50 @@ export default class AuthController {
       data: freshUser,
     })
   }
+
+  /**
+   * @updateProfile
+   * @tag AUTH
+   * @description Update current authenticated user profile
+   * @requestBody {"fullName":"New Name", "email":"new@example.com"}
+   * @responseBody 200 - { message: "Profile updated successfully", data: <User> }
+   */
+  async updateProfile({ auth, request, response }: HttpContext) {
+    const user = auth.user!
+    const payload = await request.validateUsing(updateProfileValidator)
+
+    user.merge(payload)
+    await user.save()
+
+    return response.ok({
+      message: 'Profile updated successfully',
+      data: user,
+    })
+  }
+
+  /**
+   * @changePassword
+   * @tag AUTH
+   * @description Change current authenticated user password
+   * @requestBody {"currentPassword":"oldpassword", "newPassword":"newpassword", "newPassword_confirmation":"newpassword"}
+   * @responseBody 200 - { message: "Password changed successfully" }
+   * @responseBody 400 - { message: "Incorrect current password" }
+   */
+  async changePassword({ auth, request, response }: HttpContext) {
+    const user = auth.user!
+    const { currentPassword, newPassword } = await request.validateUsing(changePasswordValidator)
+
+    const isPasswordValid = await Hash.verify(user.password, currentPassword)
+    if (!isPasswordValid) {
+      return response.badRequest({ message: 'Incorrect current password' })
+    }
+
+    user.password = newPassword
+    await user.save()
+
+    return response.ok({
+      message: 'Password changed successfully',
+    })
+  }
 }
+

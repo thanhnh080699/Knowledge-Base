@@ -351,6 +351,34 @@ Xóa dữ liệu **BẮT BUỘC** phải qua Modal xác nhận:
 </Modal>
 ```
 
+#### Modal/Popup Scroll Standard
+
+Tất cả popup/modal trong CMS phải dùng modal component dùng chung từ `src/components/ui`. Component này phải xử lý tốt khi viewport bị thấp do DevTools/F12, split screen, hoặc màn hình nhỏ:
+
+- Overlay/modal wrapper dùng vùng `fixed inset-0` có `overflow-y-auto`.
+- Modal panel có `max-height` theo viewport, ví dụ `max-h-[calc(100dvh-4rem)]`.
+- Modal panel là flex column; header/action quan trọng không bị cắt, phần body dùng `overflow-y-auto`.
+- Khi modal mở, khóa scroll của page chính nhưng vẫn cho phép scroll nội dung trong modal.
+- Không tạo popup bằng layout chỉ `items-center justify-center` nếu panel không có `max-height` và scroll container.
+- Không dùng chiều cao cứng (`h-screen`, `height: 700px`, v.v.) cho form modal dài.
+
+Mẫu cấu trúc chuẩn:
+
+```tsx
+<div className="fixed inset-0 z-50 overflow-y-auto p-4 pointer-events-none">
+  <div className="flex min-h-full items-start justify-center py-4 sm:items-center">
+    <div className="pointer-events-auto flex max-h-[calc(100dvh-4rem)] w-full max-w-lg flex-col overflow-hidden rounded-xl border bg-[var(--app-surface)] shadow-lg">
+      <div className="shrink-0 border-b px-6 py-4">
+        {/* header */}
+      </div>
+      <div className="overflow-y-auto px-6 py-6">
+        {/* form/content */}
+      </div>
+    </div>
+  </div>
+</div>
+```
+
 ---
 
 ## 🎨 Tiêu chuẩn Giao diện (Aesthetics)

@@ -6,6 +6,8 @@ export interface ApiDefinition {
     login: typeof routes['auth.login']
     logout: typeof routes['auth.logout']
     me: typeof routes['auth.me']
+    updateProfile: typeof routes['auth.update_profile']
+    changePassword: typeof routes['auth.change_password']
   }
   posts: {
     public: {
@@ -80,6 +82,7 @@ export interface ApiDefinition {
   }
   users: {
     forceDestroy: typeof routes['users.force_destroy']
+    changePassword: typeof routes['users.change_password']
     meta: typeof routes['users.meta']
     index: typeof routes['users.index']
     create: typeof routes['users.create']

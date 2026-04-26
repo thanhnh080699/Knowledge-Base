@@ -7,6 +7,8 @@ export type ScannedRoutes = {
     'auth.login': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'auth.me': { paramsTuple?: []; params?: {} }
+    'auth.update_profile': { paramsTuple?: []; params?: {} }
+    'auth.change_password': { paramsTuple?: []; params?: {} }
     'posts.public.index': { paramsTuple?: []; params?: {} }
     'posts.public.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'posts.index': { paramsTuple?: []; params?: {} }
@@ -207,6 +209,8 @@ export type ScannedRoutes = {
     'settings.send_test_email': { paramsTuple?: []; params?: {} }
   }
   PUT: {
+    'auth.update_profile': { paramsTuple?: []; params?: {} }
+    'auth.change_password': { paramsTuple?: []; params?: {} }
     'posts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tags.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

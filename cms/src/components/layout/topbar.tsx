@@ -1,26 +1,16 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/stores/auth';
-import { useThemeStore } from '@/stores/theme';
-import { Button } from '../ui/button';
-import { Moon, Sun, LogOut, User, Search, Bell, Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Input } from '../ui/input';
+import { Moon, Sun, Search, Bell, Menu } from 'lucide-react';
+import { useThemeStore } from '@/stores/theme';
 import { useSidebarStore } from '@/stores/sidebar';
-import { toast } from 'sonner';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { UserMenu } from './user-menu';
 
 export function Topbar() {
-  const router = useRouter();
-  const { logout } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
   const { isOpen, toggle } = useSidebarStore();
-
-  const handleLogout = () => {
-    logout();
-    toast.success('Đăng xuất thành công');
-    router.push('/');
-  };
 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -42,7 +32,7 @@ export function Topbar() {
   };
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-topbar-bg)] px-4 shadow-sm backdrop-blur-md">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-topbar-bg)] px-4 shadow-sm backdrop-blur-md">
       <div className="flex flex-1 items-center gap-4">
         {!isOpen && (
           <Button variant="ghost" size="icon" onClick={toggle} className="lg:hidden">
@@ -66,19 +56,11 @@ export function Topbar() {
           {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
         </Button>
         
-        <div className="ml-2 flex items-center space-x-3 border-l border-[var(--app-border)] pl-2">
-          <div className="flex flex-col items-end mr-1 hidden sm:flex">
-            <span className="text-xs font-bold leading-tight text-[var(--foreground)]">Admin User</span>
-            <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--app-muted)]">Administrator</span>
-          </div>
-          <div className="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-[var(--app-border)] bg-[var(--app-bg)] transition-all hover:ring-2 hover:ring-[var(--app-border)]">
-            <User className="h-5 w-5 text-[var(--app-muted)]" />
-          </div>
-          <Button variant="ghost" size="icon" onClick={handleLogout} className="h-9 w-9 rounded-full text-[var(--app-muted)] transition-colors hover:bg-[var(--app-danger-hover-bg)] hover:text-[var(--app-danger-soft-fg)]">
-            <LogOut className="h-4 w-4" />
-          </Button>
+        <div className="ml-2 flex items-center border-l border-[var(--app-border)] pl-4">
+          <UserMenu />
         </div>
       </div>
     </header>
   );
 }
+
