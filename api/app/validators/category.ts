@@ -18,6 +18,8 @@ export const createCategoryValidator = vine.compile(
     name: vine.string().trim().maxLength(100),
     slug: slug().unique({ table: 'categories', column: 'slug' }),
     description: vine.string().trim().optional(),
+    metaTitle: vine.string().trim().maxLength(255).optional(),
+    metaDescription: vine.string().trim().optional(),
     icon: vine.string().trim().optional(),
     image: vine.string().trim().optional(),
   })
@@ -42,6 +44,8 @@ export const updateCategoryValidator = vine.compile(
       })
       .optional(),
     description: vine.string().trim().optional(),
+    metaTitle: vine.string().trim().maxLength(255).optional(),
+    metaDescription: vine.string().trim().optional(),
     icon: vine.string().trim().optional(),
     image: vine.string().trim().optional(),
   })

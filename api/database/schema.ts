@@ -33,7 +33,7 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class CategorySchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'icon', 'id', 'image', 'name', 'slug', 'updatedAt'] as const
+  static $columns = ['createdAt', 'description', 'icon', 'id', 'image', 'metaDescription', 'metaTitle', 'name', 'slug', 'updatedAt'] as const
   $columns = CategorySchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -45,6 +45,10 @@ export class CategorySchema extends BaseModel {
   declare id: number
   @column()
   declare image: string | null
+  @column()
+  declare metaDescription: string | null
+  @column()
+  declare metaTitle: string | null
   @column()
   declare name: string
   @column()
@@ -131,8 +135,10 @@ export class PostTagSchema extends BaseModel {
 }
 
 export class PostSchema extends BaseModel {
-  static $columns = ['categoryId', 'content', 'coverImage', 'createdAt', 'excerpt', 'id', 'seriesId', 'slug', 'status', 'title', 'updatedAt'] as const
+  static $columns = ['canonicalUrl', 'categoryId', 'content', 'coverImage', 'createdAt', 'deletedAt', 'excerpt', 'focusKeyword', 'id', 'metaDescription', 'metaTitle', 'publishedAt', 'seriesId', 'slug', 'status', 'title', 'updatedAt', 'views', 'wordpressId'] as const
   $columns = PostSchema.$columns
+  @column()
+  declare canonicalUrl: string | null
   @column()
   declare categoryId: number | null
   @column()
@@ -141,10 +147,20 @@ export class PostSchema extends BaseModel {
   declare coverImage: string | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column.dateTime()
+  declare deletedAt: DateTime | null
   @column()
   declare excerpt: string | null
+  @column()
+  declare focusKeyword: string | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare metaDescription: string | null
+  @column()
+  declare metaTitle: string | null
+  @column.dateTime()
+  declare publishedAt: DateTime | null
   @column()
   declare seriesId: number | null
   @column()
@@ -155,6 +171,10 @@ export class PostSchema extends BaseModel {
   declare title: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare views: number
+  @column()
+  declare wordpressId: number | null
 }
 
 export class ProjectSchema extends BaseModel {
@@ -284,12 +304,18 @@ export class SettingSchema extends BaseModel {
 }
 
 export class TagSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'name', 'slug', 'updatedAt'] as const
+  static $columns = ['createdAt', 'description', 'id', 'metaDescription', 'metaTitle', 'name', 'slug', 'updatedAt'] as const
   $columns = TagSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare description: string | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare metaDescription: string | null
+  @column()
+  declare metaTitle: string | null
   @column()
   declare name: string
   @column()

@@ -42,6 +42,12 @@ router.get('/docs', async () => {
   return AutoSwagger.default.json(router.toJSON(), swagger)
 })
 
+const SitemapsController = () => import('#controllers/sitemaps_controller')
+
+// Public routes (outside /api)
+router.get('/sitemap.xml', [SitemapsController, 'index'])
+router.get('/sitemap-:section.xml', [SitemapsController, 'section'])
+
 // API Routes
 router
   .group(() => {

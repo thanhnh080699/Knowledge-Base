@@ -48,14 +48,24 @@ test.group('Posts', (group) => {
       title: 'Test Post Functional',
       slug: 'test-post-functional',
       content: 'This is a test post content',
+      excerpt: 'Imported excerpt',
+      metaTitle: 'SEO title',
+      metaDescription: 'SEO description',
+      focusKeyword: 'adonis wordpress migration',
+      wordpressId: 987654,
+      views: 12,
+      publishedAt: '2026-04-26T08:30:00.000Z',
       status: 'PUBLISHED' as const,
     }
 
     const response = await client.post('/api/admin/posts').loginAs(admin).json(payload)
-    const createdPost = (response.body() as { data: { title: string } }).data
+    const createdPost = (response.body() as { data: { title: string; wordpressId: number; views: number } })
+      .data
 
     response.assertStatus(201)
     assert.equal(createdPost.title, payload.title)
+    assert.equal(createdPost.wordpressId, payload.wordpressId)
+    assert.equal(createdPost.views, payload.views)
   })
 
   test('cannot create post without permission', async ({ client }) => {
@@ -102,5 +112,19 @@ test.group('Posts', (group) => {
     const response = await client.delete(`/api/admin/posts/${post.id}`).loginAs(admin)
 
     response.assertStatus(204)
+  })
+
+  test('restore and force delete post as admin', async ({ client, assert }) => {
+    const post = await Post.query().where('slug', 'test-post-functional').whereNotNull('deleted_at').firstOrFail()
+
+    const restoreResponse = await client.post(`/api/admin/posts/${post.id}/restore`).loginAs(admin)
+    restoreResponse.assertStatus(200)
+    assert.isNull(restoreResponse.body().data.deletedAt)
+
+    const deleteResponse = await client.delete(`/api/admin/posts/${post.id}`).loginAs(admin)
+    deleteResponse.assertStatus(204)
+
+    const forceDeleteResponse = await client.delete(`/api/admin/posts/${post.id}/force`).loginAs(admin)
+    forceDeleteResponse.assertStatus(204)
   })
 })

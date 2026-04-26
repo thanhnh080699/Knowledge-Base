@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Modal } from '@/components/ui/modal'
+import { Textarea } from '@/components/ui/textarea'
 import { slugify, absoluteCdnUrl } from '@/lib/utils'
 import type {
   Category,
@@ -38,6 +39,8 @@ interface FormState {
   name: string
   slug: string
   description: string
+  metaTitle: string
+  metaDescription: string
   icon: string
   image: string
   imageFile?: File | null
@@ -47,13 +50,15 @@ const emptyForm: FormState = {
   name: '',
   slug: '',
   description: '',
+  metaTitle: '',
+  metaDescription: '',
   icon: '',
   image: '',
   imageFile: null,
 }
 
 function isCategory(item?: TaxonomyItem | null): item is Category {
-  return !!item && 'description' in item
+  return !!item && 'image' in item
 }
 
 export function TaxonomyFormModal({
@@ -77,10 +82,13 @@ export function TaxonomyFormModal({
 
     if (mode === 'edit' && item) {
       const isCat = isCategory(item)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         name: item.name,
         slug: item.slug,
         description: isCat ? item.description ?? '' : '',
+        metaTitle: item.metaTitle ?? '',
+        metaDescription: item.metaDescription ?? '',
         icon: isCat ? item.icon ?? '' : '',
         image: isCat ? item.image ?? '' : '',
         imageFile: null,
@@ -140,10 +148,17 @@ export function TaxonomyFormModal({
         ? {
             ...basePayload,
             description: form.description.trim() || undefined,
+            metaTitle: form.metaTitle.trim() || undefined,
+            metaDescription: form.metaDescription.trim() || undefined,
             icon: form.icon.trim() || undefined,
             image: form.imageFile || form.image || undefined,
           }
-        : basePayload
+        : {
+            ...basePayload,
+            description: form.description.trim() || undefined,
+            metaTitle: form.metaTitle.trim() || undefined,
+            metaDescription: form.metaDescription.trim() || undefined,
+          }
 
     try {
       await onSubmit(payload)
@@ -190,18 +205,40 @@ export function TaxonomyFormModal({
           </div>
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor={`${kind}-description`}>Mô tả</Label>
+          <Textarea
+            id={`${kind}-description`}
+            value={form.description}
+            onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
+            className="min-h-24"
+            placeholder="Mô tả ngắn dùng cho taxonomy archive và SEO"
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor={`${kind}-meta-title`}>SEO title</Label>
+            <Input
+              id={`${kind}-meta-title`}
+              value={form.metaTitle}
+              onChange={(event) => setForm((current) => ({ ...current, metaTitle: event.target.value }))}
+              placeholder="Tiêu đề SEO"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={`${kind}-meta-description`}>SEO description</Label>
+            <Input
+              id={`${kind}-meta-description`}
+              value={form.metaDescription}
+              onChange={(event) => setForm((current) => ({ ...current, metaDescription: event.target.value }))}
+              placeholder="Mô tả hiển thị trên Google"
+            />
+          </div>
+        </div>
+
         {kind === 'category' ? (
           <>
-            <div className="space-y-2">
-              <Label htmlFor="category-description">Mô tả</Label>
-              <textarea
-                id="category-description"
-                value={form.description}
-                onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-                className="min-h-32 w-full rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--app-border-strong)]"
-                placeholder="Nhập mô tả cho danh mục"
-              />
-            </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="category-icon">Icon</Label>

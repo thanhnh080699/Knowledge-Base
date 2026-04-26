@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -38,6 +39,8 @@ type TaxonomyPayload =
 
 interface TaxonomyPageProps {
   kind: TaxonomyKind
+  usePageForm?: boolean
+  pageBasePath?: string
 }
 
 interface DeleteState {
@@ -47,10 +50,10 @@ interface DeleteState {
 }
 
 function isCategory(item: TaxonomyItem): item is Category {
-  return 'description' in item
+  return 'image' in item
 }
 
-export function TaxonomyPage({ kind }: TaxonomyPageProps) {
+export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: TaxonomyPageProps) {
   const [query, setQuery] = useState('')
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -83,6 +86,8 @@ export function TaxonomyPage({ kind }: TaxonomyPageProps) {
       ? 'Manage content categories for documentation and posts.'
       : 'Manage quick labels used to classify posts.'
   const Icon = kind === 'category' ? FolderOpen : TagIcon
+  const useModalForm = !usePageForm
+  const basePath = pageBasePath ?? `/dashboard/${kind === 'category' ? 'categories' : 'tags'}`
 
   function toggleAll() {
     if (allSelected) {
@@ -176,10 +181,20 @@ export function TaxonomyPage({ kind }: TaxonomyPageProps) {
                 {selectedIds.length}
               </span>
             </Button>
-            <Button size="sm" className="h-10 gap-2 px-4" onClick={() => setIsCreateOpen(true)}>
-              <Plus className="h-4 w-4" />
-              Create New
-            </Button>
+            {useModalForm ? (
+              <Button size="sm" className="h-10 gap-2 px-4" onClick={() => setIsCreateOpen(true)}>
+                <Plus className="h-4 w-4" />
+                Create New
+              </Button>
+            ) : (
+              <Link
+                href={`${basePath}/create`}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-[var(--foreground)] px-4 text-sm font-medium text-[var(--app-surface)] transition-colors hover:opacity-90"
+              >
+                <Plus className="h-4 w-4" />
+                Create New
+              </Link>
+            )}
           </div>
         </div>
 
@@ -271,14 +286,23 @@ export function TaxonomyPage({ kind }: TaxonomyPageProps) {
                       </TableCell>
                       <TableCell className="pr-6 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)] hover:text-[var(--app-accent-soft-fg)]"
-                            onClick={() => setEditingItem(item)}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
+                          {useModalForm ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)] hover:text-[var(--app-accent-soft-fg)]"
+                              onClick={() => setEditingItem(item)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          ) : (
+                            <Link
+                              href={`${basePath}/${item.id}`}
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--app-muted)] transition-colors hover:bg-[var(--app-surface-hover)] hover:text-[var(--app-accent-soft-fg)]"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Link>
+                          )}
                           <Button
                             variant="ghost"
                             size="icon"
@@ -309,24 +333,28 @@ export function TaxonomyPage({ kind }: TaxonomyPageProps) {
         </div>
       </div>
 
-      <TaxonomyFormModal
-        isOpen={isCreateOpen}
-        kind={kind}
-        mode="create"
-        isSubmitting={isSubmitting}
-        onClose={() => setIsCreateOpen(false)}
-        onSubmit={handleCreate}
-      />
+      {useModalForm ? (
+        <>
+          <TaxonomyFormModal
+            isOpen={isCreateOpen}
+            kind={kind}
+            mode="create"
+            isSubmitting={isSubmitting}
+            onClose={() => setIsCreateOpen(false)}
+            onSubmit={handleCreate}
+          />
 
-      <TaxonomyFormModal
-        isOpen={!!editingItem}
-        kind={kind}
-        mode="edit"
-        item={editingItem}
-        isSubmitting={isSubmitting}
-        onClose={() => setEditingItem(null)}
-        onSubmit={handleUpdate}
-      />
+          <TaxonomyFormModal
+            isOpen={!!editingItem}
+            kind={kind}
+            mode="edit"
+            item={editingItem}
+            isSubmitting={isSubmitting}
+            onClose={() => setEditingItem(null)}
+            onSubmit={handleUpdate}
+          />
+        </>
+      ) : null}
 
       <Modal
         isOpen={!!deleteState}

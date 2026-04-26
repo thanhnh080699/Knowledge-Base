@@ -10,6 +10,12 @@ export default function postsRoutes() {
 
   // Admin
   router.group(() => {
+    router
+      .post('posts/:id/restore', [PostsController, 'restore'])
+      .use(middleware.acl({ permission: 'posts.manage' }))
+    router
+      .delete('posts/:id/force', [PostsController, 'forceDestroy'])
+      .use(middleware.acl({ permission: 'posts.manage' }))
     router.resource('posts', PostsController)
       .use('*', middleware.acl({ permission: 'posts.manage' }))
   }).prefix('admin').use(middleware.auth())

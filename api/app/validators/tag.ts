@@ -17,6 +17,9 @@ export const createTagValidator = vine.compile(
   vine.object({
     name: vine.string().trim().maxLength(50),
     slug: slug().unique({ table: 'tags', column: 'slug' }),
+    description: vine.string().trim().optional(),
+    metaTitle: vine.string().trim().maxLength(255).optional(),
+    metaDescription: vine.string().trim().optional(),
   })
 )
 
@@ -29,6 +32,9 @@ export const updateTagValidator = vine.compile(
       id: vine.number(),
     }),
     name: vine.string().trim().maxLength(50).optional(),
+    description: vine.string().trim().optional(),
+    metaTitle: vine.string().trim().maxLength(255).optional(),
+    metaDescription: vine.string().trim().optional(),
     slug: slug()
       .unique({
         table: 'tags',

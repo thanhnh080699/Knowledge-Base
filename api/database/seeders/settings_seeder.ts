@@ -263,9 +263,53 @@ const contactSettings: DefaultSetting[] = [
   },
 ]
 
+const sitemapSettings: DefaultSetting[] = [
+  {
+    settingGroup: 'sitemap',
+    settingKey: 'enable_sitemap',
+    settingValue: true,
+    type: 'boolean',
+    label: 'Enable sitemap',
+    description: 'Whether to generate and serve the XML sitemap.',
+    sortOrder: 10,
+  },
+  {
+    settingGroup: 'sitemap',
+    settingKey: 'sitemap_items_per_page',
+    settingValue: 500,
+    type: 'number',
+    label: 'Sitemap items per page',
+    description: 'Maximum number of URLs allowed in a single sitemap file.',
+    sortOrder: 20,
+  },
+  {
+    settingGroup: 'sitemap',
+    settingKey: 'enable_sitemap_cache',
+    settingValue: true,
+    type: 'boolean',
+    label: 'Enable sitemap cache',
+    description: 'Whether to cache the sitemap data for better performance.',
+    sortOrder: 30,
+  },
+  {
+    settingGroup: 'sitemap',
+    settingKey: 'sitemap_cache_duration',
+    settingValue: 60,
+    type: 'number',
+    label: 'Sitemap cache duration',
+    description: 'Length of time (in minutes) to cache the sitemap data.',
+    sortOrder: 40,
+  },
+]
+
 export default class SettingsSeeder extends BaseSeeder {
   async run() {
-    const settings = [...overviewSettings, ...emailSettings, ...contactSettings]
+    const settings = [
+      ...overviewSettings,
+      ...emailSettings,
+      ...contactSettings,
+      ...sitemapSettings,
+    ]
 
     for (const setting of settings) {
       await Setting.updateOrCreate(

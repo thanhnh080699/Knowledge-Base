@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, afterSave, afterDelete } from '@adonisjs/lucid/orm'
+import { clearSitemapCache } from '#helpers/sitemap'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -37,4 +38,14 @@ export default class Project extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @afterSave()
+  static async clearSitemapAfterSave() {
+    await clearSitemapCache()
+  }
+
+  @afterDelete()
+  static async clearSitemapAfterDelete() {
+    await clearSitemapCache()
+  }
 }
