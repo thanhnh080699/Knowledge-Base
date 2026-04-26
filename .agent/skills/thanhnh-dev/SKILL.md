@@ -115,6 +115,8 @@ thanhnh.id.vn/
 - **Validator** — Dùng VineJS (`vine.compile`). Không import Zod.
 - **Relations** — Luôn dùng `.preload()` khi cần data liên quan. Không query thủ công bằng raw ID.
 - **Swagger** — Mọi bộ CRUD sau khi hoàn thiện PHẢI được bổ sung vào Swagger documentation. Truy cập tại `/swagger`.
+- **ACL Sync** — Sau khi thêm module hoặc permission mới vào `ACL_MODULES`, PHẢI chạy `node ace sync:permissions` để cập nhật database.
+- **Seeding** — `AclSeeder` chịu trách nhiệm đồng bộ quyền, khởi tạo role và tạo admin mặc định. Luôn chạy seeder này khi setup môi trường mới.
 
 ### FE (Next.js 15)
 - **KHÔNG glassmorphism** — Border + flat color tuyệt đối.
@@ -209,7 +211,8 @@ redirects: async () => [
 - [ ] `.env` đủ `APP_KEY`, `DB_*`, `JWT_SECRET`
 - [ ] MariaDB user có quyền: `GRANT ALL ON thanhnh.* TO 'thanhnh'@'%'`
 - [ ] `node ace migration:run` đã chạy trên production
-- [ ] `node ace db:seed` đã chạy (categories, tags mặc định)
+- [ ] `node ace db:seed` đã chạy (để đồng bộ permissions và tạo admin mặc định)
+- [ ] `node ace sync:permissions` đã chạy (nếu có thay đổi trong ACL_MODULES)
 - [ ] `node ace test` pass toàn bộ
 
 **FE:**

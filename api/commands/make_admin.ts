@@ -2,6 +2,8 @@ import { BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
 import User from '#models/user'
 import Role from '#models/role'
+import Permission from '#models/permission'
+
 
 export default class MakeAdmin extends BaseCommand {
   static commandName = 'make:admin'
@@ -43,7 +45,17 @@ export default class MakeAdmin extends BaseCommand {
       // 3. Assign Role
       await user.related('roles').attach([adminRole.id])
 
+      // 4. Sync Permissions (Optional but recommended)
+      const allPermissions = await Permission.all()
+      if (allPermissions.length > 0) {
+        await adminRole.related('permissions').sync(allPermissions.map((p) => p.id))
+        this.logger.info('Synced all available permissions to Admin role')
+      } else {
+        this.logger.warning('No permissions found in database. Run "node ace sync:permissions" to populate them.')
+      }
+
       this.logger.success(`Administrator ${fullName} (${email}) created successfully!`)
+
     } catch (error) {
       this.logger.error('Failed to create administrator')
       this.logger.error(error instanceof Error ? error.message : 'Unknown error')

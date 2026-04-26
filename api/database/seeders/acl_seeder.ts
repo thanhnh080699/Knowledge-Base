@@ -20,6 +20,7 @@ export default class AclSeeder extends BaseSeeder {
     }
 
     // Update or create permissions
+    let syncedCount = 0
     for (const p of permissionsToSync) {
       await Permission.updateOrCreate(
         { slug: p.slug },
@@ -29,7 +30,9 @@ export default class AclSeeder extends BaseSeeder {
           deletedAt: null,
         }
       )
+      syncedCount++
     }
+    console.log(`[ACL] Synced ${syncedCount} permissions`)
 
     const allPermissions = await Permission.all()
 
@@ -51,6 +54,7 @@ export default class AclSeeder extends BaseSeeder {
         deletedAt: null,
       }
     )
+    console.log(`[ACL] Roles created/updated: Admin, Editor`)
 
     // 3. Assign all permissions to Admin
     await adminRole.related('permissions').sync(allPermissions.map((p) => p.id))
@@ -60,6 +64,7 @@ export default class AclSeeder extends BaseSeeder {
       ['Posts', 'Categories', 'Tags', 'Projects', 'Services'].includes(p.module)
     )
     await editorRole.related('permissions').sync(contentPermissions.map((p) => p.id))
+    console.log(`[ACL] Permissions assigned to roles`)
 
     // 5. Clone make:admin logic - Create a default admin user if none exists
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@thanhnh.id.vn'
@@ -77,12 +82,14 @@ export default class AclSeeder extends BaseSeeder {
 
       // Assign Admin Role
       await user.related('roles').attach([adminRole.id])
+      console.log(`[ACL] Created default admin user: ${adminEmail}`)
     } else {
       // Ensure existing admin has the role
       const hasRole = await existingAdmin.related('roles').query().where('slug', 'admin').first()
       if (!hasRole) {
         await existingAdmin.related('roles').attach([adminRole.id])
       }
+      console.log(`[ACL] Admin user already exists: ${adminEmail}`)
     }
   }
 }

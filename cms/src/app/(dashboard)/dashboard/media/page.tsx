@@ -9,8 +9,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Modal } from '@/components/ui/modal'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Tag } from '@/components/ui/tag'
 import { useMedia } from '@/hooks/queries/use-media'
 import {
   useCreateFolder,
@@ -24,8 +22,7 @@ import type { MediaAsset, MediaFilters, MediaFolder } from '@/types/media'
 import {
   ArrowDownAZ,
   ArrowUpAZ,
-  Eye,
-  FileImage,
+  File,
   Folder,
   FolderInput,
   FolderPlus,
@@ -71,6 +68,7 @@ export default function MediaPage() {
     )
   }, [data?.files, query])
 
+  const visibleItemsCount = folders.length + files.length
   const allSelected = files.length > 0 && selectedPaths.length === files.length
   const partiallySelected = selectedPaths.length > 0 && !allSelected
   const parentFolder = folder.split('/').slice(0, -1).join('/')
@@ -168,63 +166,48 @@ export default function MediaPage() {
             )}
           </div>
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
-              <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[50px] px-4">
-                    <Checkbox checked={allSelected} indeterminate={partiallySelected} onChange={toggleAll} />
-                  </TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Size</TableHead>
-                  <TableHead>Dimensions</TableHead>
-                  <TableHead>Path</TableHead>
-                  <TableHead className="pr-6 text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="py-20 text-center">
-                      <div className="flex flex-col items-center gap-2">
-                        <RotateCcw className="h-6 w-6 animate-spin text-slate-400" />
-                        <span className="text-sm text-[var(--app-muted)]">Loading media...</span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  <>
-                    {folders.map((item) => (
-                      <FolderRow
-                        key={item.path}
-                        folder={item}
-                        onOpen={() => setFolder(item.path)}
-                        onRename={() => setRenameFolder(item)}
-                        onDelete={() => setDeleteFolder(item)}
-                      />
-                    ))}
-                    {files.map((file) => (
-                      <MediaRow
-                        key={file.path}
-                        file={file}
-                        selected={selectedPaths.includes(file.path)}
-                        onSelect={() => toggleOne(file.path)}
-                        onDelete={() => deleteMedia.mutate(file.path)}
-                      />
-                    ))}
-                    {folders.length === 0 && files.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={7} className="py-20 text-center text-[var(--app-muted)]">
-                          No media found.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </>
-                )}
-              </TableBody>
-            </Table>
+          <div className="flex items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-surface-muted)] px-4 py-3">
+            <div className="flex items-center gap-3 text-sm text-[var(--app-muted)]">
+              <Checkbox checked={allSelected} indeterminate={partiallySelected} onChange={toggleAll} />
+              <span>Select all files</span>
+            </div>
+            <span className="text-sm text-[var(--app-muted)]">
+              {visibleItemsCount} items
+            </span>
           </div>
+
+          {isLoading ? (
+            <div className="flex min-h-[360px] flex-col items-center justify-center gap-2">
+              <RotateCcw className="h-6 w-6 animate-spin text-slate-400" />
+              <span className="text-sm text-[var(--app-muted)]">Loading media...</span>
+            </div>
+          ) : (
+            <div className="grid min-h-[360px] grid-cols-2 gap-4 p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
+              {folders.map((item) => (
+                <FolderTile
+                  key={item.path}
+                  folder={item}
+                  onOpen={() => setFolder(item.path)}
+                  onRename={() => setRenameFolder(item)}
+                  onDelete={() => setDeleteFolder(item)}
+                />
+              ))}
+              {files.map((file) => (
+                <MediaTile
+                  key={file.path}
+                  file={file}
+                  selected={selectedPaths.includes(file.path)}
+                  onSelect={() => toggleOne(file.path)}
+                  onDelete={() => deleteMedia.mutate(file.path)}
+                />
+              ))}
+              {visibleItemsCount === 0 && (
+                <div className="col-span-full flex min-h-[280px] items-center justify-center text-sm text-[var(--app-muted)]">
+                  No media found.
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3 text-sm text-[var(--app-muted)]">
             <span>
@@ -244,102 +227,87 @@ export default function MediaPage() {
   )
 }
 
-function FolderRow({ folder, onOpen, onRename, onDelete }: { folder: MediaFolder; onOpen: () => void; onRename: () => void; onDelete: () => void }) {
+function FolderTile({ folder, onOpen, onRename, onDelete }: { folder: MediaFolder; onOpen: () => void; onRename: () => void; onDelete: () => void }) {
   return (
-    <TableRow>
-      <TableCell className="px-4" />
-      <TableCell>
-        <button type="button" className="flex items-center gap-3 font-medium text-[var(--app-muted-strong)] hover:text-[var(--foreground)]" onClick={onOpen}>
-          <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--app-warning-soft-bg)] text-[var(--app-warning-soft-fg)]">
-            <Folder className="h-5 w-5" />
-          </span>
+    <div className="group relative rounded-lg border border-transparent p-3 text-center transition-colors hover:border-[var(--app-border)] hover:bg-[var(--app-surface-hover)]">
+      <button type="button" className="flex w-full flex-col items-center gap-2" onClick={onOpen} title={folder.path}>
+        <span className="flex h-20 w-24 items-center justify-center rounded-md bg-[var(--app-warning-soft-bg)] text-[var(--app-warning-soft-fg)]">
+          <Folder className="h-12 w-12" />
+        </span>
+        <span className="line-clamp-2 min-h-10 w-full break-words text-sm font-medium text-[var(--app-muted-strong)]">
           {folder.name}
-        </button>
-      </TableCell>
-      <TableCell>
-        <Tag variant="warning">Folder</Tag>
-      </TableCell>
-      <TableCell>{folder.file_count} files</TableCell>
-      <TableCell>-</TableCell>
-      <TableCell className="font-mono text-xs text-[var(--app-muted)]">{folder.path}</TableCell>
-      <TableCell className="pr-6 text-right">
-        <RowActions onRename={onRename} onDelete={onDelete} />
-      </TableCell>
-    </TableRow>
+        </span>
+        <span className="text-xs text-[var(--app-muted)]">{folder.file_count} files</span>
+      </button>
+      <div className="absolute right-2 top-2 hidden items-center gap-1 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-1 shadow-sm group-hover:flex">
+        <Button variant="ghost" size="icon" className="h-7 w-7" title="Rename folder" onClick={onRename}>
+          <Pencil className="h-3.5 w-3.5" />
+        </Button>
+        <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-500 hover:text-red-600" title="Delete folder" onClick={onDelete}>
+          <Trash2 className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+    </div>
   )
 }
 
-function MediaRow({ file, selected, onSelect, onDelete }: { file: MediaAsset; selected: boolean; onSelect: () => void; onDelete: () => void }) {
+function MediaTile({ file, selected, onSelect, onDelete }: { file: MediaAsset; selected: boolean; onSelect: () => void; onDelete: () => void }) {
+  const isImage = file.mime_type.startsWith('image/')
+
   return (
-    <TableRow>
-      <TableCell className="px-4">
+    <div
+      className={[
+        'group relative rounded-lg border p-3 text-center transition-colors',
+        selected
+          ? 'border-[var(--app-border-strong)] bg-[var(--app-surface-hover)]'
+          : 'border-transparent hover:border-[var(--app-border)] hover:bg-[var(--app-surface-hover)]',
+      ].join(' ')}
+    >
+      <button type="button" className="absolute left-2 top-2 z-10 rounded bg-[var(--app-surface)] shadow-sm" onClick={onSelect} title="Select file">
         <Checkbox checked={selected} onChange={onSelect} />
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-md border border-[var(--app-border)] bg-[var(--app-surface-muted)]">
-            {file.mime_type.startsWith('image/') ? (
-              <Image
-                src={absoluteCdnUrl(file.variants?.thumbnail || file.url)}
-                alt=""
-                width={80}
-                height={80}
-                unoptimized
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <FileImage className="h-5 w-5 text-slate-400" />
-            )}
-          </div>
-          <span className="font-medium text-[var(--app-muted-strong)]">{file.original_name}</span>
+      </button>
+      <Link href={`/dashboard/media/detail?path=${encodeURIComponent(file.path)}`} className="flex w-full flex-col items-center gap-2" title={file.path}>
+        <div className="flex h-20 w-24 items-center justify-center overflow-hidden rounded-md border border-[var(--app-border)] bg-[var(--app-surface-muted)]">
+          {isImage ? (
+            <Image
+              src={absoluteCdnUrl(file.variants?.thumbnail || file.url)}
+              alt=""
+              width={160}
+              height={120}
+              unoptimized
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <File className="h-12 w-12 text-slate-400" />
+          )}
         </div>
-      </TableCell>
-      <TableCell>
-        <Tag variant="secondary">{file.mime_type}</Tag>
-      </TableCell>
-      <TableCell>{formatBytes(file.size)}</TableCell>
-      <TableCell>{file.width && file.height ? `${file.width} x ${file.height}` : '-'}</TableCell>
-      <TableCell className="max-w-[260px] truncate font-mono text-xs text-slate-500">{file.path}</TableCell>
-      <TableCell className="pr-6 text-right">
-        <div className="flex items-center justify-end gap-2">
-          <Link
-            href={`/dashboard/media/detail?path=${encodeURIComponent(file.path)}`}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--app-muted)] transition-colors hover:bg-[var(--app-surface-hover)] hover:text-[var(--foreground)]"
-            title="View detail"
-          >
-            <Eye className="h-4 w-4" />
-          </Link>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-red-600" title="Delete media" onClick={onDelete}>
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
-  )
-}
-
-function RowActions({ onRename, onDelete }: { onRename: () => void; onDelete: () => void }) {
-  return (
-    <div className="flex items-center justify-end gap-2">
-      <Button variant="ghost" size="icon" className="h-8 w-8" title="Rename folder" onClick={onRename}>
-        <Pencil className="h-4 w-4" />
-      </Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-red-600" title="Delete folder" onClick={onDelete}>
-        <Trash2 className="h-4 w-4" />
+        <span className="line-clamp-2 min-h-10 w-full break-words text-sm font-medium text-[var(--app-muted-strong)]">
+          {file.original_name}
+        </span>
+        <span className="text-xs text-[var(--app-muted)]">
+          {file.width && file.height ? `${file.width} x ${file.height} • ` : ''}
+          {formatBytes(file.size)}
+        </span>
+      </Link>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute right-2 top-2 hidden h-7 w-7 border border-[var(--app-border)] bg-[var(--app-surface)] text-slate-500 shadow-sm hover:text-red-600 group-hover:inline-flex"
+        title="Delete media"
+        onClick={onDelete}
+      >
+        <Trash2 className="h-3.5 w-3.5" />
       </Button>
     </div>
   )
 }
 
-function UploadModal({ isOpen, folder, onClose, onSubmit }: { isOpen: boolean; folder: string; onClose: () => void; onSubmit: (payload: { file: File; folder?: string; width?: string; height?: string }) => Promise<unknown> }) {
+function UploadModal({ isOpen, folder, onClose, onSubmit }: { isOpen: boolean; folder: string; onClose: () => void; onSubmit: (payload: { file: File; folder?: string }) => Promise<unknown> }) {
   const [file, setFile] = useState<File | null>(null)
-  const [targetFolder, setTargetFolder] = useState(folder)
-  const [width, setWidth] = useState('')
-  const [height, setHeight] = useState('')
 
   async function submit() {
     if (!file) return
-    await onSubmit({ file, folder: targetFolder, width, height })
+    await onSubmit({ file, folder })
     setFile(null)
     onClose()
   }
@@ -347,20 +315,12 @@ function UploadModal({ isOpen, folder, onClose, onSubmit }: { isOpen: boolean; f
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Upload Media" description="Files will be processed via API before being saved to the CDN.">
       <div className="space-y-4">
+        <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface-muted)] px-3 py-2 text-sm text-[var(--app-muted)]">
+          Destination: <span className="font-mono text-[var(--app-muted-strong)]">{folder || 'root'}</span>
+        </div>
         <Field label="File">
           <Input type="file" onChange={(event) => setFile(event.target.files?.[0] || null)} />
         </Field>
-        <Field label="Folder">
-          <Input value={targetFolder} onChange={(event) => setTargetFolder(event.target.value)} placeholder="media/posts" />
-        </Field>
-        <div className="flex gap-3">
-          <Field label="Width">
-            <Input type="number" min={0} value={width} onChange={(event) => setWidth(event.target.value)} placeholder="auto" />
-          </Field>
-          <Field label="Height">
-            <Input type="number" min={0} value={height} onChange={(event) => setHeight(event.target.value)} placeholder="auto" />
-          </Field>
-        </div>
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={submit} disabled={!file}>
