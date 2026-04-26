@@ -11,3 +11,13 @@ export function absoluteCdnUrl(path: string | null | undefined) {
   const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:3002';
   return `${cdnUrl.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 }
+
+export function slugify(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}

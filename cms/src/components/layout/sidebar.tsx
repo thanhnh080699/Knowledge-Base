@@ -67,13 +67,6 @@ const navigation: NavGroup[] = [
     ],
   },
   {
-    group: 'CRM',
-    items: [
-      { name: 'Contacts', href: '/dashboard/contact-requests', icon: MessageSquare },
-      { name: 'Newsletters', href: '/dashboard/newsletters', icon: Mail },
-    ],
-  },
-  {
     group: 'SYSTEM',
     items: [
       {

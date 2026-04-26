@@ -57,6 +57,12 @@ const sections: SettingSection[] = [
         icon: Mail,
       },
       {
+        title: 'Contact',
+        description: 'View and update your contact information',
+        href: '/dashboard/settings/contact',
+        icon: Phone,
+      },
+      {
         title: 'Languages',
         description: 'View and update your website languages',
         href: '/dashboard/settings/languages',

@@ -9,8 +9,28 @@ export default class CategoriesController {
    * @tag CATEGORIES
    * @responseBody 200 - { data: <Category[]> }
    */
-  async index({ response }: HttpContext) {
-    const categories = await Category.query().orderBy('name', 'asc')
+  async index({ request, response }: HttpContext) {
+    const page = request.input('page')
+    const limit = request.input('limit')
+    const q = request.input('q')
+
+    const query = Category.query().orderBy('name', 'asc')
+
+    if (q) {
+      query.where((builder) => {
+        builder
+          .where('name', 'like', `%${q}%`)
+          .orWhere('slug', 'like', `%${q}%`)
+          .orWhere('description', 'like', `%${q}%`)
+      })
+    }
+
+    if (page || limit) {
+      const categories = await query.paginate(Number(page ?? 1), Number(limit ?? 20))
+      return response.ok(categories)
+    }
+
+    const categories = await query
     return response.ok({ data: categories })
   }
 
@@ -52,9 +72,13 @@ export default class CategoriesController {
    */
   async update({ params, request, response }: HttpContext) {
     const category = await Category.findOrFail(params.id)
-    const payload = await request.validateUsing(updateCategoryValidator, {
-      meta: { params },
-    })
+    const { params: validatorParams, ...payload } = await request.validateUsing(
+      updateCategoryValidator,
+      {
+        meta: { params },
+      }
+    )
+    void validatorParams
 
     category.merge(payload)
     await category.save()

@@ -1,10 +1,5 @@
-'use client';
-import { Typography } from '@/components/ui/typography';
-export default function Page() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[400px]">
-      <Typography variant="h2" className="capitalize">categories</Typography>
-      <Typography variant="muted">This module is under development...</Typography>
-    </div>
-  );
+import { TaxonomyPage } from '@/components/content/taxonomy-page'
+
+export default function CategoriesPage() {
+  return <TaxonomyPage kind="category" />
 }

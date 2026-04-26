@@ -161,9 +161,111 @@ const emailSettings: DefaultSetting[] = [
   },
 ]
 
+const contactSettings: DefaultSetting[] = [
+  {
+    settingGroup: 'contact',
+    settingKey: 'contact_name',
+    settingValue: 'Thanh Nguyen',
+    type: 'string',
+    label: 'Contact name',
+    description: 'Name of the contact person or entity.',
+    sortOrder: 10,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'contact_email',
+    settingValue: 'contact@thanhnh.id.vn',
+    type: 'email',
+    label: 'Contact email',
+    description: 'Primary email address for business inquiries.',
+    sortOrder: 20,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'contact_phone',
+    settingValue: '',
+    type: 'string',
+    label: 'Contact phone',
+    description: 'Primary phone number for business inquiries.',
+    sortOrder: 30,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'contact_address',
+    settingValue: 'Ho Chi Minh City, Vietnam',
+    type: 'text',
+    label: 'Contact address',
+    description: 'Physical or mailing address.',
+    sortOrder: 40,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'working_hours',
+    settingValue: 'Mon - Fri: 08:00 - 18:00',
+    type: 'text',
+    label: 'Working hours',
+    description: 'Business hours or availability.',
+    sortOrder: 50,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'social_facebook',
+    settingValue: '',
+    type: 'url',
+    label: 'Facebook URL',
+    description: 'Link to your Facebook profile or page.',
+    sortOrder: 60,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'social_twitter',
+    settingValue: '',
+    type: 'url',
+    label: 'Twitter (X) URL',
+    description: 'Link to your Twitter profile.',
+    sortOrder: 70,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'social_linkedin',
+    settingValue: '',
+    type: 'url',
+    label: 'LinkedIn URL',
+    description: 'Link to your LinkedIn profile.',
+    sortOrder: 80,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'social_github',
+    settingValue: 'https://github.com/thanhnh080699',
+    type: 'url',
+    label: 'GitHub URL',
+    description: 'Link to your GitHub profile.',
+    sortOrder: 90,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'social_youtube',
+    settingValue: '',
+    type: 'url',
+    label: 'YouTube URL',
+    description: 'Link to your YouTube channel.',
+    sortOrder: 100,
+  },
+  {
+    settingGroup: 'contact',
+    settingKey: 'social_instagram',
+    settingValue: '',
+    type: 'url',
+    label: 'Instagram URL',
+    description: 'Link to your Instagram profile.',
+    sortOrder: 110,
+  },
+]
+
 export default class SettingsSeeder extends BaseSeeder {
   async run() {
-    const settings = [...overviewSettings, ...emailSettings]
+    const settings = [...overviewSettings, ...emailSettings, ...contactSettings]
 
     for (const setting of settings) {
       await Setting.updateOrCreate(

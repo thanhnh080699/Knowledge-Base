@@ -9,8 +9,25 @@ export default class TagsController {
    * @description Display a list of tags
    * @responseBody 200 - { data: <Tag[]> }
    */
-  async index({ response }: HttpContext) {
-    const tags = await Tag.query().orderBy('name', 'asc')
+  async index({ request, response }: HttpContext) {
+    const page = request.input('page')
+    const limit = request.input('limit')
+    const q = request.input('q')
+
+    const query = Tag.query().orderBy('name', 'asc')
+
+    if (q) {
+      query.where((builder) => {
+        builder.where('name', 'like', `%${q}%`).orWhere('slug', 'like', `%${q}%`)
+      })
+    }
+
+    if (page || limit) {
+      const tags = await query.paginate(Number(page ?? 1), Number(limit ?? 20))
+      return response.ok(tags)
+    }
+
+    const tags = await query
     return response.ok({ data: tags })
   }
 
@@ -35,10 +52,7 @@ export default class TagsController {
    * @responseBody 200 - { data: <Tag> }
    */
   async show({ params, response }: HttpContext) {
-    const tag = await Tag.query()
-      .where('id', params.id)
-      .orWhere('slug', params.id)
-      .firstOrFail()
+    const tag = await Tag.query().where('id', params.id).orWhere('slug', params.id).firstOrFail()
     return response.ok({ data: tag })
   }
 
@@ -52,9 +66,13 @@ export default class TagsController {
    */
   async update({ params, request, response }: HttpContext) {
     const tag = await Tag.findOrFail(params.id)
-    const payload = await request.validateUsing(updateTagValidator, {
-      meta: { params },
-    })
+    const { params: validatorParams, ...payload } = await request.validateUsing(
+      updateTagValidator,
+      {
+        meta: { params },
+      }
+    )
+    void validatorParams
 
     tag.merge(payload)
     await tag.save()
