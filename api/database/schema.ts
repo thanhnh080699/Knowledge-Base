@@ -78,6 +78,60 @@ export class ContactRequestSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class MenuItemSchema extends BaseModel {
+  static $columns = ['createdAt', 'cssClass', 'id', 'menuId', 'parentId', 'referenceId', 'rel', 'sortOrder', 'target', 'title', 'type', 'updatedAt', 'url'] as const
+  $columns = MenuItemSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare cssClass: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare menuId: number
+  @column()
+  declare parentId: number | null
+  @column()
+  declare referenceId: number | null
+  @column()
+  declare rel: string | null
+  @column()
+  declare sortOrder: number
+  @column()
+  declare target: string
+  @column()
+  declare title: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare url: string | null
+}
+
+export class MenuSchema extends BaseModel {
+  static $columns = ['createdAt', 'deletedAt', 'description', 'id', 'isDefault', 'location', 'name', 'slug', 'updatedAt'] as const
+  $columns = MenuSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime()
+  declare deletedAt: DateTime | null
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isDefault: boolean
+  @column()
+  declare location: string | null
+  @column()
+  declare name: string
+  @column()
+  declare slug: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class NewsletterSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'id', 'isActive', 'updatedAt'] as const
   $columns = NewsletterSchema.$columns
@@ -89,6 +143,45 @@ export class NewsletterSchema extends BaseModel {
   declare id: number
   @column()
   declare isActive: boolean | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PageSchema extends BaseModel {
+  static $columns = ['canonicalUrl', 'content', 'coverImage', 'createdAt', 'deletedAt', 'excerpt', 'focusKeyword', 'id', 'isHomepage', 'metaDescription', 'metaTitle', 'publishedAt', 'slug', 'status', 'template', 'title', 'updatedAt'] as const
+  $columns = PageSchema.$columns
+  @column()
+  declare canonicalUrl: string | null
+  @column()
+  declare content: string
+  @column()
+  declare coverImage: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime()
+  declare deletedAt: DateTime | null
+  @column()
+  declare excerpt: string | null
+  @column()
+  declare focusKeyword: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isHomepage: boolean
+  @column()
+  declare metaDescription: string | null
+  @column()
+  declare metaTitle: string | null
+  @column.dateTime()
+  declare publishedAt: DateTime | null
+  @column()
+  declare slug: string
+  @column()
+  declare status: string
+  @column()
+  declare template: string | null
+  @column()
+  declare title: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

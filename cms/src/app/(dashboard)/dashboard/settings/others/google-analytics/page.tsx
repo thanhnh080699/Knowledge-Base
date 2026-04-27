@@ -352,7 +352,7 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: any; isLoa
               onChange={(e) => updateValue('google_analytics_property_id', e.target.value)}
               placeholder="123456789"
             />
-            <p className="text-xs text-[var(--app-muted)]">Found in GA4 Admin > Property Settings > Property ID.</p>
+            <p className="text-xs text-[var(--app-muted)]">Found in GA4 Admin &gt; Property Settings &gt; Property ID.</p>
           </div>
 
           <div className="space-y-2">
