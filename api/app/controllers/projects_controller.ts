@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Project from '#models/project'
 import { createProjectValidator, updateProjectValidator } from '#validators/project'
+import { normalizeMediaFields } from '#helpers/media'
 
 export default class ProjectsController {
   /**
@@ -32,7 +33,8 @@ export default class ProjectsController {
    * @responseBody 201 - { data: <Project> }
    */
   async store({ request, response }: HttpContext) {
-    const payload = await request.validateUsing(createProjectValidator)
+    const validatedPayload = await request.validateUsing(createProjectValidator)
+    const payload = normalizeMediaFields(validatedPayload, ['thumbnailUrl'])
     const project = await Project.create(payload)
     return response.created({ data: project })
   }
@@ -62,9 +64,10 @@ export default class ProjectsController {
    */
   async update({ params, request, response }: HttpContext) {
     const project = await Project.findOrFail(params.id)
-    const payload = await request.validateUsing(updateProjectValidator, {
+    const validatedPayload = await request.validateUsing(updateProjectValidator, {
       meta: { params },
     })
+    const payload = normalizeMediaFields(validatedPayload, ['thumbnailUrl'])
 
     project.merge(payload)
     await project.save()

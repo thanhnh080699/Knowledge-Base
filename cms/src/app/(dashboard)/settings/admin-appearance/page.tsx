@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,8 +9,8 @@ import { useUpdateSettingsGroup } from '@/hooks/mutations/use-setting-mutations'
 import { useSettingsGroup } from '@/hooks/queries/use-settings'
 import { useUploadMedia } from '@/hooks/mutations/use-media-mutations'
 import type { Setting, SettingValue, UpdateSettingInput } from '@/types/settings'
-import { Palette, RotateCcw, Save, Upload, Image as ImageIcon, Loader2 } from 'lucide-react'
-import { absoluteCdnUrl } from '@/lib/utils'
+import { RotateCcw, Save, Upload, Image as ImageIcon, Loader2 } from 'lucide-react'
+import { absoluteCdnUrl, normalizeCdnPath } from '@/lib/utils'
 
 const APPEARANCE_GROUP = 'admin-appearance'
 
@@ -154,8 +153,8 @@ export default function AdminAppearanceSettingsPage() {
         file,
         folder: 'settings',
       })
-      updateValue(key, result.url)
-    } catch (error) {
+      updateValue(key, normalizeCdnPath(result.path || result.url))
+    } catch {
       // Error is handled by the hook toast
     }
   }

@@ -7,6 +7,12 @@ import (
 	"meditour/cdn/config"
 	"meditour/cdn/handlers"
 
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
+
+	_ "golang.org/x/image/webp"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

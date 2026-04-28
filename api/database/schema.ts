@@ -57,6 +57,39 @@ export class CategorySchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class CommentSchema extends BaseModel {
+  static $columns = ['approvedAt', 'authorEmail', 'authorName', 'authorWebsite', 'content', 'createdAt', 'deletedAt', 'id', 'ipAddress', 'parentId', 'postId', 'status', 'updatedAt', 'userAgent'] as const
+  $columns = CommentSchema.$columns
+  @column.dateTime()
+  declare approvedAt: DateTime | null
+  @column()
+  declare authorEmail: string
+  @column()
+  declare authorName: string
+  @column()
+  declare authorWebsite: string | null
+  @column()
+  declare content: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime()
+  declare deletedAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare ipAddress: string | null
+  @column()
+  declare parentId: number | null
+  @column()
+  declare postId: number
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userAgent: string | null
+}
+
 export class ContactRequestSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'id', 'message', 'name', 'status', 'subject', 'updatedAt'] as const
   $columns = ContactRequestSchema.$columns
@@ -293,6 +326,27 @@ export class ProjectSchema extends BaseModel {
   declare thumbnailUrl: string | null
   @column()
   declare title: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class QuestionAnswerSchema extends BaseModel {
+  static $columns = ['answer', 'createdAt', 'id', 'isPublished', 'postId', 'question', 'sortOrder', 'updatedAt'] as const
+  $columns = QuestionAnswerSchema.$columns
+  @column()
+  declare answer: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isPublished: boolean | null
+  @column()
+  declare postId: number
+  @column()
+  declare question: string
+  @column()
+  declare sortOrder: number | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

@@ -4,17 +4,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { handleApiError } from "@/lib/error-handler";
+import { normalizeCdnPath } from "@/lib/utils";
 import type { ApiItemResponse } from "@/types/common";
 import type { CreatePagePayload, Page, UpdatePagePayload } from "@/types/page";
 
 async function uploadCoverImage(image: string | File | undefined) {
-  if (!image || typeof image === "string") return image;
+  if (!image || typeof image === "string") return normalizeCdnPath(image);
 
   const form = new FormData();
   form.append("file", image);
   form.append("folder", "Pages");
 
-  const { data } = await api.post<ApiItemResponse<{ url: string }>>(
+  const { data } = await api.post<ApiItemResponse<{ path: string; url: string }>>(
     "/admin/media/upload",
     form,
     {
@@ -22,7 +23,7 @@ async function uploadCoverImage(image: string | File | undefined) {
     },
   );
 
-  return data.data.url;
+  return normalizeCdnPath(data.data.path || data.data.url);
 }
 
 export function useCreatePage() {

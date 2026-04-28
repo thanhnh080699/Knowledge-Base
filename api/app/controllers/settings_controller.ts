@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Setting, { type SettingValue } from '#models/setting'
 import EmailService from '#services/email_service'
+import { normalizeMediaPath } from '#helpers/media'
 import {
   sendTestEmailValidator,
   showSettingsGroupValidator,
@@ -20,6 +21,18 @@ function formatGroupPayload(group: string, settings: Setting[]) {
 
 export default class SettingsController {
   private emailService = new EmailService()
+
+  private settingValueForStorage(group: string, key: string, value: SettingValue | null) {
+    if (
+      group === 'admin-appearance' &&
+      ['admin_logo', 'admin_favicon'].includes(key) &&
+      typeof value === 'string'
+    ) {
+      return normalizeMediaPath(value) as SettingValue
+    }
+
+    return value
+  }
 
   /**
    * @show
@@ -55,7 +68,12 @@ export default class SettingsController {
     })
 
     for (const item of payload.settings) {
-      const settingValue = item.value === undefined ? null : (item.value as SettingValue)
+      const rawSettingValue = item.value === undefined ? null : (item.value as SettingValue)
+      const settingValue = this.settingValueForStorage(
+        payload.params.group,
+        item.key,
+        rawSettingValue
+      )
       const setting = await Setting.query()
         .where('setting_group', payload.params.group)
         .where('setting_key', item.key)

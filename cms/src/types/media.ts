@@ -29,12 +29,18 @@ export interface MediaList {
   current_folder: string
   folders: MediaFolder[]
   files: MediaAsset[]
+  total?: number
+  limit?: number
+  offset?: number
+  has_more?: boolean
+  next_offset?: number
 }
 
 export interface MediaFilters {
   folder?: string
   sort?: 'updated_at' | 'name' | 'size'
   direction?: 'asc' | 'desc'
+  limit?: number
 }
 
 export interface UploadMediaPayload {

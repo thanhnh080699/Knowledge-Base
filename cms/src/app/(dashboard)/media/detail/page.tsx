@@ -6,13 +6,14 @@ import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Tag } from '@/components/ui/tag'
 import { useMediaDetail } from '@/hooks/queries/use-media'
+import { absoluteCdnUrl } from '@/lib/utils'
 import { ArrowLeft, Copy, ExternalLink, FileImage, RotateCcw } from 'lucide-react'
-
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || 'http://localhost:3002'
 
 export default function MediaDetailPage() {
   const searchParams = useSearchParams()
   const path = searchParams.get('path') || ''
+  const folder = searchParams.get('folder') || path.split('/').slice(0, -1).join('/')
+  const backHref = folder ? `/media?folder=${encodeURIComponent(folder)}` : '/media'
   const { data: media, isLoading } = useMediaDetail(path)
 
   async function copyPath() {
@@ -32,7 +33,7 @@ export default function MediaDetailPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
-              href="/media"
+              href={backHref}
               className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] px-3 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--app-surface-hover)]"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -122,12 +123,6 @@ function DetailRow({ label, value, mono }: { label: string; value: string; mono?
       </p>
     </div>
   )
-}
-
-function absoluteCdnUrl(path: string) {
-  if (!path) return ''
-  if (path.startsWith('http://') || path.startsWith('https://')) return path
-  return `${CDN_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
 }
 
 function formatBytes(size: number) {

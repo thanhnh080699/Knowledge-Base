@@ -39,9 +39,17 @@ export const ACL_MODULES = {
     name: 'Services',
     permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
+  QUESTION_ANSWERS: {
+    name: 'Question & Answer',
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
+  },
   CONTACTS: {
     name: 'Contacts',
     permissions: ['read', 'delete', 'manage'],
+  },
+  COMMENTS: {
+    name: 'Comments',
+    permissions: ['read', 'update', 'delete', 'manage'],
   },
   NEWSLETTERS: {
     name: 'Newsletters',

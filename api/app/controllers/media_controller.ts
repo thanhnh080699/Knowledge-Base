@@ -21,6 +21,8 @@ export default class MediaController {
       folder: request.input('folder', ''),
       sort: request.input('sort', 'updated_at'),
       direction: request.input('direction', 'desc'),
+      limit: request.input('limit'),
+      offset: request.input('offset'),
     })
     return response.ok(data)
   }

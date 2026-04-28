@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -37,9 +38,13 @@ import { absoluteCdnUrl } from '@/lib/utils'
 
 const SELECT_CLASS =
   'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
+const MEDIA_PAGE_SIZE = 100
 
 export default function MediaPage() {
-  const [folder, setFolder] = useState('')
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const initialFolder = searchParams.get('folder') || ''
+  const [folder, setFolder] = useState(initialFolder)
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState<MediaFilters['sort']>('updated_at')
   const [direction, setDirection] = useState<MediaFilters['direction']>('desc')
@@ -50,8 +55,8 @@ export default function MediaPage() {
   const [renameFolder, setRenameFolder] = useState<MediaFolder | null>(null)
   const [deleteFolder, setDeleteFolder] = useState<MediaFolder | null>(null)
 
-  const filters = useMemo(() => ({ folder, sort, direction }), [direction, folder, sort])
-  const { data, isLoading } = useMedia(filters)
+  const filters = useMemo(() => ({ folder, sort, direction, limit: MEDIA_PAGE_SIZE }), [direction, folder, sort])
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useMedia(filters)
   const uploadMedia = useUploadMedia()
   const deleteMedia = useDeleteMedia()
   const moveMedia = useMoveMedia()
@@ -69,9 +74,16 @@ export default function MediaPage() {
   }, [data?.files, query])
 
   const visibleItemsCount = folders.length + files.length
+  const totalFiles = data?.total ?? files.length
   const allSelected = files.length > 0 && selectedPaths.length === files.length
   const partiallySelected = selectedPaths.length > 0 && !allSelected
   const parentFolder = folder.split('/').slice(0, -1).join('/')
+
+  function openFolder(nextFolder: string) {
+    setFolder(nextFolder)
+    setSelectedPaths([])
+    router.push(mediaListHref(nextFolder))
+  }
 
   function toggleAll() {
     setSelectedPaths(allSelected ? [] : files.map((file) => file.path))
@@ -152,13 +164,13 @@ export default function MediaPage() {
           </div>
 
           <div className="flex items-center gap-2 border-b border-[var(--app-border)] px-4 py-3 text-sm">
-            <Button variant="ghost" size="sm" className="h-8 px-2" onClick={() => setFolder('')}>
+            <Button variant="ghost" size="sm" className="h-8 px-2" onClick={() => openFolder('')}>
               Root
             </Button>
             {folder && (
               <>
                 <span className="text-slate-400">/</span>
-                <Button variant="ghost" size="sm" className="h-8 px-2" onClick={() => setFolder(parentFolder)}>
+                <Button variant="ghost" size="sm" className="h-8 px-2" onClick={() => openFolder(parentFolder)}>
                   ..
                 </Button>
                 <span className="text-[var(--app-muted)]">{folder}</span>
@@ -187,7 +199,7 @@ export default function MediaPage() {
                 <FolderTile
                   key={item.path}
                   folder={item}
-                  onOpen={() => setFolder(item.path)}
+                  onOpen={() => openFolder(item.path)}
                   onRename={() => setRenameFolder(item)}
                   onDelete={() => setDeleteFolder(item)}
                 />
@@ -196,6 +208,7 @@ export default function MediaPage() {
                 <MediaTile
                   key={file.path}
                   file={file}
+                  folder={folder}
                   selected={selectedPaths.includes(file.path)}
                   onSelect={() => toggleOne(file.path)}
                   onDelete={() => deleteMedia.mutate(file.path)}
@@ -209,9 +222,24 @@ export default function MediaPage() {
             </div>
           )}
 
+          {!isLoading && hasNextPage && (
+            <div className="flex justify-center border-t border-[var(--app-border)] px-4 py-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-10 gap-2"
+                disabled={isFetchingNextPage}
+                onClick={() => fetchNextPage()}
+              >
+                {isFetchingNextPage && <RotateCcw className="h-4 w-4 animate-spin" />}
+                Show more
+              </Button>
+            </div>
+          )}
+
           <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3 text-sm text-[var(--app-muted)]">
             <span>
-              Showing {folders.length} folders and {files.length} files
+              Showing {folders.length} folders and {files.length} of {totalFiles} files
             </span>
             <span>{folder || 'root'}</span>
           </div>
@@ -225,6 +253,10 @@ export default function MediaPage() {
       <MoveModal isOpen={moveOpen} currentFolder={folder} count={selectedPaths.length} onClose={() => setMoveOpen(false)} onMove={handleBulkMove} />
     </div>
   )
+}
+
+function mediaListHref(folder: string) {
+  return folder ? `/media?folder=${encodeURIComponent(folder)}` : '/media'
 }
 
 function FolderTile({ folder, onOpen, onRename, onDelete }: { folder: MediaFolder; onOpen: () => void; onRename: () => void; onDelete: () => void }) {
@@ -250,8 +282,22 @@ function FolderTile({ folder, onOpen, onRename, onDelete }: { folder: MediaFolde
   )
 }
 
-function MediaTile({ file, selected, onSelect, onDelete }: { file: MediaAsset; selected: boolean; onSelect: () => void; onDelete: () => void }) {
+function MediaTile({
+  file,
+  folder,
+  selected,
+  onSelect,
+  onDelete,
+}: {
+  file: MediaAsset
+  folder: string
+  selected: boolean
+  onSelect: () => void
+  onDelete: () => void
+}) {
   const isImage = file.mime_type.startsWith('image/')
+  const detailParams = new URLSearchParams({ path: file.path })
+  if (folder) detailParams.set('folder', folder)
 
   return (
     <div
@@ -265,7 +311,7 @@ function MediaTile({ file, selected, onSelect, onDelete }: { file: MediaAsset; s
       <div className="absolute left-2 top-2 z-10 rounded bg-[var(--app-surface)] shadow-sm" title="Select file">
         <Checkbox checked={selected} onChange={onSelect} />
       </div>
-      <Link href={`/media/detail?path=${encodeURIComponent(file.path)}`} className="flex w-full flex-col items-center gap-2" title={file.path}>
+      <Link href={`/media/detail?${detailParams.toString()}`} className="flex w-full flex-col items-center gap-2" title={file.path}>
         <div className="flex h-14 w-16 items-center justify-center overflow-hidden rounded-md border border-[var(--app-border)] bg-[var(--app-surface-muted)]">
           {isImage ? (
             <Image
@@ -447,4 +493,3 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
     </div>
   )
 }
-

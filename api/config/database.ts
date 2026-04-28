@@ -68,6 +68,21 @@ const dbConfig = defineConfig({
       },
       debug: app.inDev,
     },
+
+    /**
+     * WordPress Source DB connection
+     */
+    wordpress: {
+      client: 'mysql2',
+      connection: {
+        host: env.get('WP_DB_HOST'),
+        port: env.get('WP_DB_PORT'),
+        user: env.get('WP_DB_USER'),
+        password: env.get('WP_DB_PASSWORD'),
+        database: env.get('WP_DB_DATABASE'),
+      },
+      debug: app.inDev,
+    },
   },
 })
 

@@ -63,7 +63,7 @@ func GenerateUniqueFileName(originalName string) string {
 }
 
 func GetFullUrl(path string) string {
-	return fmt.Sprintf("%s/%s", strings.TrimSuffix(config.AppConfig.BaseUrl, "/"), strings.TrimPrefix(path, "/"))
+	return fmt.Sprintf("%s/%s", strings.TrimSuffix(config.AppConfig.BaseUrl, "/"), strings.TrimPrefix(GetPathUrl(path), "/"))
 }
 
 func GetPathUrl(path string) string {

@@ -4,23 +4,24 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api } from '@/lib/axios'
 import { handleApiError } from '@/lib/error-handler'
+import { normalizeCdnPath } from '@/lib/utils'
 import type { ApiItemResponse } from '@/types/common'
 import type { CreatePostPayload, Post, UpdatePostPayload } from '@/types/post'
 
 async function uploadCoverImage(image: string | File | undefined) {
   if (!image || typeof image === 'string') {
-    return image
+    return normalizeCdnPath(image)
   }
 
   const form = new FormData()
   form.append('file', image)
   form.append('folder', 'Posts')
 
-  const { data } = await api.post<ApiItemResponse<{ url: string }>>('/admin/media/upload', form, {
+  const { data } = await api.post<ApiItemResponse<{ path: string; url: string }>>('/admin/media/upload', form, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 
-  return data.data.url
+  return normalizeCdnPath(data.data.path || data.data.url)
 }
 
 export function useCreatePost() {

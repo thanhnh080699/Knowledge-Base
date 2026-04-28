@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"meditour/cdn/config"
@@ -18,18 +19,18 @@ import (
 )
 
 type MediaItem struct {
-	Name         string    `json:"name"`
-	OriginalName string    `json:"original_name"`
-	FileName     string    `json:"file_name"`
-	Path         string    `json:"path"`
-	Url          string    `json:"url"`
-	OptimizedUrl string    `json:"optimized_url"`
-	Size         int64     `json:"size"`
-	MimeType     string    `json:"mime_type"`
-	UpdatedAt    int64     `json:"updated_at"`
-	Width        int       `json:"width,omitempty"`
-	Height       int       `json:"height,omitempty"`
-	Variants     gin.H     `json:"variants,omitempty"`
+	Name         string `json:"name"`
+	OriginalName string `json:"original_name"`
+	FileName     string `json:"file_name"`
+	Path         string `json:"path"`
+	Url          string `json:"url"`
+	OptimizedUrl string `json:"optimized_url"`
+	Size         int64  `json:"size"`
+	MimeType     string `json:"mime_type"`
+	UpdatedAt    int64  `json:"updated_at"`
+	Width        int    `json:"width,omitempty"`
+	Height       int    `json:"height,omitempty"`
+	Variants     gin.H  `json:"variants,omitempty"`
 }
 
 type FolderItem struct {
@@ -41,6 +42,14 @@ func ListMediaHandler(c *gin.Context) {
 	folder := c.Query("folder")
 	sortBy := c.DefaultQuery("sort", "updated_at")
 	direction := c.DefaultQuery("direction", "desc")
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "0"))
+	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
+	if limit < 0 {
+		limit = 0
+	}
+	if offset < 0 {
+		offset = 0
+	}
 
 	cleanPath, err := sanitizeRelativePath(folder, true)
 	if err != nil {
@@ -56,7 +65,18 @@ func ListMediaHandler(c *gin.Context) {
 
 	// Ensure the directory exists
 	if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-		c.JSON(http.StatusOK, gin.H{"folders": []FolderItem{}, "files": []MediaItem{}})
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Media listed successfully",
+			"data": gin.H{
+				"folders":     []FolderItem{},
+				"files":       []MediaItem{},
+				"total":       0,
+				"limit":       limit,
+				"offset":      offset,
+				"has_more":    false,
+				"next_offset": offset,
+			},
+		})
 		return
 	}
 
@@ -139,11 +159,33 @@ func ListMediaHandler(c *gin.Context) {
 		return compare
 	})
 
+	total := len(files)
+	pagedFiles := files
+	if limit > 0 {
+		start := offset
+		if start > total {
+			start = total
+		}
+		end := start + limit
+		if end > total {
+			end = total
+		}
+		pagedFiles = files[start:end]
+	}
+
+	nextOffset := offset + len(pagedFiles)
+	hasMore := limit > 0 && nextOffset < total
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Media listed successfully",
 		"data": gin.H{
-			"folders": folders,
-			"files":   files,
+			"folders":     folders,
+			"files":       pagedFiles,
+			"total":       total,
+			"limit":       limit,
+			"offset":      offset,
+			"has_more":    hasMore,
+			"next_offset": nextOffset,
 		},
 	})
 }

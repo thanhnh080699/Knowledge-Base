@@ -63,6 +63,7 @@ func SingleUploadHandler(c *gin.Context) {
 		defer imageFile.Close()
 
 		if _, _, decodeErr := image.DecodeConfig(imageFile); decodeErr != nil {
+			fmt.Printf("Decode error for %s: %v\n", file.Filename, decodeErr)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Uploaded file is not a valid image"})
 			return
 		}

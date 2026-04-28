@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import Post from '#models/post'
 import { createPostValidator, updatePostValidator } from '#validators/post'
+import { normalizeMediaFields } from '#helpers/media'
 
 export default class PostsController {
   /**
@@ -88,7 +89,9 @@ export default class PostsController {
    * @responseHeader 201 - Set-Cookie - Cookie for authentication
    */
   async store({ request, response }: HttpContext) {
-    const { tagIds, publishedAt, ...payload } = await request.validateUsing(createPostValidator)
+    const { tagIds, publishedAt, ...validatedPayload } =
+      await request.validateUsing(createPostValidator)
+    const payload = normalizeMediaFields(validatedPayload, ['coverImage'])
 
     const post = new Post()
     post.fill(payload)
@@ -146,11 +149,12 @@ export default class PostsController {
       tagIds,
       publishedAt,
       params: validatorParams,
-      ...payload
+      ...validatedPayload
     } = await request.validateUsing(updatePostValidator, {
       meta: { params },
     })
     void validatorParams
+    const payload = normalizeMediaFields(validatedPayload, ['coverImage'])
 
     post.merge(payload)
 

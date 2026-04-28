@@ -17,6 +17,8 @@ import {
   Image,
   Navigation,
   Files,
+  CircleHelp,
+  MessageSquareText,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -45,6 +47,8 @@ const navigation: NavGroup[] = [
     items: [
       { name: "Posts", href: "/posts", icon: FileText },
       { name: "Pages", href: "/pages", icon: Files },
+      { name: "Q&A", href: "/question-answers", icon: CircleHelp },
+      { name: "Comments", href: "/comments", icon: MessageSquareText },
       { name: "Categories", href: "/categories", icon: FolderOpen },
       { name: "Tags", href: "/tags", icon: Tag },
       { name: "Menus", href: "/menus", icon: Navigation },

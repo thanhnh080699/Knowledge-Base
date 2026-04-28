@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { api } from '@/lib/axios'
 import { handleApiError } from '@/lib/error-handler'
+import { normalizeCdnPath } from '@/lib/utils'
 import type { ApiItemResponse } from '@/types/common'
 import type {
   Category,
@@ -20,18 +21,18 @@ export function useCreateCategory() {
   return useMutation({
     mutationFn: async (payload: CreateCategoryPayload) => {
       try {
-        let imageUrl = typeof payload.image === 'string' ? payload.image : undefined
+        let imageUrl = typeof payload.image === 'string' ? normalizeCdnPath(payload.image) : undefined
 
         if (payload.image instanceof File) {
           const form = new FormData()
           form.append('file', payload.image)
           form.append('folder', 'Categories')
-          const { data: uploadData } = await api.post<ApiItemResponse<{ url: string }>>(
+          const { data: uploadData } = await api.post<ApiItemResponse<{ path: string; url: string }>>(
             '/admin/media/upload',
             form,
             { headers: { 'Content-Type': 'multipart/form-data' } }
           )
-          imageUrl = uploadData.data.url
+          imageUrl = normalizeCdnPath(uploadData.data.path || uploadData.data.url)
         }
 
         const { data } = await api.post<ApiItemResponse<Category>>('/admin/categories', {
@@ -56,18 +57,18 @@ export function useUpdateCategory() {
   return useMutation({
     mutationFn: async ({ id, payload }: { id: number; payload: UpdateCategoryPayload }) => {
       try {
-        let imageUrl = typeof payload.image === 'string' ? payload.image : undefined
+        let imageUrl = typeof payload.image === 'string' ? normalizeCdnPath(payload.image) : undefined
 
         if (payload.image instanceof File) {
           const form = new FormData()
           form.append('file', payload.image)
           form.append('folder', 'Categories')
-          const { data: uploadData } = await api.post<ApiItemResponse<{ url: string }>>(
+          const { data: uploadData } = await api.post<ApiItemResponse<{ path: string; url: string }>>(
             '/admin/media/upload',
             form,
             { headers: { 'Content-Type': 'multipart/form-data' } }
           )
-          imageUrl = uploadData.data.url
+          imageUrl = normalizeCdnPath(uploadData.data.path || uploadData.data.url)
         }
 
         const { data } = await api.put<ApiItemResponse<Category>>(`/admin/categories/${id}`, {

@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Category from '#models/category'
 import { createCategoryValidator, updateCategoryValidator } from '#validators/category'
+import { normalizeMediaFields } from '#helpers/media'
 
 export default class CategoriesController {
   /**
@@ -42,7 +43,8 @@ export default class CategoriesController {
    * @responseBody 201 - { data: <Category> }
    */
   async store({ request, response }: HttpContext) {
-    const payload = await request.validateUsing(createCategoryValidator)
+    const validatedPayload = await request.validateUsing(createCategoryValidator)
+    const payload = normalizeMediaFields(validatedPayload, ['image'])
     const category = await Category.create(payload)
     return response.created({ data: category })
   }
@@ -72,13 +74,14 @@ export default class CategoriesController {
    */
   async update({ params, request, response }: HttpContext) {
     const category = await Category.findOrFail(params.id)
-    const { params: validatorParams, ...payload } = await request.validateUsing(
+    const { params: validatorParams, ...validatedPayload } = await request.validateUsing(
       updateCategoryValidator,
       {
         meta: { params },
       }
     )
     void validatorParams
+    const payload = normalizeMediaFields(validatedPayload, ['image'])
 
     category.merge(payload)
     await category.save()

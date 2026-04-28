@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import Page from '#models/page'
 import { createPageValidator, updatePageValidator } from '#validators/page'
+import { normalizeMediaFields } from '#helpers/media'
 
 export default class PagesController {
   /**
@@ -51,7 +52,9 @@ export default class PagesController {
    * @responseBody 201 - { data: <Page> }
    */
   async store({ request, response }: HttpContext) {
-    const { publishedAt, isHomepage, ...payload } = await request.validateUsing(createPageValidator)
+    const { publishedAt, isHomepage, ...validatedPayload } =
+      await request.validateUsing(createPageValidator)
+    const payload = normalizeMediaFields(validatedPayload, ['coverImage'])
 
     if (isHomepage) {
       await Page.query().where('is_homepage', true).update({ is_homepage: false })
@@ -114,11 +117,12 @@ export default class PagesController {
       publishedAt,
       isHomepage,
       params: validatorParams,
-      ...payload
+      ...validatedPayload
     } = await request.validateUsing(updatePageValidator, {
       meta: { params },
     })
     void validatorParams
+    const payload = normalizeMediaFields(validatedPayload, ['coverImage'])
 
     if (isHomepage) {
       await Page.query().whereNot('id', page.id).where('is_homepage', true).update({

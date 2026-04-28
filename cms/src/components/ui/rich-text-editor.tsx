@@ -22,6 +22,11 @@ export function RichTextEditor({ value, onChange, height = 500, placeholder }: R
   const editorRef = useRef<any>(null);
   const containerRef = useRef<HTMLTextAreaElement>(null);
   const isInitializing = useRef(false);
+  const valueRef = useRef(value);
+
+  useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -94,8 +99,8 @@ export function RichTextEditor({ value, onChange, height = 500, placeholder }: R
         },
         init_instance_callback: (editor: any) => {
           isInitializing.current = false;
-          if (value) {
-            editor.setContent(value);
+          if (valueRef.current) {
+            editor.setContent(valueRef.current);
           }
         }
       });
@@ -121,8 +126,12 @@ export function RichTextEditor({ value, onChange, height = 500, placeholder }: R
 
   // Update content if changed from outside, but only if it's actually different
   useEffect(() => {
-    if (editorRef.current && value !== editorRef.current.getContent()) {
-      editorRef.current.setContent(value || '');
+    if (editorRef.current?.initialized && value !== editorRef.current.getContent()) {
+      try {
+        editorRef.current.setContent(value || '');
+      } catch (err) {
+        console.error('Failed to set editor content:', err);
+      }
     }
   }, [value]);
 

@@ -61,7 +61,16 @@ export default class AclSeeder extends BaseSeeder {
 
     // 4. Assign content permissions to Editor
     const contentPermissions = allPermissions.filter((p) =>
-      ['Posts', 'Categories', 'Tags', 'Pages', 'Menus', 'Projects', 'Services'].includes(p.module)
+      [
+        'Posts',
+        'Categories',
+        'Tags',
+        'Pages',
+        'Menus',
+        'Projects',
+        'Services',
+        'Question & Answer',
+      ].includes(p.module)
     )
     await editorRole.related('permissions').sync(contentPermissions.map((p) => p.id))
     console.log(`[ACL] Permissions assigned to roles`)

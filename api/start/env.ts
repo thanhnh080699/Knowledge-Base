@@ -36,4 +36,11 @@ export default await Env.create(new URL('../', import.meta.url), {
   // CDN gateway
   CDN_URL: Env.schema.string.optional({ format: 'url', tld: false }),
   CDN_API_KEY: Env.schema.string.optional(),
+  
+  // WordPress Source DB
+  WP_DB_HOST: Env.schema.string({ format: 'host' }),
+  WP_DB_PORT: Env.schema.number(),
+  WP_DB_USER: Env.schema.string(),
+  WP_DB_PASSWORD: Env.schema.string.optional(),
+  WP_DB_DATABASE: Env.schema.string(),
 })

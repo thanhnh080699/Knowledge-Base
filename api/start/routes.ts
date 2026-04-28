@@ -21,11 +21,13 @@ import menusRoutes from './routes/menus.js'
 import projectsRoutes from './routes/projects.js'
 import servicesRoutes from './routes/services.js'
 import contactsRoutes from './routes/contacts.js'
+import commentsRoutes from './routes/comments.js'
 import usersRoutes from './routes/users.js'
 import rolesRoutes from './routes/roles.js'
 import permissionsRoutes from './routes/permissions.js'
 import mediaRoutes from './routes/media.js'
 import settingsRoutes from './routes/settings.js'
+import questionAnswersRoutes from './routes/question_answers.js'
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -62,10 +64,12 @@ router
     projectsRoutes()
     servicesRoutes()
     contactsRoutes()
+    commentsRoutes()
     usersRoutes()
     rolesRoutes()
     permissionsRoutes()
     mediaRoutes()
     settingsRoutes()
+    questionAnswersRoutes()
   })
   .prefix('/api')
