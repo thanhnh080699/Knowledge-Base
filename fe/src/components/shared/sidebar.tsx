@@ -1,7 +1,6 @@
 import { BookOpen, Code2, Headphones, Server, Shield } from "lucide-react"
 import Link from "next/link"
 import type { Category } from "@/types/category"
-import type { Tag } from "@/types/tag"
 
 const fallback = [
   { name: "SysAdmin", slug: "sysadmin", icon: Server },
@@ -10,35 +9,29 @@ const fallback = [
   { name: "HelpDesk", slug: "helpdesk", icon: Headphones }
 ]
 
-export function Sidebar({ categories, tags }: { categories: Category[]; tags?: Tag[]; activeCategory?: string; activeTag?: string }) {
+export function Sidebar({ categories }: { categories: Category[]; activeCategory?: string }) {
   const items = categories.length ? categories.map((item) => ({ ...item, icon: BookOpen })) : fallback
 
   return (
-    <aside className="rounded-lg border border-slate-800 bg-slate-950 p-4 text-white md:sticky md:top-20">
-      <p className="text-sm font-bold uppercase tracking-wide text-slate-400">Tài liệu</p>
-      <nav className="mt-4 grid gap-1" aria-label="Danh mục tài liệu">
+    <aside className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:sticky md:top-20">
+      <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">Danh mục tài liệu</p>
+      <nav className="mt-4 grid gap-2" aria-label="Danh mục tài liệu">
         {items.map((item) => {
           const Icon = item.icon
           return (
-            <Link key={item.slug} href={`/docs?category=${item.slug}`} className="flex items-center gap-2 rounded-md border border-transparent px-3 py-2 text-sm font-semibold text-slate-200 transition-colors hover:border-blue-500 hover:text-white">
-              <Icon size={16} aria-hidden />
-              {item.name}
+            <Link
+              key={item.slug}
+              href={`/docs?category=${item.slug}`}
+              className="flex items-center gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+            >
+              <span className="flex size-8 items-center justify-center rounded-md bg-white text-blue-600">
+                <Icon size={16} aria-hidden />
+              </span>
+              <span>{item.name}</span>
             </Link>
           )
         })}
       </nav>
-      {tags?.length ? (
-        <div className="mt-6 border-t border-slate-800 pt-4">
-          <p className="text-sm font-bold uppercase tracking-wide text-slate-400">Nhãn</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {tags.slice(0, 16).map((tag) => (
-              <Link key={tag.slug} href={`/docs?tag=${tag.slug}`} className="rounded-md border border-slate-700 px-2 py-1 text-xs text-slate-300 transition-colors hover:border-blue-500 hover:text-white">
-                {tag.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      ) : null}
     </aside>
   )
 }

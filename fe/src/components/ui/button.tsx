@@ -26,7 +26,7 @@ const variants = {
 
 export function Button(props: ButtonProps | ButtonLinkProps) {
   const { children, variant = "primary", className = "", ...rest } = props
-  const classes = `inline-flex min-h-10 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-semibold transition-colors cursor-pointer ${variants[variant]} ${className}`
+  const classes = `inline-flex min-h-10 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${variants[variant]} ${className}`
 
   if ("href" in rest && rest.href) {
     return (
