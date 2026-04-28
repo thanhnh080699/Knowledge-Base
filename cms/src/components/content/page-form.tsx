@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { Textarea } from "@/components/ui/textarea";
 import { absoluteCdnUrl, slugify } from "@/lib/utils";
 import type {
@@ -232,14 +233,12 @@ export function PageForm({
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="page-content">Content</Label>
-              <Textarea
-                id="page-content"
-                className="min-h-[320px] font-mono"
+              <RichTextEditor
                 value={form.content}
-                onChange={(event) =>
+                onChange={(value) =>
                   setForm((current) => ({
                     ...current,
-                    content: event.target.value,
+                    content: value,
                   }))
                 }
               />

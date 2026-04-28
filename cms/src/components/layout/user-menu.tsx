@@ -29,7 +29,7 @@ export function UserMenu() {
   const handleLogout = () => {
     logout();
     toast.success('Đăng xuất thành công');
-    router.push('/');
+    router.push('/login');
   };
 
   const displayName = user?.fullName || 'User';

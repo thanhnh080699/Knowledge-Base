@@ -87,7 +87,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
       : 'Manage quick labels used to classify posts.'
   const Icon = kind === 'category' ? FolderOpen : TagIcon
   const useModalForm = !usePageForm
-  const basePath = pageBasePath ?? `/dashboard/${kind === 'category' ? 'categories' : 'tags'}`
+  const basePath = pageBasePath ?? `/${kind === 'category' ? 'categories' : 'tags'}`
 
   function toggleAll() {
     if (allSelected) {

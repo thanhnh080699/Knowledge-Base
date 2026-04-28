@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'r
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Textarea } from '@/components/ui/textarea'
 import { absoluteCdnUrl, slugify } from '@/lib/utils'
 import type { Category, Tag } from '@/types/taxonomy'
@@ -190,7 +191,7 @@ export function PostForm({ mode, post, categories, tags, isSubmitting, onSubmit 
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="post-content">Content</Label>
-              <Textarea id="post-content" className="min-h-[320px] font-mono" value={form.content} onChange={(event) => setForm((current) => ({ ...current, content: event.target.value }))} />
+              <RichTextEditor value={form.content} onChange={(value) => setForm((current) => ({ ...current, content: value }))} />
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="post-excerpt">Excerpt</Label>

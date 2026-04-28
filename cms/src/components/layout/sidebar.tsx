@@ -38,21 +38,21 @@ type NavGroup = {
 const navigation: NavGroup[] = [
   {
     group: "DASHBOARD",
-    items: [{ name: "Dashboard", href: "/dashboard", icon: LayoutDashboard }],
+    items: [{ name: "Dashboard", href: "/", icon: LayoutDashboard }],
   },
   {
     group: "CONTENT",
     items: [
-      { name: "Posts", href: "/dashboard/posts", icon: FileText },
-      { name: "Pages", href: "/dashboard/pages", icon: Files },
-      { name: "Categories", href: "/dashboard/categories", icon: FolderOpen },
-      { name: "Tags", href: "/dashboard/tags", icon: Tag },
-      { name: "Menus", href: "/dashboard/menus", icon: Navigation },
+      { name: "Posts", href: "/posts", icon: FileText },
+      { name: "Pages", href: "/pages", icon: Files },
+      { name: "Categories", href: "/categories", icon: FolderOpen },
+      { name: "Tags", href: "/tags", icon: Tag },
+      { name: "Menus", href: "/menus", icon: Navigation },
     ],
   },
   {
     group: "MEDIA MANAGER",
-    items: [{ name: "Media Library", href: "/dashboard/media", icon: Image }],
+    items: [{ name: "Media Library", href: "/media", icon: Image }],
   },
 
   {
@@ -62,12 +62,12 @@ const navigation: NavGroup[] = [
         name: "Users & ACL",
         icon: Shield,
         children: [
-          { name: "Users", href: "/dashboard/users" },
-          { name: "Roles", href: "/dashboard/roles" },
-          { name: "Permissions", href: "/dashboard/permissions" },
+          { name: "Users", href: "/users" },
+          { name: "Roles", href: "/roles" },
+          { name: "Permissions", href: "/permissions" },
         ],
       },
-      { name: "Settings", href: "/dashboard/settings", icon: Settings },
+      { name: "Settings", href: "/settings", icon: Settings },
     ],
   },
 ];

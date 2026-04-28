@@ -29,8 +29,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear token and redirect to login
       Cookies.remove('access_token');
-      if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-        window.location.href = '/';
+      if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+        window.location.href = '/login';
       }
     }
     return Promise.reject(error);
