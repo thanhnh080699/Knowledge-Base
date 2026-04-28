@@ -11,11 +11,9 @@ import {
   FolderOpen,
   Settings,
   Menu,
-  Briefcase,
   ChevronDown,
   Shield,
   Tag,
-  Package,
   Image,
   Navigation,
   Files,
@@ -56,13 +54,7 @@ const navigation: NavGroup[] = [
     group: "MEDIA MANAGER",
     items: [{ name: "Media Library", href: "/dashboard/media", icon: Image }],
   },
-  {
-    group: "PORTFOLIO",
-    items: [
-      { name: "Projects", href: "/dashboard/projects", icon: Package },
-      { name: "Services", href: "/dashboard/services", icon: Briefcase },
-    ],
-  },
+
   {
     group: "SYSTEM",
     items: [
