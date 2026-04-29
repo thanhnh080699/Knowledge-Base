@@ -21,7 +21,7 @@ export default async function ProjectsPage() {
   const featured = projects.filter((project) => project.featured).slice(0, 3)
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+    <main className="mx-auto max-w-[1600px] px-4 py-10 md:px-6">
       <section className="mb-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Projects</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-950">Dự án đã làm</h1>

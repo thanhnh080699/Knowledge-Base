@@ -5,10 +5,10 @@ import type { Service } from "@/types/service"
 import type { Tag } from "@/types/tag"
 
 export const fallbackCategories: Category[] = [
-  { id: 1, name: "SysAdmin", slug: "sysadmin", description: "Linux, mạng, máy chủ và vận hành hệ thống" },
-  { id: 2, name: "DevOps", slug: "devops", description: "CI/CD, Docker, Kubernetes và triển khai" },
-  { id: 3, name: "Development", slug: "development", description: "Backend, frontend và kiến trúc ứng dụng" },
-  { id: 4, name: "HelpDesk", slug: "helpdesk", description: "Ghi chú xử lý sự cố và hỗ trợ người dùng" }
+  { id: 1, name: "Systems Administration", slug: "sysadmin", parentId: null, description: "Quản trị máy chủ, cấu hình mạng, bảo mật và vận hành hệ thống" },
+  { id: 2, name: "DevOps", slug: "devops", parentId: null, description: "CI/CD, Docker, Kubernetes, monitoring và triển khai tự động" },
+  { id: 3, name: "Development", slug: "development", parentId: null, description: "Backend, frontend, kiến trúc ứng dụng và best practices" },
+  { id: 4, name: "HelpDesk", slug: "helpdesk", parentId: null, description: "Ghi chú xử lý sự cố và hỗ trợ kỹ thuật người dùng" }
 ]
 
 export const fallbackTags: Tag[] = [

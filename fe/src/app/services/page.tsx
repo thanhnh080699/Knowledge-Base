@@ -19,7 +19,7 @@ export default async function ServicesPage() {
   const services = servicesResponse.length ? servicesResponse : fallbackServices
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+    <main className="mx-auto max-w-[1600px] px-4 py-10 md:px-6">
       <section className="mb-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Services</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-950">Dịch vụ lập trình web</h1>

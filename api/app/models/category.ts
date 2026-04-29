@@ -1,5 +1,13 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, afterSave, afterDelete } from '@adonisjs/lucid/orm'
+import {
+  BaseModel,
+  column,
+  afterSave,
+  afterDelete,
+  belongsTo,
+  hasMany,
+} from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import { clearSitemapCache } from '#helpers/sitemap'
 
 export default class Category extends BaseModel {
@@ -11,6 +19,9 @@ export default class Category extends BaseModel {
 
   @column()
   declare slug: string
+
+  @column()
+  declare parentId: number | null
 
   @column()
   declare description: string | null
@@ -27,11 +38,20 @@ export default class Category extends BaseModel {
   @column()
   declare icon: string | null
 
+  @column()
+  declare sortOrder: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @belongsTo(() => Category, { foreignKey: 'parentId' })
+  declare parent: BelongsTo<typeof Category>
+
+  @hasMany(() => Category, { foreignKey: 'parentId' })
+  declare children: HasMany<typeof Category>
 
   @afterSave()
   static async clearSitemapAfterSave() {

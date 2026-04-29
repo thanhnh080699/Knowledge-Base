@@ -1,5 +1,7 @@
 import { BookOpen, BriefcaseBusiness, Code2, Mail, Menu, Wrench } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
+import { absoluteCdnUrl } from "@/lib/cdn-loader"
 
 const nav = [
   { href: "/docs", label: "Tài liệu", icon: BookOpen },
@@ -9,13 +11,26 @@ const nav = [
   { href: "/contact", label: "Liên hệ", icon: Mail }
 ]
 
-export function Header() {
+export function Header({ siteName, logoUrl }: { siteName?: string; logoUrl?: string | null }) {
+  const displayName = siteName || "Knowledge Base"
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6" aria-label="Main navigation">
         <Link href="/" className="flex items-center gap-2 font-bold text-slate-950">
-          <span className="flex size-9 items-center justify-center rounded-md border border-blue-600 bg-blue-600 text-white">T</span>
-          <span>thanhnh.id.vn</span>
+          {logoUrl ? (
+            <Image
+              src={absoluteCdnUrl(logoUrl)}
+              alt={displayName}
+              width={32}
+              height={32}
+              className="size-9 rounded-md object-contain"
+              unoptimized
+            />
+          ) : (
+            <span className="flex size-9 items-center justify-center rounded-md border border-blue-600 bg-blue-600 text-white">{displayName.charAt(0).toUpperCase()}</span>
+          )}
+          <span>{displayName}</span>
         </Link>
         <div className="hidden items-center gap-1 md:flex">
           {nav.map((item) => {

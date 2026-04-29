@@ -149,6 +149,17 @@ export default class SettingsController {
       'google_analytics_measurement_id',
       'admin_logo',
       'admin_favicon',
+      'contact_name',
+      'contact_email',
+      'contact_phone',
+      'contact_address',
+      'working_hours',
+      'social_facebook',
+      'social_twitter',
+      'social_linkedin',
+      'social_github',
+      'social_youtube',
+      'social_instagram',
     ]
 
     const settings = await Setting.query().whereIn('setting_key', publicKeys)

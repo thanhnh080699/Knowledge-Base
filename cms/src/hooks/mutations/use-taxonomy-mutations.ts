@@ -105,6 +105,24 @@ export function useDeleteCategory() {
   })
 }
 
+export function useReorderCategories() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (items: { id: number; parent_id: number | null; sort_order: number }[]) => {
+      try {
+        await api.post('/admin/categories/reorder', { items })
+      } catch (error) {
+        throw new Error(handleApiError(error, 'Không thể sắp xếp danh mục'))
+      }
+    },
+    onSuccess: () => {
+      toast.success('Sắp xếp danh mục thành công')
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
+    },
+  })
+}
+
 export function useCreateTag() {
   const queryClient = useQueryClient()
 

@@ -10,6 +10,7 @@ export default function categoriesRoutes() {
 
   // Admin
   router.group(() => {
+    router.post('categories/reorder', [CategoriesController, 'reorder']).as('categories.admin.reorder')
     router.resource('categories', CategoriesController)
       .use('*', middleware.acl({ permission: 'categories.manage' }))
   }).prefix('admin').use(middleware.auth())

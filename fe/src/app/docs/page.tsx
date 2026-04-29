@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/shared/sidebar"
 import { SearchBox } from "@/components/shared/search-box"
 import { Pagination } from "@/components/shared/pagination"
 import { fallbackCategories, fallbackPosts } from "@/lib/fallback-data"
-import { getCategories, getPosts } from "@/lib/api"
+import { getRootCategories, getPosts } from "@/lib/api"
 
 export const revalidate = 60
 
@@ -25,14 +25,14 @@ export default async function DocsPage({
   const page = Number(params.page ?? 1)
   const [postsResponse, categoriesResponse] = await Promise.all([
     getPosts({ page, limit: 9, category: params.category, tag: params.tag, search: params.q }),
-    getCategories()
+    getRootCategories()
   ])
   const posts = postsResponse.data.length ? postsResponse.data : fallbackPosts
   const categories = categoriesResponse.length ? categoriesResponse : fallbackCategories
 
   return (
-    <main className="mx-auto grid max-w-7xl gap-6 px-4 py-8 md:grid-cols-[280px_1fr] md:px-6">
-      <Sidebar categories={categories} />
+    <main className="mx-auto grid max-w-[1600px] gap-6 px-4 py-8 md:grid-cols-[280px_1fr] md:px-6">
+      <Sidebar categories={categories} activeCategory={params.category} />
       <section>
         <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Trung tâm tài liệu</p>

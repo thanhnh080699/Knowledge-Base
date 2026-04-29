@@ -15,6 +15,7 @@ interface CategoryFormProps {
   mode: 'create' | 'edit'
   initialCategory?: Category | null
   isSubmitting: boolean
+  categories?: Category[]
   onSubmit: (payload: CategoryPayload) => Promise<void> | void
 }
 
@@ -26,6 +27,7 @@ interface FormState {
   metaDescription: string
   icon: string
   image: string
+  parentId: string
   imageFile: File | null
 }
 
@@ -37,10 +39,11 @@ const emptyForm: FormState = {
   metaDescription: '',
   icon: '',
   image: '',
+  parentId: '',
   imageFile: null,
 }
 
-export function CategoryForm({ mode, initialCategory, isSubmitting, onSubmit }: CategoryFormProps) {
+export function CategoryForm({ mode, initialCategory, isSubmitting, categories = [], onSubmit }: CategoryFormProps) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -58,6 +61,7 @@ export function CategoryForm({ mode, initialCategory, isSubmitting, onSubmit }: 
       metaDescription: initialCategory.metaDescription ?? '',
       icon: initialCategory.icon ?? '',
       image: initialCategory.image ?? '',
+      parentId: initialCategory.parentId?.toString() ?? '',
       imageFile: null,
     })
     setPreview(initialCategory.image)
@@ -104,6 +108,7 @@ export function CategoryForm({ mode, initialCategory, isSubmitting, onSubmit }: 
         metaDescription: form.metaDescription.trim() || undefined,
         icon: form.icon.trim() || undefined,
         image: form.imageFile || form.image || undefined,
+        parentId: form.parentId ? Number(form.parentId) : null,
       })
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Không thể lưu danh mục')
@@ -146,6 +151,24 @@ export function CategoryForm({ mode, initialCategory, isSubmitting, onSubmit }: 
                 {preview ? <Button type="button" variant="ghost" size="sm" className="h-8 gap-2 text-[var(--app-danger-soft-fg)]" onClick={removeImage}><X className="h-4 w-4" />Remove</Button> : null}
                 <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
               </div>
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="category-parent">Parent Category</Label>
+              <select
+                id="category-parent"
+                value={form.parentId}
+                onChange={(event) => setForm((current) => ({ ...current, parentId: event.target.value }))}
+                className="flex h-10 w-full rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm ring-offset-[var(--app-surface)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent-soft-fg)] focus-visible:ring-offset-2"
+              >
+                <option value="">-- No Parent Category --</option>
+                {categories
+                  .filter((c) => c.id !== initialCategory?.id)
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+              </select>
             </div>
           </div>
         </div>

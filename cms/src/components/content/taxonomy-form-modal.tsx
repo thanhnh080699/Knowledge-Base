@@ -33,6 +33,7 @@ interface TaxonomyFormModalProps {
   isSubmitting: boolean
   onClose: () => void
   onSubmit: (payload: TaxonomyPayload) => Promise<void> | void
+  items?: TaxonomyItem[]
 }
 
 interface FormState {
@@ -43,6 +44,7 @@ interface FormState {
   metaDescription: string
   icon: string
   image: string
+  parentId: string
   imageFile?: File | null
 }
 
@@ -54,6 +56,7 @@ const emptyForm: FormState = {
   metaDescription: '',
   icon: '',
   image: '',
+  parentId: '',
   imageFile: null,
 }
 
@@ -91,6 +94,7 @@ export function TaxonomyFormModal({
         metaDescription: item.metaDescription ?? '',
         icon: isCat ? item.icon ?? '' : '',
         image: isCat ? item.image ?? '' : '',
+        parentId: isCat ? item.parentId?.toString() ?? '' : '',
         imageFile: null,
       })
       setPreview(isCat ? item.image : null)
@@ -152,6 +156,7 @@ export function TaxonomyFormModal({
             metaDescription: form.metaDescription.trim() || undefined,
             icon: form.icon.trim() || undefined,
             image: form.imageFile || form.image || undefined,
+            parentId: form.parentId ? Number(form.parentId) : null,
           }
         : {
             ...basePayload,
@@ -236,6 +241,27 @@ export function TaxonomyFormModal({
             />
           </div>
         </div>
+        
+        {kind === 'category' ? (
+          <div className="space-y-2">
+            <Label htmlFor="category-parent">Danh mục cha</Label>
+            <select
+              id="category-parent"
+              value={form.parentId}
+              onChange={(event) => setForm((current) => ({ ...current, parentId: event.target.value }))}
+              className="flex h-10 w-full rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm ring-offset-[var(--app-surface)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent-soft-fg)] focus-visible:ring-offset-2"
+            >
+              <option value="">-- Không có danh mục cha --</option>
+              {items
+                ?.filter((i) => i.id !== item?.id)
+                .map((i) => (
+                  <option key={i.id} value={i.id}>
+                    {i.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+        ) : null}
 
         {kind === 'category' ? (
           <>

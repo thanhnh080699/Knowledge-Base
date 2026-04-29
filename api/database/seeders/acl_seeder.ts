@@ -76,8 +76,8 @@ export default class AclSeeder extends BaseSeeder {
     console.log(`[ACL] Permissions assigned to roles`)
 
     // 5. Clone make:admin logic - Create a default admin user if none exists
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@thanhnh.id.vn'
-    const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123'
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@gmail.com'
+    const adminPassword = process.env.ADMIN_PASSWORD || '123456'
     const adminFullName = process.env.ADMIN_FULL_NAME || 'Administrator'
 
     const existingAdmin = await User.findBy('email', adminEmail)

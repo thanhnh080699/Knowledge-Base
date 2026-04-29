@@ -29,6 +29,7 @@ export default class MigrateEazydocs extends BaseCommand {
   private cdn = new CdnMediaService()
   private seriesMap = new Map<number, number>() // wp_id -> local_id
   private categoryMap = new Map<number, number>() // wp_id -> local_id
+  private sysAdminCatId: number | null = null
 
   async run() {
     this.logger.info('Starting EazyDocs migration...')
@@ -54,6 +55,19 @@ export default class MigrateEazydocs extends BaseCommand {
       )
 
       this.logger.info(`Structure: ${rootDocs.length} Series, ${sectionDocs.length} Categories, ${articleDocs.length} Articles.`)
+
+      // Step 0: Ensure Parent Categories exist
+      if (!this.dryRun) {
+        let sysAdmin = await Category.findBy('slug', 'system-administrator')
+        if (!sysAdmin) sysAdmin = await Category.create({ name: 'System Administrator', slug: 'system-administrator' })
+        this.sysAdminCatId = sysAdmin.id
+
+        let helpDesk = await Category.findBy('slug', 'help-desk')
+        if (!helpDesk) await Category.create({ name: 'Help Desk', slug: 'help-desk' })
+
+        let devOps = await Category.findBy('slug', 'dev-ops')
+        if (!devOps) await Category.create({ name: 'Dev Ops', slug: 'dev-ops' })
+      }
 
       // Step 1: Migrate Root Docs -> Series
       for (const wpDoc of rootDocs) {
@@ -115,9 +129,14 @@ export default class MigrateEazydocs extends BaseCommand {
           name: wpDoc.post_title,
           slug: slug,
           description: wpDoc.post_excerpt || null,
+          parentId: this.sysAdminCatId,
         })
       }
     } else {
+      if (!this.dryRun && category.parentId !== this.sysAdminCatId) {
+        category.parentId = this.sysAdminCatId
+        await category.save()
+      }
       this.logger.info(`  ✓ Found existing Category: ${wpDoc.post_title}`)
     }
 
@@ -143,6 +162,10 @@ export default class MigrateEazydocs extends BaseCommand {
     // Determine IDs
     let parentId = Number(wpDoc.post_parent)
     let categoryId = this.categoryMap.get(parentId) || null
+    if (!categoryId && this.sysAdminCatId) {
+       // If no category was mapped, place it directly under System Administrator
+       categoryId = this.sysAdminCatId
+    }
     
     // Find Series ID (either from parent or grandparent)
     let seriesId = this.seriesMap.get(parentId) || null

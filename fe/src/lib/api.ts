@@ -1,5 +1,5 @@
 import axios from "axios"
-import type { Category } from "@/types/category"
+import type { Category, SiteSettings } from "@/types/category"
 import type { ContactPayload } from "@/types/contact"
 import type { PaginatedResponse, Post } from "@/types/post"
 import type { Project } from "@/types/project"
@@ -72,6 +72,57 @@ export async function getCategories() {
     return []
   }
 }
+
+export async function getRootCategories() {
+  try {
+    const { data } = await api.get<{ data: Category[] }>("/categories", {
+      params: { roots: "true" }
+    })
+    return data.data
+  } catch {
+    return []
+  }
+}
+
+export async function getCategory(slugOrId: string) {
+  try {
+    const { data } = await api.get<{ data: Category }>(`/categories/${slugOrId}`)
+    return data.data
+  } catch {
+    return null
+  }
+}
+
+export async function getSettings(): Promise<SiteSettings> {
+  const fallback: SiteSettings = {
+    site_name: "Knowledge Base",
+    site_description: "Tài liệu kỹ thuật mở cho cộng đồng",
+    site_url: "",
+    google_analytics_enabled: false,
+    google_analytics_measurement_id: "",
+    admin_logo: null,
+    admin_favicon: null,
+    contact_name: "",
+    contact_email: "",
+    contact_phone: "",
+    contact_address: "",
+    working_hours: "",
+    social_facebook: "",
+    social_twitter: "",
+    social_linkedin: "",
+    social_github: "",
+    social_youtube: "",
+    social_instagram: ""
+  }
+
+  try {
+    const { data } = await api.get<{ data: Record<string, unknown> }>("/settings/public")
+    return { ...fallback, ...data.data } as SiteSettings
+  } catch {
+    return fallback
+  }
+}
+
 
 export async function getTags() {
   try {

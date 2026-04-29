@@ -20,7 +20,7 @@ export default async function ContactPage() {
   const services = servicesResponse.length ? servicesResponse : fallbackServices
 
   return (
-    <main className="mx-auto grid max-w-7xl gap-6 px-4 py-10 md:grid-cols-[0.8fr_1.2fr] md:px-6">
+    <main className="mx-auto grid max-w-[1600px] gap-6 px-4 py-10 md:grid-cols-[0.8fr_1.2fr] md:px-6">
       <section>
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Contact</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-950">Liên hệ</h1>

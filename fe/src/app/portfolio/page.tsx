@@ -23,7 +23,7 @@ const timeline = [
 
 export default function PortfolioPage() {
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+    <main className="mx-auto max-w-[1600px] px-4 py-10 md:px-6">
       <section className="grid gap-6 md:grid-cols-[320px_1fr]">
         <Card className="p-6">
           <div className="flex size-28 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-4xl font-bold text-blue-600" aria-label="Avatar thanhnh">

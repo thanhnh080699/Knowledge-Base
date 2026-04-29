@@ -14,8 +14,28 @@ export default class CategoriesController {
     const page = request.input('page')
     const limit = request.input('limit')
     const q = request.input('q')
+    const parentId = request.input('parent_id')
+    const roots = request.input('roots')
 
-    const query = Category.query().orderBy('name', 'asc')
+    const query = Category.query()
+      .preload('children', (childQuery) => {
+        childQuery
+          .orderBy('sort_order', 'asc')
+          .orderBy('name', 'asc')
+          .preload('children', (subChildQuery) => {
+            subChildQuery.orderBy('sort_order', 'asc').orderBy('name', 'asc')
+          })
+      })
+      .orderBy('sort_order', 'asc')
+      .orderBy('name', 'asc')
+
+    if (roots === 'true' || roots === '1') {
+      query.whereNull('parent_id')
+    }
+
+    if (parentId) {
+      query.where('parent_id', parentId)
+    }
 
     if (q) {
       query.where((builder) => {
@@ -60,6 +80,15 @@ export default class CategoriesController {
     const category = await Category.query()
       .where('id', params.id)
       .orWhere('slug', params.id)
+      .preload('children', (childQuery) => {
+        childQuery
+          .orderBy('sort_order', 'asc')
+          .orderBy('name', 'asc')
+          .preload('children', (subChildQuery) => {
+            subChildQuery.orderBy('sort_order', 'asc').orderBy('name', 'asc')
+          })
+      })
+      .preload('parent')
       .firstOrFail()
     return response.ok({ data: category })
   }
@@ -101,4 +130,25 @@ export default class CategoriesController {
     await category.delete()
     return response.noContent()
   }
+
+  /**
+   * @reorder
+   * @description Reorder categories
+   * @tag CATEGORIES
+   */
+  async reorder({ request, response }: HttpContext) {
+    const { items } = request.only(['items']) as {
+      items: { id: number; parent_id: number | null; sort_order: number }[]
+    }
+
+    for (const item of items) {
+      await Category.query().where('id', item.id).update({
+        parent_id: item.parent_id,
+        sort_order: item.sort_order,
+      })
+    }
+
+    return response.ok({ message: 'Categories reordered successfully' })
+  }
 }
+

@@ -2,6 +2,7 @@ export interface Category {
   id: number
   name: string
   slug: string
+  parentId: number | null
   description: string | null
   metaTitle: string | null
   metaDescription: string | null
@@ -9,6 +10,7 @@ export interface Category {
   image: string | null
   createdAt: string | null
   updatedAt: string | null
+  children?: Category[]
 }
 
 export interface Tag {
@@ -36,6 +38,7 @@ export interface CreateCategoryPayload {
   metaDescription?: string
   icon?: string
   image?: string | File
+  parentId?: number | null
 }
 
 export type UpdateCategoryPayload = Partial<CreateCategoryPayload>
