@@ -14,11 +14,30 @@ export default class ProjectsController {
     const page = request.input('page', 1)
     const limit = request.input('limit', 10)
     const featured = request.input('featured')
+    const status = request.input('status')
+    const search = request.input('q') || request.input('search')
+    const isAdminRequest = request.url().includes('/admin/projects')
 
     const query = Project.query().orderBy('createdAt', 'desc')
 
+    if (!isAdminRequest) {
+      query.where('status', 'PUBLISHED')
+    } else if (status) {
+      query.where('status', status)
+    }
+
     if (featured !== undefined) {
       query.where('featured', featured === 'true' || featured === '1')
+    }
+
+    if (search) {
+      query.where((builder) => {
+        builder
+          .whereILike('title', `%${search}%`)
+          .orWhereILike('slug', `%${search}%`)
+          .orWhereILike('description', `%${search}%`)
+          .orWhereILike('content', `%${search}%`)
+      })
     }
 
     const projects = await query.paginate(page, limit)
@@ -46,10 +65,13 @@ export default class ProjectsController {
    * @paramPath id - The project ID or Slug
    * @responseBody 200 - { data: <Project> }
    */
-  async show({ params, response }: HttpContext) {
+  async show({ params, request, response }: HttpContext) {
+    const isAdminRequest = request.url().includes('/admin/projects')
     const project = await Project.query()
-      .where('id', params.id)
-      .orWhere('slug', params.id)
+      .where((builder) => {
+        builder.where('id', params.id).orWhere('slug', params.id)
+      })
+      .if(!isAdminRequest, (query) => query.where('status', 'PUBLISHED'))
       .firstOrFail()
     return response.ok({ data: project })
   }
@@ -67,7 +89,9 @@ export default class ProjectsController {
     const validatedPayload = await request.validateUsing(updateProjectValidator, {
       meta: { params },
     })
-    const payload = normalizeMediaFields(validatedPayload, ['thumbnailUrl'])
+    const projectPayload = { ...validatedPayload }
+    delete projectPayload.params
+    const payload = normalizeMediaFields(projectPayload, ['thumbnailUrl'])
 
     project.merge(payload)
     await project.save()

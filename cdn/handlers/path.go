@@ -3,8 +3,11 @@ package handlers
 import (
 	"fmt"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
+
+var windowsAbsolutePathPattern = regexp.MustCompile(`^[a-zA-Z]:[\\/]`)
 
 func sanitizeRelativePath(input string, allowEmpty bool) (string, error) {
 	trimmed := strings.TrimSpace(input)
@@ -25,7 +28,7 @@ func sanitizeRelativePath(input string, allowEmpty bool) (string, error) {
 		return "", fmt.Errorf("path is required")
 	}
 
-	if filepath.IsAbs(cleaned) || filepath.VolumeName(cleaned) != "" {
+	if filepath.IsAbs(cleaned) || filepath.VolumeName(cleaned) != "" || windowsAbsolutePathPattern.MatchString(cleaned) {
 		return "", fmt.Errorf("absolute paths are not allowed")
 	}
 

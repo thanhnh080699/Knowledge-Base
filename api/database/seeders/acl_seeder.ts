@@ -68,7 +68,6 @@ export default class AclSeeder extends BaseSeeder {
         'Pages',
         'Menus',
         'Projects',
-        'Services',
         'Question & Answer',
       ].includes(p.module)
     )

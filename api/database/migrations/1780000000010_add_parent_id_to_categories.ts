@@ -19,6 +19,7 @@ export default class extends BaseSchema {
 
   async down() {
     this.schema.alterTable(this.tableName, (table) => {
+      table.dropForeign(['parent_id'])
       table.dropColumn('parent_id')
       table.dropColumn('sort_order')
     })

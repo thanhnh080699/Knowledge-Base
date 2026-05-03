@@ -3,7 +3,6 @@ import type { Category, SiteSettings } from "@/types/category"
 import type { ContactPayload } from "@/types/contact"
 import type { PaginatedResponse, Post } from "@/types/post"
 import type { Project } from "@/types/project"
-import type { Service } from "@/types/service"
 import type { Tag } from "@/types/tag"
 
 const api = axios.create({
@@ -148,17 +147,17 @@ export async function getProjects(params: { page?: number; limit?: number; featu
   }
 }
 
-export async function getServices(featured?: boolean) {
+export async function getProject(slug: string) {
   try {
-    const { data } = await api.get<{ data: Service[] }>("/services", { params: { featured } })
+    const { data } = await api.get<{ data: Project }>(`/projects/${slug}`)
     return data.data
   } catch {
-    return []
+    return null
   }
 }
 
 export async function submitContact(payload: ContactPayload) {
-  const subjectParts = [payload.service, payload.company].filter(Boolean)
+  const subjectParts = [payload.company].filter(Boolean)
   const subject = subjectParts.length ? subjectParts.join(" - ") : "Website contact request"
 
   const { data } = await api.post("/contact", {

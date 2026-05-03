@@ -1,7 +1,6 @@
 import type { Category } from "@/types/category"
 import type { Post } from "@/types/post"
 import type { Project } from "@/types/project"
-import type { Service } from "@/types/service"
 import type { Tag } from "@/types/tag"
 
 export const fallbackCategories: Category[] = [
@@ -59,66 +58,39 @@ export const fallbackProjects: Project[] = [
     id: 1,
     title: "thanhnh.id.vn CMS",
     slug: "thanhnh-cms",
-    description: "Admin panel quản trị bài viết, danh mục, media, dự án và dịch vụ.",
+    description: "Admin panel quản trị bài viết, danh mục, media và dự án.",
+    content: "## Phạm vi triển khai\nXây dựng dashboard quản trị nội dung theo workflow CMS: bài viết, phân loại, media, project và cấu hình hệ thống.\n\n## Kết quả\nTối ưu thao tác biên tập, upload ảnh qua CDN nội bộ và kết nối API phân quyền.",
     techStack: ["Next.js", "React Query", "Zustand"],
     thumbnailUrl: null,
     demoUrl: null,
     repoUrl: null,
-    featured: true
+    featured: true,
+    status: "PUBLISHED"
   },
   {
     id: 2,
     title: "AdonisJS Content API",
     slug: "adonisjs-content-api",
     description: "REST API cho content, portfolio, contact va sitemap.",
+    content: "## Phạm vi triển khai\nThiết kế REST API cho content, taxonomy, portfolio, service, contact và sitemap.\n\n## Kết quả\nChuẩn hóa validator, ACL, migration và media path để FE/CMS dùng chung một contract.",
     techStack: ["AdonisJS", "MariaDB", "Lucid"],
     thumbnailUrl: null,
     demoUrl: null,
     repoUrl: null,
-    featured: true
+    featured: true,
+    status: "PUBLISHED"
   },
   {
     id: 3,
-    title: "Go CDN Service",
+    title: "Go CDN",
     slug: "go-cdn-service",
-    description: "Dịch vụ upload, resize ảnh và phân phối media qua CDN nội bộ.",
+    description: "Module upload, resize ảnh và phân phối media qua CDN nội bộ.",
+    content: "## Phạm vi triển khai\nXây dựng service upload, quản lý folder, serve file và resize ảnh on-the-fly.\n\n## Kết quả\nCMS upload ảnh theo module, FE hiển thị bằng URL CDN tuyệt đối và hỗ trợ biến thể ảnh WebP.",
     techStack: ["Go", "Gin", "Image"],
     thumbnailUrl: null,
     demoUrl: null,
     repoUrl: null,
-    featured: true
-  }
-]
-
-export const fallbackServices: Service[] = [
-  {
-    id: 1,
-    name: "Website doanh nghiệp",
-    slug: "website-doanh-nghiep",
-    description: "Thiết kế và lập trình website giới thiệu, landing page, blog và trang dịch vụ.",
-    features: ["Next.js App Router", "SEO kỹ thuật", "CMS quản trị nội dung", "Tích hợp contact form"],
-    priceRange: "8.000.000 VND",
-    category: "Web",
-    featured: true
-  },
-  {
-    id: 2,
-    name: "Hệ thống quản trị nội bộ",
-    slug: "he-thong-quan-tri-noi-bo",
-    description: "Xây dựng dashboard quản trị, phân quyền, CRUD workflow và báo cáo.",
-    features: ["Phân quyền theo vai trò", "Giao diện admin", "REST API", "Workflow dễ kiểm soát"],
-    priceRange: "20.000.000 VND",
-    category: "Application",
-    featured: true
-  },
-  {
-    id: 3,
-    name: "Tư vấn DevOps",
-    slug: "tu-van-devops",
-    description: "Đóng gói, deploy, backup và monitoring cho website hoặc ứng dụng sẵn có.",
-    features: ["Docker deployment", "Reverse proxy", "Kế hoạch backup", "Monitoring cơ bản"],
-    priceRange: "5.000.000 VND",
-    category: "DevOps",
-    featured: false
+    featured: true,
+    status: "PUBLISHED"
   }
 ]

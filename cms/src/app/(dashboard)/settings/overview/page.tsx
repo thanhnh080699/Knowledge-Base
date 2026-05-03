@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { useUpdateSettingsGroup } from '@/hooks/mutations/use-setting-mutations'
 import { useSettingsGroup } from '@/hooks/queries/use-settings'
 import type { Setting, SettingValue, UpdateSettingInput } from '@/types/settings'
-import { AlertCircle, RotateCcw, Save, X } from 'lucide-react'
+import { AlertCircle, RotateCcw, Save } from 'lucide-react'
 
 const OVERVIEW_GROUP = 'overview'
 
@@ -34,7 +34,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     id: 'site_description',
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'site_description',
-    settingValue: 'Knowledge base, portfolio and software services by Thanh Nguyen.',
+    settingValue: 'Knowledge base, portfolio and technical notes by Thanh Nguyen.',
     type: 'text',
     label: 'Site description',
     description: 'Short description used for SEO and interface summaries.',

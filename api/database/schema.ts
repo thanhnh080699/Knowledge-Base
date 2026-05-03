@@ -308,8 +308,10 @@ export class PostSchema extends BaseModel {
 }
 
 export class ProjectSchema extends BaseModel {
-  static $columns = ['createdAt', 'demoUrl', 'description', 'featured', 'id', 'repoUrl', 'slug', 'techStack', 'thumbnailUrl', 'title', 'updatedAt'] as const
+  static $columns = ['content', 'createdAt', 'demoUrl', 'description', 'featured', 'id', 'repoUrl', 'slug', 'status', 'techStack', 'thumbnailUrl', 'title', 'updatedAt'] as const
   $columns = ProjectSchema.$columns
+  @column()
+  declare content: string | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
@@ -324,6 +326,8 @@ export class ProjectSchema extends BaseModel {
   declare repoUrl: string | null
   @column()
   declare slug: string
+  @column()
+  declare status: string
   @column()
   declare techStack: any | null
   @column()
@@ -398,31 +402,6 @@ export class SeriesSchema extends BaseModel {
   declare id: number
   @column()
   declare name: string
-  @column()
-  declare slug: string
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
-}
-
-export class ServiceSchema extends BaseModel {
-  static $columns = ['category', 'createdAt', 'description', 'featured', 'features', 'id', 'name', 'priceRange', 'slug', 'updatedAt'] as const
-  $columns = ServiceSchema.$columns
-  @column()
-  declare category: string | null
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null
-  @column()
-  declare description: string | null
-  @column()
-  declare featured: boolean | null
-  @column()
-  declare features: any | null
-  @column({ isPrimary: true })
-  declare id: number
-  @column()
-  declare name: string
-  @column()
-  declare priceRange: string | null
   @column()
   declare slug: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })

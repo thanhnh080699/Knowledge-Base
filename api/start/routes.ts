@@ -19,7 +19,6 @@ import tagsRoutes from './routes/tags.js'
 import pagesRoutes from './routes/pages.js'
 import menusRoutes from './routes/menus.js'
 import projectsRoutes from './routes/projects.js'
-import servicesRoutes from './routes/services.js'
 import contactsRoutes from './routes/contacts.js'
 import commentsRoutes from './routes/comments.js'
 import usersRoutes from './routes/users.js'
@@ -62,7 +61,6 @@ router
     pagesRoutes()
     menusRoutes()
     projectsRoutes()
-    servicesRoutes()
     contactsRoutes()
     commentsRoutes()
     usersRoutes()

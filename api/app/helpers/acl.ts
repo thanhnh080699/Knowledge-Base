@@ -35,10 +35,6 @@ export const ACL_MODULES = {
     name: 'Projects',
     permissions: ['create', 'read', 'update', 'delete', 'manage'],
   },
-  SERVICES: {
-    name: 'Services',
-    permissions: ['create', 'read', 'update', 'delete', 'manage'],
-  },
   QUESTION_ANSWERS: {
     name: 'Question & Answer',
     permissions: ['create', 'read', 'update', 'delete', 'manage'],

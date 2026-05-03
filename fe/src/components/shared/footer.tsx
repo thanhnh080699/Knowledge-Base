@@ -11,7 +11,6 @@ const docLinks = [
 
 const quickLinks = [
   { href: "/projects", label: "Dự án" },
-  { href: "/services", label: "Dịch vụ" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/contact", label: "Liên hệ" }
 ]

@@ -24,7 +24,7 @@ const overviewSettings: DefaultSetting[] = [
   {
     settingGroup: 'overview',
     settingKey: 'site_description',
-    settingValue: 'Knowledge base, portfolio and software services by Thanh Nguyen.',
+    settingValue: 'Knowledge base, portfolio and technical notes by Thanh Nguyen.',
     type: 'text',
     label: 'Site description',
     description: 'Short description used for SEO and interface summaries.',

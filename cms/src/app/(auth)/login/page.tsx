@@ -79,7 +79,7 @@ export default function LoginPage() {
               ThanhNh CMS
             </h1>
             <p className="text-lg text-white/80 max-w-md">
-              Multi-platform content management system. Manage your posts, projects, services, and contact information in one place.
+              Multi-platform content management system. Manage your posts, projects, media, and contact information in one place.
             </p>
           </motion.div>
         </div>

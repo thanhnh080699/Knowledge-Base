@@ -15,9 +15,30 @@ export default class Project extends BaseModel {
   @column()
   declare description: string | null
 
+  @column()
+  declare content: string | null
+
   @column({
-    prepare: (value: any) => JSON.stringify(value),
-    consume: (value: string) => JSON.parse(value),
+    prepare: (value: unknown) => {
+      if (Array.isArray(value)) return JSON.stringify(value)
+      if (typeof value === 'string') return value
+      return JSON.stringify([])
+    },
+    consume: (value: unknown) => {
+      if (Array.isArray(value)) return value
+      if (!value) return []
+      if (typeof value !== 'string') return []
+
+      try {
+        const parsed = JSON.parse(value)
+        return Array.isArray(parsed) ? parsed : []
+      } catch {
+        return value
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean)
+      }
+    },
   })
   declare techStack: any
 
@@ -32,6 +53,9 @@ export default class Project extends BaseModel {
 
   @column()
   declare featured: boolean
+
+  @column()
+  declare status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

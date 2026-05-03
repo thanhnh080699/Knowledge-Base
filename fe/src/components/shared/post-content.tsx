@@ -64,7 +64,8 @@ export function PostContent({ content }: { content: string }) {
           h3: ({ children }) => <h3 id={slugifyHeading(String(children))}>{children}</h3>,
           pre: ({ children }) => {
             // Extract text content for the copy button
-            const codeContent = (children as any)?.props?.children || ""
+            const codeElement = children as { props?: { children?: string | string[] } }
+            const codeContent = codeElement.props?.children || ""
             return (
               <div className="relative group">
                 <CopyButton text={String(codeContent).replace(/\n$/, "")} />
@@ -79,4 +80,3 @@ export function PostContent({ content }: { content: string }) {
     </div>
   )
 }
-

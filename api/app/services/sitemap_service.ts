@@ -3,7 +3,6 @@ import Post from '#models/post'
 import Category from '#models/category'
 import Tag from '#models/tag'
 import Project from '#models/project'
-import Service from '#models/service'
 import { DateTime } from 'luxon'
 
 export default class SitemapService {
@@ -54,7 +53,7 @@ export default class SitemapService {
     }
 
     const siteUrl = await this.getSiteUrl()
-    const sections = ['posts', 'categories', 'tags', 'projects', 'services']
+    const sections = ['posts', 'categories', 'tags', 'projects']
     
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`
@@ -120,19 +119,10 @@ export default class SitemapService {
       case 'projects':
         const projects = await Project.query().where('status', 'PUBLISHED').orderBy('updated_at', 'desc')
         urls = projects.map((p) => ({
-          loc: `${siteUrl}/portfolio/${p.slug}`,
+          loc: `${siteUrl}/projects/${p.slug}`,
           lastmod: p.updatedAt.toISOString(),
           changefreq: 'monthly',
           priority: '0.7',
-        }))
-        break
-      case 'services':
-        const services = await Service.query().orderBy('updated_at', 'desc')
-        urls = services.map((s) => ({
-          loc: `${siteUrl}/services/${s.slug || s.id}`, // Fallback if no slug
-          lastmod: s.updatedAt.toISOString(),
-          changefreq: 'monthly',
-          priority: '0.6',
         }))
         break
       default:

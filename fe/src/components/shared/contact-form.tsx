@@ -6,9 +6,8 @@ import { FormEvent, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input, Textarea } from "@/components/ui/input"
 import { submitContact } from "@/lib/api"
-import type { Service } from "@/types/service"
 
-export function ContactForm({ services }: { services: Service[] }) {
+export function ContactForm() {
   const params = useSearchParams()
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [message, setMessage] = useState("")
@@ -25,7 +24,6 @@ export function ContactForm({ services }: { services: Service[] }) {
         name: String(formData.get("name") ?? ""),
         email: String(formData.get("email") ?? ""),
         company: String(formData.get("company") ?? ""),
-        service: String(formData.get("service") ?? ""),
         message: String(formData.get("message") ?? "")
       })
       event.currentTarget.reset()
@@ -53,17 +51,8 @@ export function ContactForm({ services }: { services: Service[] }) {
           <Input name="company" autoComplete="organization" />
         </label>
         <label className="grid gap-2 text-sm font-semibold text-slate-700">
-          Dịch vụ
-          <select name="service" defaultValue={params.get("service") ?? ""} className="min-h-10 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-colors focus:border-blue-600">
-            <option value="">Chọn dịch vụ</option>
-            {services.map((service) => (
-              <option key={service.id} value={service.name}>{service.name}</option>
-            ))}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm font-semibold text-slate-700">
           Nội dung
-          <Textarea name="message" required />
+          <Textarea name="message" required defaultValue={params.get("message") ?? ""} />
         </label>
       </div>
       {message ? (

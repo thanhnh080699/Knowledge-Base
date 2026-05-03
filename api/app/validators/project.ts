@@ -18,11 +18,13 @@ export const createProjectValidator = vine.compile(
     title: vine.string().trim().minLength(3).maxLength(255),
     slug: slug().unique({ table: 'projects', column: 'slug' }),
     description: vine.string().trim(),
+    content: vine.string().trim().optional(),
     techStack: vine.array(vine.string().trim()).optional(),
     thumbnailUrl: vine.string().trim().optional(),
     demoUrl: vine.string().trim().url().optional(),
     repoUrl: vine.string().trim().url().optional(),
     featured: vine.boolean().optional(),
+    status: vine.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
   })
 )
 
@@ -45,10 +47,12 @@ export const updateProjectValidator = vine.compile(
       })
       .optional(),
     description: vine.string().trim().optional(),
+    content: vine.string().trim().optional(),
     techStack: vine.array(vine.string().trim()).optional(),
     thumbnailUrl: vine.string().trim().optional(),
     demoUrl: vine.string().trim().url().optional(),
     repoUrl: vine.string().trim().url().optional(),
     featured: vine.boolean().optional(),
+    status: vine.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
   })
 )

@@ -4,6 +4,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "reac
 type ButtonBaseProps = {
   children: ReactNode
   variant?: "primary" | "secondary" | "outline" | "ghost"
+  size?: "default" | "sm"
   className?: string
 }
 
@@ -25,8 +26,12 @@ const variants = {
 }
 
 export function Button(props: ButtonProps | ButtonLinkProps) {
-  const { children, variant = "primary", className = "", ...rest } = props
-  const classes = `inline-flex min-h-10 items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${variants[variant]} ${className}`
+  const { children, variant = "primary", size = "default", className = "", ...rest } = props
+  const sizes = {
+    default: "min-h-10 px-4 py-2",
+    sm: "min-h-9 px-3 py-1.5"
+  }
+  const classes = `inline-flex items-center justify-center gap-2 rounded-md border text-sm font-medium transition-colors cursor-pointer ${sizes[size]} ${variants[variant]} ${className}`
 
   if ("href" in rest && rest.href) {
     return (

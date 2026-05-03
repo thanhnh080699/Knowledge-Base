@@ -1,5 +1,6 @@
 import { ExternalLink, Github } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import cdnLoader, { absoluteCdnUrl } from "@/lib/cdn-loader"
 import type { Project } from "@/types/project"
@@ -8,7 +9,7 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
   const imageSrc = absoluteCdnUrl(project.thumbnailUrl)
 
   return (
-    <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-colors hover:border-blue-600">
+    <article className="group overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-colors hover:border-blue-600">
       <div className="relative aspect-[16/9] border-b border-slate-200 bg-slate-50">
         <Image
           loader={project.thumbnailUrl ? cdnLoader : undefined}
@@ -26,9 +27,16 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
             <Badge key={tech} tone="slate">{tech}</Badge>
           ))}
         </div>
-        <h2 className="mt-3 text-lg font-bold text-slate-950">{project.title}</h2>
+        <h2 className="mt-3 text-lg font-bold text-slate-950">
+          <Link href={`/projects/${project.slug}`} className="transition-colors group-hover:text-blue-700">
+            {project.title}
+          </Link>
+        </h2>
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{project.description ?? "Dự án thực tế với giao diện và backend tùy biến."}</p>
         <div className="mt-4 flex flex-wrap gap-2">
+          <a className="inline-flex items-center gap-2 rounded-md border border-slate-950 bg-slate-950 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-slate-950" href={`/projects/${project.slug}`}>
+            Chi tiết
+          </a>
           {project.demoUrl ? (
             <a className="inline-flex items-center gap-2 rounded-md border border-blue-600 px-3 py-2 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-600 hover:text-white" href={project.demoUrl} target="_blank" rel="noreferrer">
               <ExternalLink size={15} aria-hidden /> Demo

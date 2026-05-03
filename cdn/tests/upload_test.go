@@ -61,6 +61,31 @@ func TestFileUpload(t *testing.T) {
 		}
 	})
 
+	t.Run("Project Content Upload Folder", func(t *testing.T) {
+		pr, pw := io.Pipe()
+		m := multipart.NewWriter(pw)
+
+		go func() {
+			defer pw.Close()
+			defer m.Close()
+
+			part, _ := m.CreateFormFile("file", "project-cover.png")
+			img := imaging.New(120, 80, color.White)
+			imaging.Encode(part, img, imaging.PNG)
+			m.WriteField("folder", "Projects/content")
+		}()
+
+		req, _ := http.NewRequest("POST", "/api/upload", pr)
+		req.Header.Set("Content-Type", m.FormDataContentType())
+		req.Header.Set("X-API-KEY", "test_key")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Contains(t, w.Body.String(), "Projects/content/")
+	})
+
 	t.Run("Deep Inspection (Fail - Not an Image)", func(t *testing.T) {
 		pr, pw := io.Pipe()
 		m := multipart.NewWriter(pw)

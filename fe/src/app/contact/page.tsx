@@ -3,22 +3,17 @@ import type { Metadata } from "next"
 import { Suspense } from "react"
 import { ContactForm } from "@/components/shared/contact-form"
 import { Card } from "@/components/ui/card"
-import { fallbackServices } from "@/lib/fallback-data"
-import { getServices } from "@/lib/api"
 
 export const metadata: Metadata = {
   title: "Liên hệ",
-  description: "Liên hệ tư vấn lập trình web, dashboard quản trị và DevOps.",
+  description: "Liên hệ trao đổi website, dashboard quản trị, API và DevOps.",
   openGraph: {
     title: "Liên hệ | thanhnh.id.vn",
-    description: "Gửi yêu cầu liên hệ cho dịch vụ lập trình web."
+    description: "Gửi yêu cầu liên hệ cho dự án web, API, CMS hoặc deployment."
   }
 }
 
 export default async function ContactPage() {
-  const servicesResponse = await getServices()
-  const services = servicesResponse.length ? servicesResponse : fallbackServices
-
   return (
     <main className="mx-auto grid max-w-[1600px] gap-6 px-4 py-10 md:grid-cols-[0.8fr_1.2fr] md:px-6">
       <section>
@@ -50,7 +45,7 @@ export default async function ContactPage() {
       </section>
       <section aria-label="Contact form">
         <Suspense fallback={<div className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">Đang tải form...</div>}>
-          <ContactForm services={services} />
+          <ContactForm />
         </Suspense>
       </section>
     </main>
