@@ -81,11 +81,14 @@ export default function SitemapSettingsPage() {
             <p className="text-[var(--app-muted)]">Configure how your XML sitemap is generated and cached.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <a href={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/sitemap.xml`} target="_blank" rel="noopener noreferrer" className="gap-2">
-                <Share2 className="h-4 w-4" />
-                View Sitemap
-              </a>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-2"
+              onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/sitemap.xml`, '_blank', 'noopener,noreferrer')}
+            >
+              <Share2 className="h-4 w-4" />
+              View Sitemap
             </Button>
           </div>
         </div>
