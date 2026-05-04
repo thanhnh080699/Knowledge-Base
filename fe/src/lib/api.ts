@@ -110,6 +110,7 @@ export async function getSettings(): Promise<SiteSettings> {
     social_twitter: "",
     social_linkedin: "",
     social_github: "",
+    social_gitlab: "",
     social_youtube: "",
     social_instagram: ""
   }

@@ -1,8 +1,8 @@
-import { Mail, MapPin } from "lucide-react"
 import type { Metadata } from "next"
+import Image from "next/image"
 import { Suspense } from "react"
 import { ContactForm } from "@/components/shared/contact-form"
-import { Card } from "@/components/ui/card"
+import { getSettings } from "@/lib/api"
 
 export const metadata: Metadata = {
   title: "Liên hệ",
@@ -14,38 +14,34 @@ export const metadata: Metadata = {
 }
 
 export default async function ContactPage() {
+  const settings = await getSettings()
+
   return (
-    <main className="mx-auto grid max-w-[1600px] gap-6 px-4 py-10 md:grid-cols-[0.8fr_1.2fr] md:px-6">
-      <section>
-        <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Contact</p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-950">Liên hệ</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-600">
-          Gửi thông tin nhu cầu để trao đổi về website, dashboard quản trị, API hoặc deployment.
-        </p>
-        <div className="mt-6 grid gap-4">
-          <Card className="p-5">
-            <div className="flex gap-3">
-              <Mail className="text-blue-600" size={20} aria-hidden />
-              <div>
-                <h2 className="font-bold text-slate-950">Email</h2>
-                <p className="text-sm text-slate-600">contact@thanhnh.id.vn</p>
-              </div>
-            </div>
-          </Card>
-          <Card className="p-5">
-            <div className="flex gap-3">
-              <MapPin className="text-blue-600" size={20} aria-hidden />
-              <div>
-                <h2 className="font-bold text-slate-950">Location</h2>
-                <p className="text-sm text-slate-600">Viet Nam</p>
-              </div>
-            </div>
-          </Card>
+    <main className="bg-slate-50">
+      <section className="relative min-h-[500px] overflow-hidden border-b border-slate-200 bg-white">
+        <Image
+          src="/images/contact-bg.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(248,250,252,0.98)_0%,rgba(248,250,252,0.9)_42%,rgba(248,250,252,0.3)_100%)]" />
+
+        <div className="relative mx-auto flex min-h-[300px] max-w-7xl items-center px-4 py-16 md:px-6">
+          <div className="max-w-2xl">
+            <h1 className="mt-4 text-4xl font-bold leading-tight text-slate-950 md:text-6xl">Liên hệ</h1>
+            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 md:text-lg">
+              Gửi thông tin nhu cầu để trao đổi về website, dashboard quản trị, API hoặc deployment.
+            </p>
+          </div>
         </div>
       </section>
-      <section aria-label="Contact form">
-        <Suspense fallback={<div className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600">Đang tải form...</div>}>
-          <ContactForm />
+
+      <section className="relative z-10 mx-auto -mt-20 max-w-6xl px-4 pb-16 md:px-6 md:pb-20" aria-label="Contact form">
+        <Suspense fallback={<div className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm">Đang tải form...</div>}>
+          <ContactForm settings={settings} />
         </Suspense>
       </section>
     </main>

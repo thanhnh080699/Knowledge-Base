@@ -1,8 +1,8 @@
 import { ExternalLink, Github } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
-import cdnLoader, { absoluteCdnUrl } from "@/lib/cdn-loader"
+import { CdnImage } from "@/components/shared/cdn-image"
+import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import type { Project } from "@/types/project"
 
 export function ProjectCard({ project, priority = false }: { project: Project; priority?: boolean }) {
@@ -11,8 +11,8 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
   return (
     <article className="group overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-colors hover:border-blue-600">
       <div className="relative aspect-[16/9] border-b border-slate-200 bg-slate-50">
-        <Image
-          loader={project.thumbnailUrl ? cdnLoader : undefined}
+        <CdnImage
+          useCdnLoader={!!project.thumbnailUrl}
           src={imageSrc}
           alt={`Ảnh dự án ${project.title}`}
           fill
@@ -34,11 +34,11 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
         </h2>
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{project.description ?? "Dự án thực tế với giao diện và backend tùy biến."}</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <a className="inline-flex items-center gap-2 rounded-md border border-slate-950 bg-slate-950 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-slate-950" href={`/projects/${project.slug}`}>
+          <a className="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 transition-colors hover:border-blue-600 hover:bg-white" href={`/projects/${project.slug}`}>
             Chi tiết
           </a>
           {project.demoUrl ? (
-            <a className="inline-flex items-center gap-2 rounded-md border border-blue-600 px-3 py-2 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-600 hover:text-white" href={project.demoUrl} target="_blank" rel="noreferrer">
+            <a className="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 transition-colors hover:border-blue-600 hover:bg-white" href={project.demoUrl} target="_blank" rel="noreferrer">
               <ExternalLink size={15} aria-hidden /> Demo
             </a>
           ) : null}

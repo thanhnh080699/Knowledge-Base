@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
-import Image from "next/image"
 import { notFound } from "next/navigation"
 import { ExternalLink, Github } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PostContent } from "@/components/shared/post-content"
-import cdnLoader, { absoluteCdnUrl } from "@/lib/cdn-loader"
+import { CdnImage } from "@/components/shared/cdn-image"
+import { absoluteCdnUrl } from "@/lib/cdn-loader"
+import { stripFirstImage } from "@/lib/content"
 import { fallbackProjects } from "@/lib/fallback-data"
 import { getProject } from "@/lib/api"
 
@@ -53,40 +54,39 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
   return (
     <main className="bg-white">
       <article className="mx-auto max-w-[1200px] px-4 py-10 md:px-6">
-        <header className="grid gap-8 border-b border-slate-200 pb-10 lg:grid-cols-[1fr_420px]">
-          <div>
-            <div className="flex flex-wrap gap-2">
-              {project.featured ? <Badge tone="amber">Featured</Badge> : null}
-              {(project.techStack ?? []).map((tech) => <Badge key={tech} tone="slate">{tech}</Badge>)}
-            </div>
-            <h1 className="mt-5 text-4xl font-bold leading-tight text-slate-950 md:text-5xl">{project.title}</h1>
-            <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
-              {project.description ?? "Case study dự án đã triển khai với giao diện, backend và hạ tầng tùy biến."}
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {project.demoUrl ? (
-                <Button href={project.demoUrl} variant="primary" target="_blank" rel="noreferrer">
-                  <ExternalLink size={16} aria-hidden /> Demo
-                </Button>
-              ) : null}
-              {project.repoUrl ? (
-                <Button href={project.repoUrl} variant="outline" target="_blank" rel="noreferrer">
-                  <Github size={16} aria-hidden /> Repo
-                </Button>
-              ) : null}
-              <Button href="/contact" variant="secondary">Trao đổi dự án tương tự</Button>
-            </div>
+        <header className="border-b border-slate-200 pb-10">
+          <div className="flex flex-wrap gap-2">
+            {project.featured ? <Badge tone="amber">Featured</Badge> : null}
+            {(project.techStack ?? []).map((tech) => <Badge key={tech} tone="slate">{tech}</Badge>)}
           </div>
-
-          <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-slate-200 bg-slate-50 shadow-sm">
-            <Image
-              loader={project.thumbnailUrl ? cdnLoader : undefined}
+          <h1 className="mt-5 text-4xl font-bold leading-tight text-slate-950 md:text-5xl">{project.title}</h1>
+          
+          <div className="mt-8 relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+            <CdnImage
+              useCdnLoader={!!project.thumbnailUrl}
               src={imageSrc}
               alt={`Ảnh dự án ${project.title}`}
               fill
               priority
               className="object-cover"
             />
+          </div>
+
+          <p className="mt-8 max-w-3xl text-base leading-7 text-slate-600">
+            {project.description ?? "Case study dự án đã triển khai với giao diện, backend và hạ tầng tùy biến."}
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {project.demoUrl ? (
+              <Button href={project.demoUrl} variant="primary" target="_blank" rel="noreferrer">
+                <ExternalLink size={16} aria-hidden /> Demo
+              </Button>
+            ) : null}
+            {project.repoUrl ? (
+              <Button href={project.repoUrl} variant="outline" target="_blank" rel="noreferrer">
+                <Github size={16} aria-hidden /> Repo
+              </Button>
+            ) : null}
+            <Button href="/contact" variant="secondary">Trao đổi dự án tương tự</Button>
           </div>
         </header>
 
@@ -99,7 +99,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
           </aside>
           <section>
             <h2 className="text-2xl font-bold text-slate-950">Nội dung triển khai</h2>
-            <PostContent content={project.content || "## Đang cập nhật\nNội dung chi tiết của project này sẽ được bổ sung từ CMS."} />
+            <PostContent content={project.thumbnailUrl ? stripFirstImage(project.content || "") : (project.content || "")} />
           </section>
         </div>
       </article>

@@ -1,4 +1,5 @@
 import type { TocItem } from "@/components/shared/table-of-contents"
+import { absoluteCdnUrl } from "./cdn-loader"
 
 export function slugifyHeading(text: string) {
   return text
@@ -47,8 +48,32 @@ export function normalizeHtmlContent(content: string) {
       const id = slugifyHeading(text)
       return `<h${level}${attrs} id="${id}">${inner}</h${level}>`
     })
+    .replace(/<img[^>]+src="([^">]+)"[^>]*>/gi, (match, src) => {
+      if (src.startsWith("http")) return match
+      return match.replace(src, absoluteCdnUrl(src))
+    })
 }
 
 function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, "")
+}
+
+export function stripFirstImage(content: string): string {
+  // Look for the first image tag (HTML or Markdown)
+  // If it's at the very beginning of the content (within first 100 chars), remove it
+  
+  const htmlImgRegex = /<img[^>]+>/i
+  const mdImgRegex = /!\[.*?\]\(.*?\)/
+  
+  const htmlMatch = content.match(htmlImgRegex)
+  if (htmlMatch && htmlMatch.index !== undefined && htmlMatch.index < 100) {
+    return content.replace(htmlMatch[0], "")
+  }
+  
+  const mdMatch = content.match(mdImgRegex)
+  if (mdMatch && mdMatch.index !== undefined && mdMatch.index < 100) {
+    return content.replace(mdMatch[0], "")
+  }
+  
+  return content
 }

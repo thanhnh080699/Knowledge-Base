@@ -9,15 +9,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUpdateSettingsGroup } from '@/hooks/mutations/use-setting-mutations'
 import { useSettingsGroup } from '@/hooks/queries/use-settings'
 import type { Setting, SettingValue, UpdateSettingInput } from '@/types/settings'
-import { Phone, RotateCcw, Save, Loader2, Mail, MapPin, Clock, Share2, Globe, Link as LinkIcon, Video, Camera, Code2 } from 'lucide-react'
+import { Phone, RotateCcw, Save, Loader2, Mail, MapPin, Clock, Share2, Video, Camera, Github, Gitlab, Facebook, Linkedin, type LucideIcon } from 'lucide-react'
 
 const CONTACT_GROUP = 'contact'
 
-const SOCIAL_ICONS: Record<string, any> = {
-  social_facebook: Share2,
+const SOCIAL_ICONS: Record<string, LucideIcon> = {
+  social_facebook: Facebook,
   social_twitter: Share2,
-  social_linkedin: Share2,
-  social_github: Code2,
+  social_linkedin: Linkedin,
+  social_github: Github,
+  social_gitlab: Gitlab,
   social_youtube: Video,
   social_instagram: Camera,
 }
@@ -26,10 +27,6 @@ function valueToString(value: SettingValue) {
   if (typeof value === 'string') return value
   if (typeof value === 'number' || typeof value === 'boolean') return String(value)
   return ''
-}
-
-function findSetting(settings: Setting[], key: string) {
-  return settings.find((setting) => setting.settingKey === key)
 }
 
 export default function ContactSettingsPage() {

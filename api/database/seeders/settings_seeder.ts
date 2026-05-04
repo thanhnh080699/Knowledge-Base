@@ -245,6 +245,15 @@ const contactSettings: DefaultSetting[] = [
   },
   {
     settingGroup: 'contact',
+    settingKey: 'social_gitlab',
+    settingValue: '',
+    type: 'url',
+    label: 'GitLab URL',
+    description: 'Link to your GitLab profile.',
+    sortOrder: 95,
+  },
+  {
+    settingGroup: 'contact',
     settingKey: 'social_youtube',
     settingValue: '',
     type: 'url',

@@ -1,4 +1,4 @@
-import type { ImageLoaderProps } from "next/image"
+
 
 function cdnMediaBase() {
   const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL?.replace(/\/$/, "") ?? ""

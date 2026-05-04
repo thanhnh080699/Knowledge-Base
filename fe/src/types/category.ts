@@ -32,7 +32,7 @@ export interface SiteSettings {
   social_twitter: string
   social_linkedin: string
   social_github: string
+  social_gitlab: string
   social_youtube: string
   social_instagram: string
 }
-

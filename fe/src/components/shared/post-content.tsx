@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import { CopyButton } from "./copy-button"
+import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import { hasHtmlContent, normalizeHtmlContent, slugifyHeading } from "@/lib/content"
 
 export function PostContent({ content }: { content: string }) {
@@ -71,6 +72,24 @@ export function PostContent({ content }: { content: string }) {
                 <CopyButton text={String(codeContent).replace(/\n$/, "")} />
                 <pre className="!mt-0">{children}</pre>
               </div>
+            )
+          },
+          img: ({ src, alt, ...props }) => {
+            if (!src) return null
+            return (
+              <span className="block my-8">
+                <img 
+                  src={absoluteCdnUrl(src)} 
+                  alt={alt ?? ""} 
+                  {...props} 
+                  className="mx-auto block rounded-xl border border-slate-200 shadow-sm" 
+                />
+                {alt && (
+                  <span className="mt-3 block text-center text-sm italic text-slate-500">
+                    {alt}
+                  </span>
+                )}
+              </span>
             )
           }
         }}

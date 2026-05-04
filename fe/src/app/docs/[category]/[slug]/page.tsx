@@ -5,9 +5,11 @@ import { Badge } from "@/components/ui/badge"
 import { Sidebar } from "@/components/shared/sidebar"
 import { PostContent } from "@/components/shared/post-content"
 import { DocReader } from "@/components/shared/doc-reader"
+import { CdnImage } from "@/components/shared/cdn-image"
+import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import { fallbackCategories, fallbackPosts } from "@/lib/fallback-data"
 import { getRootCategories, getPost } from "@/lib/api"
-import { buildTocFromContent } from "@/lib/content"
+import { buildTocFromContent, stripFirstImage } from "@/lib/content"
 
 export const revalidate = 60
 
@@ -67,21 +69,27 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
             <h1 className="text-3xl font-extrabold leading-tight text-slate-950 md:text-5xl">
               {post.title}
             </h1>
+
+            {post.coverImage && (
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                <CdnImage
+                  src={absoluteCdnUrl(post.coverImage)}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
+
             {post.excerpt && (
               <p className="text-lg leading-relaxed text-slate-600 border-l-4 border-blue-100 pl-4 py-1">
                 {post.excerpt}
               </p>
             )}
-            <div className="flex flex-wrap gap-2 pt-2">
-              {(post.tags ?? []).map((tag) => (
-                <Badge key={tag.slug} tone="slate" className="px-2 py-0.5 text-xs">
-                  #{tag.name}
-                </Badge>
-              ))}
-            </div>
           </header>
 
-          <PostContent content={post.content} />
+          <PostContent content={post.coverImage ? stripFirstImage(post.content) : post.content} />
         </article>
       </DocReader>
     </main>
