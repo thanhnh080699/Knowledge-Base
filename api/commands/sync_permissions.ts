@@ -15,7 +15,6 @@ export default class SyncPermissions extends BaseCommand {
   async run() {
     this.logger.info('Syncing permissions...')
 
-    let createdCount = 0
     let updatedCount = 0
 
     for (const [moduleKey, moduleConfig] of Object.entries(ACL_MODULES)) {

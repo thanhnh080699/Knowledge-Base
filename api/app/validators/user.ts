@@ -12,8 +12,10 @@ export const signupValidator = vine.compile(
     email: email().unique({
       table: 'users',
       column: 'email',
-      filter: (db) => db.whereNull('deleted_at').where('status', 'active'),
-    }),
+      filter: (db: any) => {
+        db.whereNull('deleted_at').where('status', 'active')
+      },
+    } as any),
     password: password(),
   })
 )
@@ -27,8 +29,10 @@ export const createUserValidator = vine.compile(
     email: email().unique({
       table: 'users',
       column: 'email',
-      filter: (db) => db.whereNull('deleted_at').where('status', 'active'),
-    }),
+      filter: (db: any) => {
+        db.whereNull('deleted_at').where('status', 'active')
+      },
+    } as any),
     password: password(),
     roleIds: vine.array(vine.number().exists({ table: 'roles', column: 'id' })).optional(),
   })
@@ -44,14 +48,14 @@ export const updateUserValidator = vine.compile(
       .unique({
         table: 'users',
         column: 'email',
-        filter: (db, _value, field) => {
+        filter: (db: any, _value: any, field: any) => {
           const id = field.meta.params?.id
           if (id) {
             db.whereNot('id', id)
           }
           db.whereNull('deleted_at').where('status', 'active')
         },
-      })
+      } as any)
       .optional(),
     password: password().optional(),
     roleIds: vine.array(vine.number().exists({ table: 'roles', column: 'id' })).optional(),

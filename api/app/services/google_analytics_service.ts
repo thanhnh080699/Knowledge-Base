@@ -30,7 +30,7 @@ export default class GoogleAnalyticsService {
         credentials: serviceAccount.settingValue as any,
       })
       return this.client
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Failed to initialize Google Analytics client: ${error.message}`)
     }
   }

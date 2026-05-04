@@ -62,7 +62,7 @@ export default class SitemapService {
       xml += `
   <sitemap>
     <loc>${siteUrl}/sitemap-${section}.xml</loc>
-    <lastmod>${DateTime.now().toISOString()}</lastmod>
+    <lastmod>${DateTime.now().toISO()}</lastmod>
   </sitemap>`
     }
     
@@ -93,7 +93,7 @@ export default class SitemapService {
         const posts = await Post.query().where('status', 'PUBLISHED').orderBy('updated_at', 'desc')
         urls = posts.map((p) => ({
           loc: `${siteUrl}/docs/${p.slug}`,
-          lastmod: p.updatedAt.toISOString(),
+          lastmod: p.updatedAt?.toISO() || '',
           changefreq: 'weekly',
           priority: '0.8',
         }))
@@ -102,7 +102,7 @@ export default class SitemapService {
         const categories = await Category.query().orderBy('updated_at', 'desc')
         urls = categories.map((c) => ({
           loc: `${siteUrl}/docs?category=${c.slug}`,
-          lastmod: c.updatedAt.toISOString(),
+          lastmod: c.updatedAt?.toISO() || '',
           changefreq: 'monthly',
           priority: '0.5',
         }))
@@ -111,7 +111,7 @@ export default class SitemapService {
         const tags = await Tag.query().orderBy('updated_at', 'desc')
         urls = tags.map((t) => ({
           loc: `${siteUrl}/docs?tag=${t.slug}`,
-          lastmod: t.updatedAt.toISOString(),
+          lastmod: t.updatedAt?.toISO() || '',
           changefreq: 'monthly',
           priority: '0.3',
         }))
@@ -120,7 +120,7 @@ export default class SitemapService {
         const projects = await Project.query().where('status', 'PUBLISHED').orderBy('updated_at', 'desc')
         urls = projects.map((p) => ({
           loc: `${siteUrl}/projects/${p.slug}`,
-          lastmod: p.updatedAt.toISOString(),
+          lastmod: p.updatedAt?.toISO() || '',
           changefreq: 'monthly',
           priority: '0.7',
         }))

@@ -13,8 +13,8 @@ export default class User extends UserSchema {
 
   @manyToMany(() => Role, {
     pivotTable: 'role_users',
-    onQuery: (query) => {
-      query.whereNull('role_users.deleted_at').whereExists((sub) => {
+    onQuery: (query: any) => {
+      query.whereNull('role_users.deleted_at').whereExists((sub: any) => {
         sub.from('roles').whereColumn('roles.id', 'role_users.role_id').whereNull('roles.deleted_at')
       })
     },
@@ -62,7 +62,7 @@ export default class User extends UserSchema {
    */
   async hasRole(roleSlug: string): Promise<boolean> {
     if (!this.roles) {
-      await this.load('roles')
+      await (this as any).load('roles')
     }
     return this.roles.some((role) => role.slug === roleSlug)
   }
@@ -76,7 +76,7 @@ export default class User extends UserSchema {
     }
 
     if (!this.roles || !this.roles.every((role) => role.permissions)) {
-      await this.load('roles', (query) => {
+      await (this as any).load('roles', (query: any) => {
         query.preload('permissions')
       })
     }

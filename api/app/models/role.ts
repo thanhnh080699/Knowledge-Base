@@ -10,8 +10,8 @@ export default class Role extends RoleSchema {
 
   @manyToMany(() => User, {
     pivotTable: 'role_users',
-    onQuery: (query) => {
-      query.whereNull('role_users.deleted_at').whereExists((sub) => {
+    onQuery: (query: any) => {
+      query.whereNull('role_users.deleted_at').whereExists((sub: any) => {
         sub.from('users').whereColumn('users.id', 'role_users.user_id').whereNull('users.deleted_at')
       })
     },
@@ -20,8 +20,8 @@ export default class Role extends RoleSchema {
 
   @manyToMany(() => Permission, {
     pivotTable: 'permission_roles',
-    onQuery: (query) => {
-      query.whereNull('permission_roles.deleted_at').whereExists((sub) => {
+    onQuery: (query: any) => {
+      query.whereNull('permission_roles.deleted_at').whereExists((sub: any) => {
         sub.from('permissions').whereColumn('permissions.id', 'permission_roles.permission_id').whereNull('permissions.deleted_at')
       })
     },

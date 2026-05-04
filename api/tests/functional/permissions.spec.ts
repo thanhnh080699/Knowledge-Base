@@ -46,7 +46,7 @@ test.group('Permissions', () => {
         slug: `tours.manage.${Date.now()}`,
         module: 'tours',
       })
-    const createdPermission = createResponse.body().data as { id: number }
+    const createdPermission = (createResponse.body() as any).data as { id: number }
 
     createResponse.assertStatus(201)
     const permissionId = createdPermission.id

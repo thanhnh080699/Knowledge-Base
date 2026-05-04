@@ -86,11 +86,10 @@ export default class ProjectsController {
    */
   async update({ params, request, response }: HttpContext) {
     const project = await Project.findOrFail(params.id)
-    const validatedPayload = await request.validateUsing(updateProjectValidator, {
+    const { params: _, ...projectPayload } = await request.validateUsing(updateProjectValidator, {
       meta: { params },
     })
-    const projectPayload = { ...validatedPayload }
-    delete projectPayload.params
+    void _
     const payload = normalizeMediaFields(projectPayload, ['thumbnailUrl'])
 
     project.merge(payload)

@@ -161,8 +161,8 @@ export default class MenusController {
     }
 
     for (const { item, payload } of created) {
-      if (payload.parentId !== undefined && idMap.has(payload.parentId)) {
-        item.parentId = idMap.get(payload.parentId) ?? null
+      if (payload.parentId !== undefined && payload.parentId !== null && idMap.has(payload.parentId)) {
+        item.parentId = idMap.get(payload.parentId!) ?? null
         await item.save()
       }
     }

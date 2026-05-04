@@ -2,7 +2,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import Role from '#models/role'
 import { createUserValidator, updateUserValidator, changePasswordValidator } from '#validators/user'
-import hash from '@adonisjs/core/services/hash'
 import { DateTime } from 'luxon'
 
 function applyDeletedFilter(query: ReturnType<typeof User.query>, status: string) {

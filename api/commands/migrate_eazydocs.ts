@@ -85,7 +85,7 @@ export default class MigrateEazydocs extends BaseCommand {
       }
 
       this.logger.success('Migration completed successfully!')
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Migration failed at post: ${this.currentPostTitle || 'unknown'}`)
       this.logger.error('Error message: ' + error.message)
       if (error.stack) {
@@ -289,7 +289,7 @@ export default class MigrateEazydocs extends BaseCommand {
             if (uploadRes && uploadRes.data && uploadRes.data.path) {
               return uploadRes.data.path
             }
-          } catch (error) {
+          } catch (error: any) {
             this.logger.error(`      ⚠ Local file upload failed: ${localPath} - ${error.message}`)
             return url // Don't download if local upload failed
           }
@@ -347,7 +347,7 @@ export default class MigrateEazydocs extends BaseCommand {
       if (uploadRes && uploadRes.data && uploadRes.data.path) {
         return uploadRes.data.path
       }
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`      ⚠ Failed to migrate media: ${url} - ${error.message}`)
     }
     return url

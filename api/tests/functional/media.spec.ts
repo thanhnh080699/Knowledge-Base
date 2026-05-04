@@ -35,7 +35,7 @@ test.group('Media gateway', (group) => {
     const response = await client.get('/api/admin/media?folder=docs').loginAs(user)
 
     response.assertStatus(200)
-    assert.equal(response.body().data.current_folder, 'docs')
+    assert.equal((response.body() as any).data.current_folder, 'docs')
   })
 
   test('moves media through CDN gateway', async ({ client, assert }) => {
@@ -63,6 +63,6 @@ test.group('Media gateway', (group) => {
       .loginAs(user)
 
     response.assertStatus(200)
-    assert.equal(response.body().data.path, 'archive/image.png')
+    assert.equal((response.body() as any).data.path, 'archive/image.png')
   })
 })

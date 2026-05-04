@@ -6,8 +6,8 @@ import Role from './role.js'
 export default class Permission extends PermissionSchema {
   @manyToMany(() => Role, {
     pivotTable: 'permission_roles',
-    onQuery: (query) => {
-      query.whereNull('permission_roles.deleted_at').whereExists((sub) => {
+    onQuery: (query: any) => {
+      query.whereNull('permission_roles.deleted_at').whereExists((sub: any) => {
         sub
           .from('roles')
           .whereColumn('roles.id', 'permission_roles.role_id')

@@ -63,7 +63,7 @@ test.group('Menus', () => {
     assert.isTrue(created.isDefault)
     assert.lengthOf(created.items, 2)
     assert.isNotNull(
-      created.items.find((item: { title: string }) => item.title === 'About').parentId
+      created.items.find((item: { title: string }) => item.title === 'About')?.parentId
     )
 
     const menu = await Menu.findByOrFail('slug', slug)

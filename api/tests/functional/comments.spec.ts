@@ -166,7 +166,7 @@ test.group('Comments', (group) => {
     })
 
     const listResponse = await client.get('/api/admin/comments').loginAs(admin)
-    const listBody = listResponse.body() as CommentListPayload
+    const listBody = (listResponse.body() as any) as CommentListPayload
 
     listResponse.assertStatus(200)
     assert.isAtLeast(listBody.data.length, 1)

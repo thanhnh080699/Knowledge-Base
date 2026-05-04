@@ -14,7 +14,7 @@ export default class GoogleAnalyticsController {
     try {
       const data = await this.analyticsService.getDashboardData()
       return response.ok({ data })
-    } catch (error) {
+    } catch (error: any) {
       return response.badRequest({
         message: error.message || 'Unable to fetch Google Analytics data',
       })
@@ -31,7 +31,7 @@ export default class GoogleAnalyticsController {
     try {
       const data = await this.analyticsService.getRealtimeUsers()
       return response.ok({ data })
-    } catch (error) {
+    } catch (error: any) {
       return response.badRequest({
         message: error.message || 'Unable to fetch real-time data',
       })
