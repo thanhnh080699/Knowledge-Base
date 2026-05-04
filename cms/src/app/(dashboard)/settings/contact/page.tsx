@@ -9,14 +9,14 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUpdateSettingsGroup } from '@/hooks/mutations/use-setting-mutations'
 import { useSettingsGroup } from '@/hooks/queries/use-settings'
 import type { Setting, SettingValue, UpdateSettingInput } from '@/types/settings'
-import { Phone, RotateCcw, Save, Loader2, Mail, MapPin, Clock, Share2, Video, Camera, Globe, Code, GitBranch, Link, type LucideIcon } from 'lucide-react'
+import { Phone, RotateCcw, Save, Loader2, Mail, MapPin, Clock, Share2, Video, Camera, Globe, Code, GitBranch, Link as LinkIcon, type LucideIcon } from 'lucide-react'
 
 const CONTACT_GROUP = 'contact'
 
 const SOCIAL_ICONS: Record<string, LucideIcon> = {
   social_facebook: Globe,
   social_twitter: Share2,
-  social_linkedin: Link,
+  social_linkedin: LinkIcon,
   social_github: Code,
   social_gitlab: GitBranch,
   social_youtube: Video,
