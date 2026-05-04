@@ -22,7 +22,7 @@ const SELECT_OPTIONS: Record<string, string[]> = {
 
 const FALLBACK_SETTINGS: Setting[] = [
   {
-    id: 'admin_logo',
+    id: 0,
     settingGroup: APPEARANCE_GROUP,
     settingKey: 'admin_logo',
     settingValue: '/logo.png',
@@ -34,7 +34,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'admin_favicon',
+    id: 0,
     settingGroup: APPEARANCE_GROUP,
     settingKey: 'admin_favicon',
     settingValue: '/favicon.ico',
@@ -46,7 +46,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'admin_title',
+    id: 0,
     settingGroup: APPEARANCE_GROUP,
     settingKey: 'admin_title',
     settingValue: 'Antigravity CMS',
@@ -58,7 +58,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'admin_layout',
+    id: 0,
     settingGroup: APPEARANCE_GROUP,
     settingKey: 'admin_layout',
     settingValue: 'vertical',
@@ -70,7 +70,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'admin_sidebar_style',
+    id: 0,
     settingGroup: APPEARANCE_GROUP,
     settingKey: 'admin_sidebar_style',
     settingValue: 'dark',
@@ -82,7 +82,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'admin_theme',
+    id: 0,
     settingGroup: APPEARANCE_GROUP,
     settingKey: 'admin_theme',
     settingValue: 'system',

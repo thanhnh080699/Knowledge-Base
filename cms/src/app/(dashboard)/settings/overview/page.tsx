@@ -19,7 +19,7 @@ const SELECT_OPTIONS: Record<string, string[]> = {
 
 const FALLBACK_SETTINGS: Setting[] = [
   {
-    id: 'site_name',
+    id: 0,
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'site_name',
     settingValue: 'thanhnh.id.vn',
@@ -31,7 +31,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'site_description',
+    id: 0,
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'site_description',
     settingValue: 'Knowledge base, portfolio and technical notes by Thanh Nguyen.',
@@ -43,7 +43,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'site_url',
+    id: 0,
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'site_url',
     settingValue: 'https://thanhnh.id.vn',
@@ -55,7 +55,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'admin_email',
+    id: 0,
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'admin_email',
     settingValue: 'admin@thanhnh.id.vn',
@@ -67,7 +67,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'date_format',
+    id: 0,
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'date_format',
     settingValue: 'dd/MM/yyyy',
@@ -79,7 +79,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'maintenance_mode',
+    id: 0,
     settingGroup: OVERVIEW_GROUP,
     settingKey: 'maintenance_mode',
     settingValue: false,

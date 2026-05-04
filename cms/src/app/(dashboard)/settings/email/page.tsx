@@ -22,7 +22,7 @@ const REQUIRED_FIELDS = new Set(['mailer', 'smtp_host', 'smtp_port', 'smtp_encry
 
 const FALLBACK_SETTINGS: Setting[] = [
   {
-    id: 'mailer',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'mailer',
     settingValue: 'smtp',
@@ -34,7 +34,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'smtp_host',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'smtp_host',
     settingValue: '',
@@ -46,7 +46,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'smtp_port',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'smtp_port',
     settingValue: 587,
@@ -58,7 +58,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'smtp_username',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'smtp_username',
     settingValue: '',
@@ -70,7 +70,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'smtp_password',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'smtp_password',
     settingValue: '',
@@ -82,7 +82,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'smtp_encryption',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'smtp_encryption',
     settingValue: 'tls',
@@ -94,7 +94,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'from_address',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'from_address',
     settingValue: 'admin@thanhnh.id.vn',
@@ -106,7 +106,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'from_name',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'from_name',
     settingValue: 'ThanhNh CMS',
@@ -118,7 +118,7 @@ const FALLBACK_SETTINGS: Setting[] = [
     updatedAt: '',
   },
   {
-    id: 'reply_to',
+    id: 0,
     settingGroup: EMAIL_GROUP,
     settingKey: 'reply_to',
     settingValue: '',
