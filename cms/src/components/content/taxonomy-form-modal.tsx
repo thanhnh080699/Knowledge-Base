@@ -72,6 +72,7 @@ export function TaxonomyFormModal({
   isSubmitting,
   onClose,
   onSubmit,
+  items,
 }: TaxonomyFormModalProps) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [error, setError] = useState<string | null>(null)

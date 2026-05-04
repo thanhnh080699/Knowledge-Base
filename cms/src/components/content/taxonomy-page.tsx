@@ -206,9 +206,9 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
     })
   }
 
-  const buildTree = (items: Category[]): Category[] => {
+  const buildTree = (items: Category[]): (Category & { children: Category[] })[] => {
     const itemMap = new Map<number, Category & { children: Category[] }>()
-    const roots: Category[] = []
+    const roots: (Category & { children: Category[] })[] = []
 
     // First pass: create map of all items
     items.forEach((item) => {

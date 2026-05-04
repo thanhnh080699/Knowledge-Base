@@ -107,7 +107,7 @@ export default function SitemapSettingsPage() {
                 <Checkbox
                   id="enable_sitemap"
                   checked={values['enable_sitemap'] === true}
-                  onCheckedChange={(checked) => updateValue('enable_sitemap', checked === true)}
+                  onChange={(e) => updateValue('enable_sitemap', e.target.checked)}
                 />
                 <div className="grid gap-1.5 leading-none">
                   <Label htmlFor="enable_sitemap" className="font-semibold cursor-pointer">
@@ -151,7 +151,7 @@ export default function SitemapSettingsPage() {
                 <Checkbox
                   id="enable_sitemap_cache"
                   checked={values['enable_sitemap_cache'] === true}
-                  onCheckedChange={(checked) => updateValue('enable_sitemap_cache', checked === true)}
+                  onChange={(e) => updateValue('enable_sitemap_cache', e.target.checked)}
                 />
                 <div className="grid gap-1.5 leading-none">
                   <Label htmlFor="enable_sitemap_cache" className="font-semibold cursor-pointer">
