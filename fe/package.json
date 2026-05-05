@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e .env -- next dev --webpack -p $PORT",
+    "dev": "dotenv -e .env -- sh -c 'next dev --webpack -p $PORT'",
     "build": "dotenv -e .env -- next build --webpack",
-    "start": "dotenv -e .env -- next start -p $PORT",
+    "start": "dotenv -e .env -- sh -c 'next start -p $PORT'",
     "lint": "eslint ."
   },
   "dependencies": {
