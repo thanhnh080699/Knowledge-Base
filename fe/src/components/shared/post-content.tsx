@@ -75,7 +75,7 @@ export function PostContent({ content }: { content: string }) {
             )
           },
           img: ({ src, alt, ...props }) => {
-            if (!src) return null
+            if (!src || typeof src !== 'string') return null
             return (
               <span className="block my-8">
                 <img 
