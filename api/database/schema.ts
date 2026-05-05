@@ -454,6 +454,37 @@ export class TagSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class ToolSchema extends BaseModel {
+  static $columns = ['category', 'createdAt', 'deletedAt', 'description', 'featured', 'icon', 'id', 'name', 'slug', 'sortOrder', 'status', 'updatedAt', 'urlPath'] as const
+  $columns = ToolSchema.$columns
+  @column()
+  declare category: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime()
+  declare deletedAt: DateTime | null
+  @column()
+  declare description: string | null
+  @column()
+  declare featured: boolean | null
+  @column()
+  declare icon: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare slug: string
+  @column()
+  declare sortOrder: number | null
+  @column()
+  declare status: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare urlPath: string
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['activeEmail', 'createdAt', 'deletedAt', 'email', 'fullName', 'id', 'password', 'status', 'updatedAt'] as const
   $columns = UserSchema.$columns

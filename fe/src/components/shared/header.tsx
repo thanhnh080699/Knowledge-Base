@@ -1,10 +1,11 @@
-import { BookOpen, BriefcaseBusiness, Code2, Mail, Menu } from "lucide-react"
+import { BookOpen, BriefcaseBusiness, Code2, Mail, Menu, Wrench } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { absoluteCdnUrl } from "@/lib/cdn-loader"
 
 const nav = [
   { href: "/docs", label: "Tài liệu", icon: BookOpen },
+  { href: "/tools", label: "Tools", icon: Wrench },
   { href: "/portfolio", label: "Portfolio", icon: BriefcaseBusiness },
   { href: "/projects", label: "Dự án", icon: Code2 },
   { href: "/contact", label: "Liên hệ", icon: Mail }

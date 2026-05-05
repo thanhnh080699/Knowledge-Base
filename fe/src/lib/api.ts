@@ -4,6 +4,7 @@ import type { ContactPayload } from "@/types/contact"
 import type { PaginatedResponse, Post } from "@/types/post"
 import type { Project } from "@/types/project"
 import type { Tag } from "@/types/tag"
+import type { Tool } from "@/types/tool"
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333/api",
@@ -151,6 +152,31 @@ export async function getProjects(params: { page?: number; limit?: number; featu
 export async function getProject(slug: string) {
   try {
     const { data } = await api.get<{ data: Project }>(`/projects/${slug}`)
+    return data.data
+  } catch {
+    return null
+  }
+}
+
+export async function getTools(params: { page?: number; limit?: number; category?: string; featured?: boolean } = {}) {
+  try {
+    const { data } = await api.get<PaginatedResponse<Tool>>("/tools", {
+      params: {
+        page: params.page ?? 1,
+        limit: params.limit ?? 100,
+        category: params.category,
+        featured: params.featured
+      }
+    })
+    return data
+  } catch {
+    return emptyPaginated<Tool>(params.page ?? 1, params.limit ?? 100)
+  }
+}
+
+export async function getTool(slug: string) {
+  try {
+    const { data } = await api.get<{ data: Tool }>(`/tools/${slug}`)
     return data.data
   } catch {
     return null
