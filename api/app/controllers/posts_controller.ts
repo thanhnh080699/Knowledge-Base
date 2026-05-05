@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import Post from '#models/post'
+import Category from '#models/category'
 import { createPostValidator, updatePostValidator } from '#validators/post'
 import { normalizeMediaFields } from '#helpers/media'
 
@@ -41,13 +42,18 @@ export default class PostsController {
     }
 
     if (categoryId) {
-      query.where('categoryId', categoryId)
+      const categoryIds = await this.getDescendantIds(Number(categoryId))
+      categoryIds.push(Number(categoryId))
+      query.whereIn('categoryId', categoryIds)
     }
 
     if (category) {
-      query.whereHas('category', (categoryQuery) => {
-        categoryQuery.where('categories.slug', category)
-      })
+      const targetCategory = await Category.findBy('slug', category)
+      if (targetCategory) {
+        const categoryIds = await this.getDescendantIds(targetCategory.id)
+        categoryIds.push(targetCategory.id)
+        query.whereIn('categoryId', categoryIds)
+      }
     }
 
     if (tagId) {
@@ -227,5 +233,24 @@ export default class PostsController {
     await post.related('tags').detach()
     await post.delete()
     return response.noContent()
+  }
+
+  /**
+   * Get all descendant category IDs for a given parent category ID
+   */
+  private async getDescendantIds(parentId: number): Promise<number[]> {
+    const allCategories = await Category.query().select('id', 'parentId')
+    const descendants: number[] = []
+
+    const findChildren = (id: number) => {
+      const children = allCategories.filter((c) => c.parentId === id)
+      for (const child of children) {
+        descendants.push(child.id)
+        findChildren(child.id)
+      }
+    }
+
+    findChildren(parentId)
+    return descendants
   }
 }
