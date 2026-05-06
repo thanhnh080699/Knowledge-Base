@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Wrench } from "lucide-react"
 import { getTools } from "@/lib/api"
+import type { Tool } from "@/types/tool"
 
 export const revalidate = 60
 
