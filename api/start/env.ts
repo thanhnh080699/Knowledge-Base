@@ -43,4 +43,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   WP_DB_USER: Env.schema.string(),
   WP_DB_PASSWORD: Env.schema.string.optional(),
   WP_DB_DATABASE: Env.schema.string(),
+
+  // CORS
+  CORS_ALLOWED_ORIGINS: Env.schema.string.optional(),
 })
