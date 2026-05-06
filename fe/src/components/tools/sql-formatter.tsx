@@ -4,34 +4,38 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Copy, Check } from "lucide-react"
 
-export function JsonFormatter() {
+export function SqlFormatter() {
   const [input, setInput] = useState("")
   const [output, setOutput] = useState("")
-  const [error, setError] = useState("")
   const [copied, setCopied] = useState(false)
 
   const format = () => {
-    try {
-      const parsed = JSON.parse(input)
-      setOutput(JSON.stringify(parsed, null, 2))
-      setError("")
-      setCopied(false)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Invalid JSON")
-      setOutput("")
-    }
+    let sql = input
+      .replace(/\s+/g, " ")
+      .replace(/\s*,\s*/g, ", ")
+      .replace(/\s*\(\s*/g, " (")
+      .replace(/\s*\)\s*/g, ") ")
+      .trim()
+
+    const keywords = [
+      "SELECT", "FROM", "WHERE", "AND", "OR", "GROUP BY", "ORDER BY", "LIMIT",
+      "INSERT INTO", "VALUES", "UPDATE", "SET", "DELETE", "JOIN", "LEFT JOIN",
+      "RIGHT JOIN", "INNER JOIN", "OUTER JOIN", "ON", "HAVING", "UNION"
+    ]
+
+    keywords.forEach(key => {
+      const regex = new RegExp(`\\b${key}\\b`, "gi")
+      sql = sql.replace(regex, `\n${key.toUpperCase()}`)
+    })
+
+    setOutput(sql.trim())
+    setCopied(false)
   }
 
   const minify = () => {
-    try {
-      const parsed = JSON.parse(input)
-      setOutput(JSON.stringify(parsed))
-      setError("")
-      setCopied(false)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Invalid JSON")
-      setOutput("")
-    }
+    const minified = input.replace(/\s+/g, " ").trim()
+    setOutput(minified)
+    setCopied(false)
   }
 
   const copy = async () => {
@@ -43,12 +47,12 @@ export function JsonFormatter() {
   return (
     <div className="space-y-4">
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">Input JSON</label>
+        <label className="mb-2 block text-sm font-medium text-slate-700">Input SQL</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder='{"key": "value"}'
-          rows={8}
+          placeholder="SELECT * FROM users WHERE id = 1"
+          rows={6}
           className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </div>
@@ -60,19 +64,14 @@ export function JsonFormatter() {
           Minify
         </Button>
       </div>
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 font-medium">
-          {error}
-        </div>
-      )}
       <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
-        <label className="mb-2 block text-sm font-medium text-slate-700 font-bold uppercase tracking-wider text-[10px] text-slate-500">Result</label>
+        <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Result</label>
         <textarea
           value={output}
           readOnly
           rows={10}
           className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-800"
-          placeholder="Formatted JSON will appear here"
+          placeholder="Formatted SQL will appear here"
         />
         {output && (
           <Button

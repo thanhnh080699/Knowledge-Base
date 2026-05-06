@@ -1,10 +1,8 @@
 import { UuidGenerator } from "./uuid-generator"
-import { TokenGenerator } from "./token-generator"
 import { Base64Tool } from "./base64-tool"
 import { HashGenerator } from "./hash-generator"
 import { UrlEncoder } from "./url-encoder"
 import { HtmlEntities } from "./html-entities"
-import { PasswordGenerator } from "./password-generator"
 import { SlugGenerator } from "./slug-generator"
 import { CaseConverter } from "./case-converter"
 import { LoremIpsum } from "./lorem-ipsum"
@@ -20,15 +18,19 @@ import { CryptoEncryptDecrypt } from "./crypto-encrypt-decrypt"
 import { CryptoHmac } from "./crypto-hmac"
 import { CryptoRsaKeyGenerator } from "./crypto-rsa-key-generator"
 import { CryptoPasswordGenerator } from "./crypto-password-generator"
+import { ChmodCalculator } from "./chmod-calculator"
+import { XmlFormatter } from "./xml-formatter"
+import { SqlFormatter } from "./sql-formatter"
+import { DateFormatter } from "./date-formatter"
 
 export const toolRegistry: Record<string, React.ComponentType> = {
   "uuid-generator": UuidGenerator,
-  "token-generator": TokenGenerator,
+  "token-generator": CryptoTokenGenerator,
   "base64-encoder-decoder": Base64Tool,
   "hash-generator": HashGenerator,
   "url-encoder-decoder": UrlEncoder,
   "html-entities": HtmlEntities,
-  "password-generator": PasswordGenerator,
+  "password-generator": CryptoPasswordGenerator,
   "slug-generator": SlugGenerator,
   "case-converter": CaseConverter,
   "lorem-ipsum-generator": LoremIpsum,
@@ -44,4 +46,8 @@ export const toolRegistry: Record<string, React.ComponentType> = {
   "crypto-hmac": CryptoHmac,
   "crypto-rsa-key-generator": CryptoRsaKeyGenerator,
   "crypto-password-generator": CryptoPasswordGenerator,
+  "chmod-calculator": ChmodCalculator,
+  "xml-formatter": XmlFormatter,
+  "sql-formatter": SqlFormatter,
+  "date-formatter": DateFormatter,
 }

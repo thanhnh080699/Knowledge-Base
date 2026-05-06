@@ -43,20 +43,22 @@ export function CaseConverter() {
       <Button onClick={convert} variant="primary" disabled={!input}>
         Convert
       </Button>
-      {Object.keys(results).length > 0 && (
-        <div className="space-y-2">
-          {Object.entries(results).map(([key, value]) => (
-            <div key={key} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <span className="w-32 text-sm font-medium text-slate-700">{key}</span>
-              <code className="flex-1 rounded bg-white px-2 py-1 text-sm">{value}</code>
-              <Button onClick={() => copy(key, value)} variant="outline" size="sm">
-                <Copy size={14} />
-                {copied === key ? "✓" : ""}
-              </Button>
+      <div className="grid gap-4 md:grid-cols-2">
+        {["camelCase", "PascalCase", "snake_case", "kebab-case", "UPPER_CASE"].map((key) => (
+          <div key={key} className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <label className="mb-2 block text-sm font-medium text-slate-700 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</label>
+            <div className="min-h-[2.5rem] w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm">
+              {results[key] || <span className="text-slate-400">...</span>}
             </div>
-          ))}
-        </div>
-      )}
+            {results[key] && (
+              <Button onClick={() => copy(key, results[key])} variant="ghost" size="sm" className="absolute right-3 top-3">
+                <Copy size={16} />
+                {copied === key ? "Copied!" : ""}
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

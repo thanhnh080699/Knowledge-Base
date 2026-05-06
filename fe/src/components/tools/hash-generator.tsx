@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy } from "lucide-react"
+import { Copy, Check } from "lucide-react"
 
 export function HashGenerator() {
   const [input, setInput] = useState("")
@@ -40,30 +40,32 @@ export function HashGenerator() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Enter text to hash"
           rows={4}
-          className="w-full rounded-md border border-slate-300 px-3 py-2"
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary"
         />
       </div>
       <Button onClick={generate} variant="primary" disabled={!input}>
         Generate Hashes
       </Button>
-      {Object.keys(hashes).length > 0 && (
-        <div className="space-y-3">
-          {Object.entries(hashes).map(([algo, hash]) => (
-            <div key={algo} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="font-semibold text-slate-700">{algo}</span>
-                <Button onClick={() => copy(algo, hash)} variant="outline" size="sm">
-                  <Copy size={14} />
-                  {copied === algo ? "Copied!" : "Copy"}
-                </Button>
-              </div>
-              <code className="block break-all rounded bg-white p-2 text-xs text-slate-800">
-                {hash}
-              </code>
+      <div className="space-y-4">
+        {["SHA-1", "SHA-256", "SHA-384", "SHA-512"].map((algo) => (
+          <div key={algo} className="relative rounded-lg border border-slate-200 bg-slate-50 p-4 pt-8">
+            <label className="absolute left-4 top-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">{algo}</label>
+            <div className="min-h-[2.5rem] break-all rounded-md border border-slate-300 bg-white p-3 font-mono text-sm text-slate-800">
+              {hashes[algo] || <span className="text-slate-400 italic">Click Generate to see hash</span>}
             </div>
-          ))}
-        </div>
-      )}
+            {hashes[algo] && (
+              <Button
+                onClick={() => copy(algo, hashes[algo])}
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
+              >
+                {copied === algo ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

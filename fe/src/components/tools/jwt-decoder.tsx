@@ -1,12 +1,16 @@
 "use client"
 
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Copy } from "lucide-react"
 
 export function JwtDecoder() {
   const [token, setToken] = useState("")
   const [header, setHeader] = useState("")
   const [payload, setPayload] = useState("")
   const [error, setError] = useState("")
+  const [copiedHeader, setCopiedHeader] = useState(false)
+  const [copiedPayload, setCopiedPayload] = useState(false)
 
   const decode = () => {
     try {
@@ -26,6 +30,18 @@ export function JwtDecoder() {
     }
   }
 
+  const copyHeader = async () => {
+    await navigator.clipboard.writeText(header)
+    setCopiedHeader(true)
+    setTimeout(() => setCopiedHeader(false), 2000)
+  }
+
+  const copyPayload = async () => {
+    await navigator.clipboard.writeText(payload)
+    setCopiedPayload(true)
+    setTimeout(() => setCopiedPayload(false), 2000)
+  }
+
   return (
     <div className="space-y-4">
       <div>
@@ -38,28 +54,36 @@ export function JwtDecoder() {
           className="w-full rounded-md border border-slate-300 px-3 py-2 font-mono text-sm"
         />
       </div>
-      <button onClick={decode} className="rounded-md border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+      <Button onClick={decode} variant="primary">
         Decode
-      </button>
+      </Button>
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
         </div>
       )}
       {header && (
-        <div>
+        <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
           <label className="mb-2 block text-sm font-medium text-slate-700">Header</label>
-          <pre className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm overflow-auto">
+          <pre className="rounded-lg border border-slate-300 bg-white p-4 text-sm overflow-auto">
             {header}
           </pre>
+          <Button onClick={copyHeader} variant="ghost" size="sm" className="absolute right-3 top-3">
+            <Copy size={14} />
+            {copiedHeader ? "Copied!" : "Copy"}
+          </Button>
         </div>
       )}
       {payload && (
-        <div>
+        <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
           <label className="mb-2 block text-sm font-medium text-slate-700">Payload</label>
-          <pre className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm overflow-auto">
+          <pre className="rounded-lg border border-slate-300 bg-white p-4 text-sm overflow-auto">
             {payload}
           </pre>
+          <Button onClick={copyPayload} variant="ghost" size="sm" className="absolute right-3 top-3">
+            <Copy size={14} />
+            {copiedPayload ? "Copied!" : "Copy"}
+          </Button>
         </div>
       )}
     </div>

@@ -48,17 +48,16 @@ export function LoremIpsum() {
         Generate
       </Button>
       {text && (
-        <div>
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <textarea
-              value={text}
-              readOnly
-              rows={10}
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
-            />
-          </div>
-          <Button onClick={copy} variant="outline" className="mt-2">
-            <Copy size={16} />
+        <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <label className="mb-2 block text-sm font-medium text-slate-700">Result</label>
+          <textarea
+            value={text}
+            readOnly
+            rows={10}
+            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+          />
+          <Button onClick={copy} variant="ghost" size="sm" className="absolute right-3 top-3">
+            <Copy size={14} />
             {copied ? "Copied!" : "Copy"}
           </Button>
         </div>

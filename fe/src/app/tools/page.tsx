@@ -18,11 +18,35 @@ export default async function ToolsPage() {
   const response = await getTools({ limit: 100 })
   const tools = response.data
 
-  const categories = Array.from(new Set(tools.map(t => t.category)))
-  const toolsByCategory = categories.map(category => ({
-    category,
-    tools: tools.filter(t => t.category === category)
-  }))
+  const toolsByCategory = Array.from(new Set(tools.map(t => t.category === "Generator" ? "Crypto" : t.category)))
+    .map(category => {
+      const categoryTools = tools.filter(t => 
+        (t.category === category) || (category === "Crypto" && t.category === "Generator")
+      )
+      
+      // Deduplicate by name, preferring slugs with 'crypto-'
+      const uniqueToolsMap = new Map<string, Tool>()
+      categoryTools.forEach(tool => {
+        const existing = uniqueToolsMap.get(tool.name)
+        if (!existing || (tool.slug.startsWith('crypto-') && !existing.slug.startsWith('crypto-'))) {
+          uniqueToolsMap.set(tool.name, tool)
+        }
+      })
+
+      return {
+        category,
+        tools: Array.from(uniqueToolsMap.values())
+      }
+    })
+    .sort((a, b) => {
+      const order = ["Cron & Date Convert", "Crypto", "Developer", "Encoder", "Converter", "Text"]
+      const indexA = order.indexOf(a.category)
+      const indexB = order.indexOf(b.category)
+      if (indexA !== -1 && indexB !== -1) return indexA - indexB
+      if (indexA !== -1) return -1
+      if (indexB !== -1) return 1
+      return 0
+    })
 
   return (
     <main className="bg-slate-50">

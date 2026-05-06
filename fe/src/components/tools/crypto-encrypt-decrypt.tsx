@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy } from "lucide-react"
+import { Copy, Check } from "lucide-react"
 
 export function CryptoEncryptDecrypt() {
   const [algorithm, setAlgorithm] = useState<"AES" | "Base64">("AES")
@@ -87,7 +87,7 @@ export function CryptoEncryptDecrypt() {
               onChange={(e) => setEncryptInput(e.target.value)}
               placeholder="Enter text to encrypt"
               rows={4}
-              className="w-full rounded-md border border-slate-300 px-3 py-2"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
           {algorithm === "AES" && (
@@ -98,7 +98,7 @@ export function CryptoEncryptDecrypt() {
                 value={encryptKey}
                 onChange={(e) => setEncryptKey(e.target.value)}
                 placeholder="Enter secret key"
-                className="w-full rounded-md border border-slate-300 px-3 py-2"
+                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
           )}
@@ -106,7 +106,7 @@ export function CryptoEncryptDecrypt() {
             Encrypt
           </Button>
           <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <label className="mb-2 block text-sm font-medium text-slate-700">Output</label>
+            <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Output</label>
             <textarea
               value={encryptOutput}
               readOnly
@@ -115,9 +115,13 @@ export function CryptoEncryptDecrypt() {
               placeholder="Encrypted text will appear here"
             />
             {encryptOutput && (
-              <Button onClick={copyEncrypt} variant="ghost" size="sm" className="absolute right-6 top-6">
-                <Copy size={14} />
-                {copiedEncrypt ? "Copied!" : "Copy"}
+              <Button
+                onClick={copyEncrypt}
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
+              >
+                {copiedEncrypt ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
               </Button>
             )}
           </div>
@@ -132,7 +136,7 @@ export function CryptoEncryptDecrypt() {
               onChange={(e) => setDecryptInput(e.target.value)}
               placeholder="Enter text to decrypt"
               rows={4}
-              className="w-full rounded-md border border-slate-300 px-3 py-2"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
           {algorithm === "AES" && (
@@ -143,7 +147,7 @@ export function CryptoEncryptDecrypt() {
                 value={decryptKey}
                 onChange={(e) => setDecryptKey(e.target.value)}
                 placeholder="Enter secret key"
-                className="w-full rounded-md border border-slate-300 px-3 py-2"
+                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
           )}
@@ -151,7 +155,7 @@ export function CryptoEncryptDecrypt() {
             Decrypt
           </Button>
           <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <label className="mb-2 block text-sm font-medium text-slate-700">Output</label>
+            <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Output</label>
             <textarea
               value={decryptOutput}
               readOnly
@@ -160,9 +164,13 @@ export function CryptoEncryptDecrypt() {
               placeholder="Decrypted text will appear here"
             />
             {decryptOutput && (
-              <Button onClick={copyDecrypt} variant="ghost" size="sm" className="absolute right-6 top-6">
-                <Copy size={14} />
-                {copiedDecrypt ? "Copied!" : "Copy"}
+              <Button
+                onClick={copyDecrypt}
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
+              >
+                {copiedDecrypt ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
               </Button>
             )}
           </div>

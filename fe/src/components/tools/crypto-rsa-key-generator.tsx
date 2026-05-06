@@ -90,7 +90,7 @@ export function CryptoRsaKeyGenerator() {
               rows={8}
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-xs"
             />
-            <Button onClick={copyPublic} variant="ghost" size="sm" className="absolute right-6 top-6">
+            <Button onClick={copyPublic} variant="ghost" size="sm" className="absolute right-3 top-3">
               <Copy size={14} />
               {copiedPublic ? "Copied!" : "Copy"}
             </Button>
@@ -103,7 +103,7 @@ export function CryptoRsaKeyGenerator() {
               rows={12}
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-xs"
             />
-            <Button onClick={copyPrivate} variant="ghost" size="sm" className="absolute right-6 top-6">
+            <Button onClick={copyPrivate} variant="ghost" size="sm" className="absolute right-3 top-3">
               <Copy size={14} />
               {copiedPrivate ? "Copied!" : "Copy"}
             </Button>

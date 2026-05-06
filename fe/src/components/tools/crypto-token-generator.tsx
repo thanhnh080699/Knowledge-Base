@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy, RefreshCw } from "lucide-react"
+import { Copy, Check, RefreshCw } from "lucide-react"
 
 export function CryptoTokenGenerator() {
   const [token, setToken] = useState("")
@@ -32,10 +32,6 @@ export function CryptoTokenGenerator() {
     setCopied(false)
   }
 
-  useEffect(() => {
-    generate()
-  }, [])
-
   const copy = async () => {
     await navigator.clipboard.writeText(token)
     setCopied(true)
@@ -44,49 +40,55 @@ export function CryptoTokenGenerator() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">Length: {length}</label>
-        <input
-          type="range"
-          value={length}
-          onChange={(e) => setLength(Number(e.target.value))}
-          min={8}
-          max={128}
-          className="w-full"
-        />
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-4 rounded-lg border border-slate-100 bg-slate-50/50 p-4">
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-medium text-slate-700 min-w-[80px]">Length: <span className="font-mono text-primary">{length}</span></label>
+          <input
+            type="range"
+            value={length}
+            onChange={(e) => setLength(Number(e.target.value))}
+            min={8}
+            max={128}
+            className="w-48 accent-primary"
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-4 border-l border-slate-200 pl-6">
+          {Object.entries(options).map(([key, value]) => (
+            <label key={key} className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={value}
+                onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
+                className="size-4 rounded border-slate-300 text-primary focus:ring-primary"
+              />
+              <span className="text-sm capitalize text-slate-600">{key}</span>
+            </label>
+          ))}
+        </div>
       </div>
-      <div className="space-y-2">
-        {Object.entries(options).map(([key, value]) => (
-          <label key={key} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
-              className="size-4"
-            />
-            <span className="text-sm capitalize text-slate-700">{key}</span>
-          </label>
-        ))}
-      </div>
+      <Button onClick={generate} variant="primary">
+        <RefreshCw size={16} />
+        Generate Token
+      </Button>
       <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
         <textarea
           value={token}
           readOnly
           rows={3}
           className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm"
-          placeholder="Generated token will appear here"
+          placeholder="Click Generate to create token"
         />
         {token && (
-          <Button onClick={copy} variant="ghost" size="sm" className="absolute right-6 top-6">
-            <Copy size={16} />
-            {copied ? "Copied!" : "Copy"}
+          <Button
+            onClick={copy}
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
+          >
+            {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
           </Button>
         )}
       </div>
-      <Button onClick={generate} variant="primary">
-        <RefreshCw size={16} />
-        Refresh
-      </Button>
     </div>
   )
 }

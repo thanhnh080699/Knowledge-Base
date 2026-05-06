@@ -133,13 +133,14 @@ thanhnh.id.vn/
 - **ISR/SSG** cho trang tài liệu (`revalidate: 60`). SSR chỉ cho data real-time.
 - SEO bắt buộc mọi page: `metadata`, một `<h1>` duy nhất, semantic HTML.
 - **Tools Page Standards**:
-  - **Layout**: Max-width `1200px`, sidebar navigation bên trái với danh mục có thể thu gọn/mở rộng.
+  - **Layout**: Max-width `1600px`, sidebar navigation bên trái với danh mục có thể thu gọn/mở rộng.
   - **Title**: Dùng `break-words` để tránh tràn khi resize màn hình.
   - **Result Boxes**: LUÔN hiển thị (không ẩn khi chưa có input), dùng `placeholder` text, `min-h-[2.5rem]` cho consistent sizing.
-  - **Copy Buttons**: Chỉ hiển thị khi có nội dung trong result box, đặt ở góc phải trên (`absolute right-6 top-6`).
-  - **Auto-generation**: Tools như Token Generator, Password Generator, RSA Key Generator phải tự động generate khi mount (`useEffect`).
+  - **Copy Buttons**: Nút copy CHỈ dùng icon (không kèm text), đặt tại góc trên bên phải của container chứa kết quả (`absolute right-3 top-3`). Khi click phải chuyển sang icon check để phản hồi người dùng.
   - **Two-Column Layout**: Tools có cả Encrypt và Decrypt phải dùng `grid md:grid-cols-2` thay vì toggle buttons.
-  - **Category Order**: "Crypto" category luôn đứng đầu (sortOrder 1-10), chứa tất cả generator và crypto tools.
+  - **Category Order**: "Crypto" category luôn đứng đầu (sortOrder 1-10), gộp tất cả các công cụ Generator vào "Crypto".
+  - **Tool Behavior**: Phải bấm nút Generate/Refresh/Convert mới hiển thị kết quả (TUYỆT ĐỐI KHÔNG tự động chạy khi mount).
+  - **Action Buttons**: Các nút bấm hành động (Generate, Refresh, Convert...) phải được đặt PHÍA TRÊN ô hiển thị kết quả (Result Box).
 
 ### CMS (Next.js + React Query + Zustand)
 - **Botble CMS UI Standard** — Giao diện PHẢI mô phỏng phong cách Botble CMS:

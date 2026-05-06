@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy, RefreshCw } from "lucide-react"
+import { Copy, Check, RefreshCw } from "lucide-react"
 
 export function CryptoPasswordGenerator() {
   const [password, setPassword] = useState("")
@@ -50,10 +50,6 @@ export function CryptoPasswordGenerator() {
     setCopied(false)
   }
 
-  useEffect(() => {
-    generate()
-  }, [])
-
   const copy = async () => {
     await navigator.clipboard.writeText(password)
     setCopied(true)
@@ -62,69 +58,92 @@ export function CryptoPasswordGenerator() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">Length: {length}</label>
-        <input
-          type="range"
-          value={length}
-          onChange={(e) => setLength(Number(e.target.value))}
-          min={8}
-          max={64}
-          className="w-full"
-        />
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-4 rounded-lg border border-slate-100 bg-slate-50/50 p-4">
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-medium text-slate-700 min-w-[80px]">Length: <span className="font-mono text-primary">{length}</span></label>
+          <input
+            type="range"
+            value={length}
+            onChange={(e) => setLength(Number(e.target.value))}
+            min={8}
+            max={64}
+            className="w-48 accent-primary"
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-4 border-l border-slate-200 pl-6">
+          {Object.entries(options).map(([key, value]) => (
+            <label key={key} className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={value}
+                onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
+                className="size-4 rounded border-slate-300 text-primary focus:ring-primary"
+              />
+              <span className="text-sm capitalize text-slate-600">{key}</span>
+            </label>
+          ))}
+        </div>
       </div>
-      <div className="space-y-2">
-        {Object.entries(options).map(([key, value]) => (
-          <label key={key} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
-              className="size-4"
-            />
-            <span className="text-sm capitalize text-slate-700">{key}</span>
-          </label>
-        ))}
-      </div>
+      <Button onClick={generate} variant="primary">
+        <RefreshCw size={16} />
+        Generate Password
+      </Button>
       <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
         <input
           type="text"
           value={password}
           readOnly
-          placeholder="Generated password will appear here"
+          placeholder="Click Generate to create password"
           className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm"
         />
         {password && (
-          <Button onClick={copy} variant="ghost" size="sm" className="absolute right-6 top-6">
-            <Copy size={16} />
-            {copied ? "Copied!" : "Copy"}
+          <Button
+            onClick={copy}
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
+          >
+            {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
           </Button>
         )}
       </div>
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-slate-700">Password Strength:</span>
-          <span className={`text-sm font-semibold ${strength.color || "text-slate-400"}`}>
-            {strength.label || "N/A"}
-          </span>
-        </div>
-        <div className="mt-2 h-2 w-full rounded-full bg-slate-200">
-          <div
-            className={`h-2 rounded-full transition-all ${
-              strength.score <= 2
-                ? "bg-red-500"
-                : strength.score <= 4
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
-            }`}
-            style={{ width: `${(strength.score / 7) * 100}%` }}
+      <div className="rounded-lg border border-slate-200 bg-slate-50 p-6">
+        <h3 className="mb-4 text-sm font-semibold text-slate-900">Check Password Strength</h3>
+        <div className="space-y-4">
+          <input
+            type="text"
+            onChange={(e) => setStrength(calculateStrength(e.target.value))}
+            placeholder="Type a password to check its strength..."
+            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary"
           />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-slate-700">Strength:</span>
+              <span className={`text-sm font-semibold ${strength.color || "text-slate-400"}`}>
+                {strength.label || "Enter password"}
+              </span>
+            </div>
+            <div className="h-2 w-full rounded-full bg-slate-200">
+              <div
+                className={`h-2 rounded-full transition-all duration-500 ${
+                  strength.score <= 2
+                    ? "bg-red-500"
+                    : strength.score <= 4
+                      ? "bg-yellow-500"
+                      : "bg-green-500"
+                }`}
+                style={{ width: `${strength.label ? (strength.score / 7) * 100 : 0}%` }}
+              />
+            </div>
+            <ul className="grid grid-cols-2 gap-2 text-[11px] text-slate-500 mt-2">
+              <li className="flex items-center gap-1">• Min 8 characters</li>
+              <li className="flex items-center gap-1">• Uppercase & Lowercase</li>
+              <li className="flex items-center gap-1">• Numbers</li>
+              <li className="flex items-center gap-1">• Special characters</li>
+            </ul>
+          </div>
         </div>
       </div>
-      <Button onClick={generate} variant="primary">
-        <RefreshCw size={16} />
-        Refresh
-      </Button>
     </div>
   )
 }

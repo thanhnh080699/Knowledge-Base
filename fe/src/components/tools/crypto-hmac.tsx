@@ -109,7 +109,7 @@ export function CryptoHmac() {
           {output || ""}
         </code>
         {output && (
-          <Button onClick={copy} variant="ghost" size="sm" className="absolute right-6 top-6">
+          <Button onClick={copy} variant="ghost" size="sm" className="absolute right-3 top-3">
             <Copy size={14} />
             {copied ? "Copied!" : "Copy"}
           </Button>

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy, RefreshCw } from "lucide-react"
+import { Copy, Check, RefreshCw } from "lucide-react"
 
 export function UuidGenerator() {
   const [uuid, setUuid] = useState("")
@@ -21,7 +21,12 @@ export function UuidGenerator() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <Button onClick={generate} variant="primary">
+        <RefreshCw size={16} />
+        Generate UUID
+      </Button>
+      <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <label className="mb-2 block text-sm font-medium text-slate-700">Result (UUID v4)</label>
         <input
           type="text"
           value={uuid}
@@ -29,16 +34,14 @@ export function UuidGenerator() {
           placeholder="Click Generate to create UUID"
           className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm"
         />
-      </div>
-      <div className="flex gap-2">
-        <Button onClick={generate} variant="primary">
-          <RefreshCw size={16} />
-          Generate UUID
-        </Button>
         {uuid && (
-          <Button onClick={copy} variant="outline">
-            <Copy size={16} />
-            {copied ? "Copied!" : "Copy"}
+          <Button
+            onClick={copy}
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
+          >
+            {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
           </Button>
         )}
       </div>
