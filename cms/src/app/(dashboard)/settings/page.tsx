@@ -89,6 +89,12 @@ const sections: SettingSection[] = [
         href: '/settings/others/google-analytics',
         icon: Globe2,
       },
+      {
+        title: 'Google Search Console',
+        description: 'Monitor search performance, queries, and indexing',
+        href: '/settings/others/google-search-console',
+        icon: Search,
+      },
     ],
   },
 ]
