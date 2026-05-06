@@ -118,7 +118,7 @@ export function CryptoEncryptDecrypt() {
               <Button
                 onClick={copyEncrypt}
                 variant="ghost"
-                size="icon"
+                size="sm"
                 className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
               >
                 {copiedEncrypt ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
@@ -167,7 +167,7 @@ export function CryptoEncryptDecrypt() {
               <Button
                 onClick={copyDecrypt}
                 variant="ghost"
-                size="icon"
+                size="sm"
                 className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
               >
                 {copiedDecrypt ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}

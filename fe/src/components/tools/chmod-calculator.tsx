@@ -85,7 +85,7 @@ export function ChmodCalculator() {
           <Button
             onClick={copy}
             variant="ghost"
-            size="icon"
+            size="sm"
             className="absolute right-2 top-2 size-8 text-primary/60 hover:text-primary transition-colors"
           >
             {copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}

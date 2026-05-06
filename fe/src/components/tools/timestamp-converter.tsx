@@ -54,7 +54,7 @@ export function TimestampConverter() {
               <Button
                 onClick={() => copy(timestamp, setCopiedTs)}
                 variant="ghost"
-                size="icon"
+                size="sm"
                 className="absolute right-2 top-1/2 -translate-y-1/2 size-8 text-slate-400 hover:text-primary transition-colors"
               >
                 {copiedTs ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
@@ -79,7 +79,7 @@ export function TimestampConverter() {
               <Button
                 onClick={() => copy(datetime, setCopiedDt)}
                 variant="ghost"
-                size="icon"
+                size="sm"
                 className="absolute right-2 top-1/2 -translate-y-1/2 size-8 text-slate-400 hover:text-primary transition-colors"
               >
                 {copiedDt ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}

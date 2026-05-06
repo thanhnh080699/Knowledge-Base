@@ -38,7 +38,7 @@ export function UuidGenerator() {
           <Button
             onClick={copy}
             variant="ghost"
-            size="icon"
+            size="sm"
             className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
           >
             {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
