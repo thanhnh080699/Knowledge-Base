@@ -52,6 +52,14 @@ const SitemapsController = () => import('#controllers/sitemaps_controller')
 router.get('/sitemap.xml', [SitemapsController, 'index'])
 router.get('/sitemap-:section.xml', [SitemapsController, 'section'])
 
+const GoogleSearchConsoleController = () =>
+  import('#controllers/google_search_console_controller')
+
+router.get('/admin/google-search-console/callback', [
+  GoogleSearchConsoleController,
+  'handleCallback',
+])
+
 // API Routes
 router
   .group(() => {

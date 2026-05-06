@@ -10,12 +10,6 @@ export default function settingsRoutes() {
   // Public Settings
   router.get('settings/public', [SettingsController, 'getPublicSettings'])
 
-  // Google Search Console OAuth2 callback (public — Google redirects browser here)
-  router.get('admin/google-search-console/callback', [
-    GoogleSearchConsoleController,
-    'handleCallback',
-  ])
-
   router
     .group(() => {
       router.get('settings/:group', [SettingsController, 'showGroup'])
