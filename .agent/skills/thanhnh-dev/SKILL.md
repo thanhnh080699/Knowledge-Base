@@ -132,6 +132,14 @@ thanhnh.id.vn/
 - Ưu tiên Server Components — `'use client'` chỉ khi cần state/event.
 - **ISR/SSG** cho trang tài liệu (`revalidate: 60`). SSR chỉ cho data real-time.
 - SEO bắt buộc mọi page: `metadata`, một `<h1>` duy nhất, semantic HTML.
+- **Tools Page Standards**:
+  - **Layout**: Max-width `1200px`, sidebar navigation bên trái với danh mục có thể thu gọn/mở rộng.
+  - **Title**: Dùng `break-words` để tránh tràn khi resize màn hình.
+  - **Result Boxes**: LUÔN hiển thị (không ẩn khi chưa có input), dùng `placeholder` text, `min-h-[2.5rem]` cho consistent sizing.
+  - **Copy Buttons**: Chỉ hiển thị khi có nội dung trong result box, đặt ở góc phải trên (`absolute right-6 top-6`).
+  - **Auto-generation**: Tools như Token Generator, Password Generator, RSA Key Generator phải tự động generate khi mount (`useEffect`).
+  - **Two-Column Layout**: Tools có cả Encrypt và Decrypt phải dùng `grid md:grid-cols-2` thay vì toggle buttons.
+  - **Category Order**: "Crypto" category luôn đứng đầu (sortOrder 1-10), chứa tất cả generator và crypto tools.
 
 ### CMS (Next.js + React Query + Zustand)
 - **Botble CMS UI Standard** — Giao diện PHẢI mô phỏng phong cách Botble CMS:
