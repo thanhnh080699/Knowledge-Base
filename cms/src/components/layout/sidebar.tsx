@@ -20,6 +20,7 @@ import {
   CircleHelp,
   MessageSquareText,
   BriefcaseBusiness,
+  Mail,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -51,6 +52,7 @@ const navigation: NavGroup[] = [
       { name: "Projects", href: "/projects", icon: BriefcaseBusiness },
       { name: "Q&A", href: "/question-answers", icon: CircleHelp },
       { name: "Comments", href: "/comments", icon: MessageSquareText },
+      { name: "Contacts", href: "/contacts", icon: Mail },
       { name: "Categories", href: "/categories", icon: FolderOpen },
       { name: "Tags", href: "/tags", icon: Tag },
       { name: "Menus", href: "/menus", icon: Navigation },

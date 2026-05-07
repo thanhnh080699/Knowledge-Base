@@ -184,15 +184,11 @@ export async function getTool(slug: string) {
 }
 
 export async function submitContact(payload: ContactPayload) {
-  const subjectParts = [payload.company].filter(Boolean)
-  const subject = subjectParts.length ? subjectParts.join(" - ") : "Website contact request"
-
   const { data } = await api.post("/contact", {
     name: payload.name,
     email: payload.email,
-    subject,
+    phone: payload.phone || undefined,
     message: payload.message
   })
-
   return data
 }

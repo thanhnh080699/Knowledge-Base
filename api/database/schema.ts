@@ -95,7 +95,7 @@ export class CommentSchema extends BaseModel {
 }
 
 export class ContactRequestSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'id', 'message', 'name', 'status', 'subject', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'id', 'message', 'name', 'phone', 'status', 'subject', 'updatedAt'] as const
   $columns = ContactRequestSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -107,6 +107,8 @@ export class ContactRequestSchema extends BaseModel {
   declare message: string
   @column()
   declare name: string
+  @column()
+  declare phone: string | null
   @column()
   declare status: string | null
   @column()

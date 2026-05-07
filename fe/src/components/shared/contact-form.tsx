@@ -29,20 +29,22 @@ export function ContactForm({ settings }: { settings: SiteSettings }) {
     setMessage("")
 
     const formData = new FormData(event.currentTarget)
+    const form = event.currentTarget
 
     try {
       await submitContact({
         name: String(formData.get("name") ?? ""),
         email: String(formData.get("email") ?? ""),
-        company: String(formData.get("company") ?? ""),
+        phone: String(formData.get("phone") ?? ""),
         message: String(formData.get("message") ?? "")
       })
-      event.currentTarget.reset()
       setStatus("success")
       setMessage("Yêu cầu đã được gửi thành công.")
-    } catch {
+      form.reset()
+    } catch (error: any) {
       setStatus("error")
-      setMessage("Không thể gửi yêu cầu. Vui lòng thử lại.")
+      const apiMessage = error.response?.data?.message || error.response?.data?.errors?.[0]?.message
+      setMessage(apiMessage || "Không thể gửi yêu cầu. Vui lòng thử lại.")
     }
   }
 
@@ -81,8 +83,8 @@ export function ContactForm({ settings }: { settings: SiteSettings }) {
             <Input name="email" type="email" required autoComplete="email" placeholder="you@example.com" className={inputClass} />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-700 md:col-span-2">
-            Công ty
-            <Input name="company" autoComplete="organization" placeholder="Tên công ty hoặc dự án" className={inputClass} />
+            Số điện thoại
+            <Input name="phone" type="tel" autoComplete="tel" placeholder="0123456789" className={inputClass} />
           </label>
           <label className="grid gap-2 text-sm font-semibold text-slate-700 md:col-span-2">
             Nội dung

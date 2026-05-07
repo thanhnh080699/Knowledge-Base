@@ -116,7 +116,7 @@ thanhnh.id.vn/
 
 ### API (AdonisJS v6)
 - **MariaDB Local**: host: `192.168.11.254`, user: `thanhnh.id.vn`, pass: `thanhnh.id.vn`, db: `thanhnh.id.vn`.
-- **UUID** — Dùng `beforeCreate` hook + `randomUUID()` (Node.js built-in). Không dùng auto-increment ID.
+- **Auto-increment ID** — TUYỆT ĐỐI KHÔNG sử dụng UUID. Luôn dùng auto-increment ID (`table.increments('id').primary()`) cho mọi model. ID type là `number`, không phải `string`.
 - **JSON Array fields** — Dùng Lucid `column({ prepare, consume })` để auto serialize/deserialize. KHÔNG để raw JSON string lọt ra response.
 - **Soft delete** — Mọi query list PHẢI filter `.whereNull('deleted_at')` hoặc dùng scope.
 - **Validator** — Dùng VineJS (`vine.compile`). Không import Zod.

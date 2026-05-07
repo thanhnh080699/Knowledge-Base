@@ -51,4 +51,43 @@ export default class ContactsController {
     const newsletters = await Newsletter.query().orderBy('createdAt', 'desc')
     return response.ok({ data: newsletters })
   }
+
+  /**
+   * @updateRequest
+   * @tag CONTACTS
+   * @description Update a contact request status (Admin only)
+   * @requestBody { status: string }
+   * @responseBody 200 - { data: <ContactRequest> }
+   */
+  async updateRequest({ params, request, response }: HttpContext) {
+    const contactRequest = await ContactRequest.findOrFail(params.id)
+    const payload = await request.only(['status'])
+    contactRequest.merge(payload)
+    await contactRequest.save()
+    return response.ok({ data: contactRequest })
+  }
+
+  /**
+   * @destroyRequest
+   * @tag CONTACTS
+   * @description Delete a contact request (Admin only)
+   * @responseBody 204
+   */
+  async destroyRequest({ params, response }: HttpContext) {
+    const contactRequest = await ContactRequest.findOrFail(params.id)
+    await contactRequest.delete()
+    return response.noContent()
+  }
+
+  /**
+   * @destroyNewsletter
+   * @tag CONTACTS
+   * @description Delete a newsletter subscription (Admin only)
+   * @responseBody 204
+   */
+  async destroyNewsletter({ params, response }: HttpContext) {
+    const newsletter = await Newsletter.findOrFail(params.id)
+    await newsletter.delete()
+    return response.noContent()
+  }
 }

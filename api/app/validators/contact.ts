@@ -7,7 +7,8 @@ export const createContactRequestValidator = vine.compile(
   vine.object({
     name: vine.string().trim().maxLength(255),
     email: vine.string().email().normalizeEmail(),
-    subject: vine.string().trim().maxLength(255),
+    phone: vine.string().trim().maxLength(20).optional(),
+    subject: vine.string().trim().maxLength(255).optional(),
     message: vine.string().trim(),
   })
 )
