@@ -148,7 +148,9 @@ export default function ContactsPage() {
                     <input
                       type="checkbox"
                       checked={isAllSelected}
-                      ref={(el) => el && (el.indeterminate = isSomeSelected)}
+                      ref={(el) => {
+                        if (el) el.indeterminate = isSomeSelected;
+                      }}
                       onChange={toggleSelectAll}
                       className="h-4 w-4 rounded border-slate-300"
                     />
