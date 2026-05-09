@@ -22,6 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: settings.site_name,
       description: settings.site_description,
       type: "website"
+    },
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SEARCH_CONSOLE_CODE
     }
   }
 }
