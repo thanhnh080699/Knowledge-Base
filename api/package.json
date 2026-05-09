@@ -11,6 +11,7 @@
   "scripts": {
     "start": "node bin/server.js",
     "build": "node ace build",
+    "postbuild": "cp .env build",
     "dev": "node ace serve --hmr",
     "test": "node ace test",
     "lint": "eslint .",
