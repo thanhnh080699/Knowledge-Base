@@ -3,7 +3,15 @@ import Post from '#models/post'
 import Category from '#models/category'
 import Tag from '#models/tag'
 import Project from '#models/project'
+import Tool from '#models/tool'
 import { DateTime } from 'luxon'
+
+type SitemapUrl = {
+  loc: string
+  lastmod: string
+  changefreq?: string
+  priority?: string
+}
 
 export default class SitemapService {
   private cache = new Map<string, { xml: string; expiresAt: number }>()
@@ -53,19 +61,19 @@ export default class SitemapService {
     }
 
     const siteUrl = await this.getSiteUrl()
-    const sections = ['posts', 'categories', 'tags', 'projects']
-    
+    const sections = ['static', 'posts', 'categories', 'tags', 'projects', 'tools']
+
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`
-    
+
     for (const section of sections) {
       xml += `
   <sitemap>
-    <loc>${siteUrl}/sitemap-${section}.xml</loc>
+    <loc>${this.escapeXml(`${siteUrl}/sitemap-${section}.xml`)}</loc>
     <lastmod>${DateTime.now().toISO()}</lastmod>
   </sitemap>`
     }
-    
+
     xml += `\n</sitemapindex>`
 
     if (cacheConfig.enabled) {
@@ -86,13 +94,20 @@ export default class SitemapService {
     }
 
     const siteUrl = await this.getSiteUrl()
-    let urls: { loc: string; lastmod: string; changefreq?: string; priority?: string }[] = []
+    let urls: SitemapUrl[] = []
 
     switch (section) {
+      case 'static':
+        urls = this.getStaticUrls(siteUrl)
+        break
       case 'posts':
-        const posts = await Post.query().where('status', 'PUBLISHED').orderBy('updated_at', 'desc')
+        const posts = await Post.query()
+          .where('status', 'PUBLISHED')
+          .whereNull('deleted_at')
+          .preload('category')
+          .orderBy('updated_at', 'desc')
         urls = posts.map((p) => ({
-          loc: `${siteUrl}/docs/${p.slug}`,
+          loc: `${siteUrl}/docs/${p.category?.slug ?? 'general'}/${p.slug}`,
           lastmod: p.updatedAt?.toISO() || '',
           changefreq: 'weekly',
           priority: '0.8',
@@ -101,7 +116,7 @@ export default class SitemapService {
       case 'categories':
         const categories = await Category.query().orderBy('updated_at', 'desc')
         urls = categories.map((c) => ({
-          loc: `${siteUrl}/docs?category=${c.slug}`,
+          loc: `${siteUrl}/docs/categories/${c.slug}`,
           lastmod: c.updatedAt?.toISO() || '',
           changefreq: 'monthly',
           priority: '0.5',
@@ -117,12 +132,26 @@ export default class SitemapService {
         }))
         break
       case 'projects':
-        const projects = await Project.query().where('status', 'PUBLISHED').orderBy('updated_at', 'desc')
+        const projects = await Project.query()
+          .where('status', 'PUBLISHED')
+          .orderBy('updated_at', 'desc')
         urls = projects.map((p) => ({
           loc: `${siteUrl}/projects/${p.slug}`,
           lastmod: p.updatedAt?.toISO() || '',
           changefreq: 'monthly',
           priority: '0.7',
+        }))
+        break
+      case 'tools':
+        const tools = await Tool.query()
+          .where('status', 'PUBLISHED')
+          .whereNull('deleted_at')
+          .orderBy('updated_at', 'desc')
+        urls = tools.map((tool) => ({
+          loc: `${siteUrl}/tools/${tool.slug}`,
+          lastmod: tool.updatedAt?.toISO() || '',
+          changefreq: 'monthly',
+          priority: tool.featured ? '0.7' : '0.6',
         }))
         break
       default:
@@ -135,8 +164,8 @@ export default class SitemapService {
     for (const url of urls) {
       xml += `
   <url>
-    <loc>${url.loc}</loc>
-    <lastmod>${url.lastmod}</lastmod>
+    <loc>${this.escapeXml(url.loc)}</loc>
+    <lastmod>${this.escapeXml(url.lastmod)}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
   </url>`
@@ -149,5 +178,27 @@ export default class SitemapService {
     }
 
     return xml
+  }
+
+  private getStaticUrls(siteUrl: string): SitemapUrl[] {
+    const lastmod = DateTime.now().toISO() || ''
+
+    return [
+      { loc: `${siteUrl}/`, lastmod, changefreq: 'daily', priority: '1.0' },
+      { loc: `${siteUrl}/docs`, lastmod, changefreq: 'daily', priority: '0.9' },
+      { loc: `${siteUrl}/projects`, lastmod, changefreq: 'weekly', priority: '0.8' },
+      { loc: `${siteUrl}/portfolio`, lastmod, changefreq: 'monthly', priority: '0.7' },
+      { loc: `${siteUrl}/tools`, lastmod, changefreq: 'weekly', priority: '0.8' },
+      { loc: `${siteUrl}/contact`, lastmod, changefreq: 'monthly', priority: '0.6' },
+    ]
+  }
+
+  private escapeXml(value: string) {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
   }
 }

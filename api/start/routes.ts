@@ -50,10 +50,15 @@ const SitemapsController = () => import('#controllers/sitemaps_controller')
 
 // Public routes (outside /api)
 router.get('/sitemap.xml', [SitemapsController, 'index'])
+router.get('/sitemap-static.xml', [SitemapsController, 'static'])
+router.get('/sitemap-posts.xml', [SitemapsController, 'posts'])
+router.get('/sitemap-categories.xml', [SitemapsController, 'categories'])
+router.get('/sitemap-tags.xml', [SitemapsController, 'tags'])
+router.get('/sitemap-projects.xml', [SitemapsController, 'projects'])
+router.get('/sitemap-tools.xml', [SitemapsController, 'tools'])
 router.get('/sitemap-:section.xml', [SitemapsController, 'section'])
 
-const GoogleSearchConsoleController = () =>
-  import('#controllers/google_search_console_controller')
+const GoogleSearchConsoleController = () => import('#controllers/google_search_console_controller')
 
 router.get('/admin/google-search-console/callback', [
   GoogleSearchConsoleController,
