@@ -46,6 +46,7 @@ router.use([
  */
 export const middleware = router.named({
   acl: () => import('#middleware/acl_middleware'),
+  apiToken: () => import('#middleware/api_token_middleware'),
   guest: () => import('#middleware/guest_middleware'),
   auth: () => import('#middleware/auth_middleware'),
 })

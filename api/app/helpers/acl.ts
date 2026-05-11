@@ -55,6 +55,10 @@ export const ACL_MODULES = {
     name: 'Settings',
     permissions: ['manage'],
   },
+  API_TOKENS: {
+    name: 'API Tokens',
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
+  },
 } as const
 
 export type AclModule = keyof typeof ACL_MODULES

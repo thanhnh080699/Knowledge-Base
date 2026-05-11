@@ -3,27 +3,15 @@
 import Link from 'next/link'
 import type { LucideIcon } from 'lucide-react'
 import {
-  Bell,
-  Box,
-  Brush,
-  CircleDollarSign,
-  Database,
-  Folder,
   Globe2,
   Languages,
-  Link2,
   Mail,
-  MailCheck,
-  MapPin,
-  Monitor,
-  Package,
   Palette,
   Phone,
   Search,
   Settings,
   Share2,
-  ShoppingCart,
-  SlidersHorizontal,
+  KeyRound,
 } from 'lucide-react'
 
 type SettingItem = {
@@ -77,6 +65,12 @@ const sections: SettingSection[] = [
         description: 'Manage sitemap configuration',
         href: '/settings/sitemap',
         icon: Share2,
+      },
+      {
+        title: 'API Tokens',
+        description: 'Create access tokens for automation, content and marketing data',
+        href: '/settings/api-tokens',
+        icon: KeyRound,
       },
     ],
   },

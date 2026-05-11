@@ -8,6 +8,15 @@ export default function postsRoutes() {
   router.get('posts', [PostsController, 'index']).as('posts.public.index')
   router.get('posts/:id', [PostsController, 'show']).as('posts.public.show')
 
+  // Automation API token routes
+  router.group(() => {
+    router.get('posts', [PostsController, 'index']).as('automation.posts.index').use(middleware.apiToken({ permission: 'posts.read' }))
+    router.get('posts/:id', [PostsController, 'show']).as('automation.posts.show').use(middleware.apiToken({ permission: 'posts.read' }))
+    router.post('posts', [PostsController, 'store']).as('automation.posts.store').use(middleware.apiToken({ permission: 'posts.create' }))
+    router.put('posts/:id', [PostsController, 'update']).as('automation.posts.update').use(middleware.apiToken({ permission: 'posts.update' }))
+    router.delete('posts/:id', [PostsController, 'destroy']).as('automation.posts.destroy').use(middleware.apiToken({ permission: 'posts.delete' }))
+  }).prefix('automation')
+
   // Admin
   router.group(() => {
     router

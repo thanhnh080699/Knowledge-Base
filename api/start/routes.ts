@@ -28,6 +28,7 @@ import mediaRoutes from './routes/media.js'
 import settingsRoutes from './routes/settings.js'
 import questionAnswersRoutes from './routes/question_answers.js'
 import toolsRoutes from './routes/tools.js'
+import apiAccessTokensRoutes from './routes/api_access_tokens.js'
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -84,5 +85,6 @@ router
     settingsRoutes()
     questionAnswersRoutes()
     toolsRoutes()
+    apiAccessTokensRoutes()
   })
   .prefix('/api')
