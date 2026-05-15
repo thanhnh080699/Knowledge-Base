@@ -51,6 +51,10 @@ export const ACL_MODULES = {
     name: 'Newsletters',
     permissions: ['read', 'delete', 'manage'],
   },
+  MEDIA: {
+    name: 'Media',
+    permissions: ['create', 'read', 'update', 'delete', 'manage'],
+  },
   SETTINGS: {
     name: 'Settings',
     permissions: ['manage'],

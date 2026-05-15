@@ -6,6 +6,14 @@ const MediaController = () => import('#controllers/media_controller')
 export default function mediaRoutes() {
   router
     .group(() => {
+      router.get('media', [MediaController, 'index']).as('automation.media.index').use(middleware.apiToken({ permission: 'media.read' }))
+      router.get('media/detail', [MediaController, 'show']).as('automation.media.show').use(middleware.apiToken({ permission: 'media.read' }))
+      router.post('media/upload', [MediaController, 'upload']).as('automation.media.upload').use(middleware.apiToken({ permission: 'media.create' }))
+    })
+    .prefix('automation')
+
+  router
+    .group(() => {
       router.get('media', [MediaController, 'index']).as('admin.media.index')
       router.get('media/detail', [MediaController, 'show']).as('admin.media.show')
       router.post('media/upload', [MediaController, 'upload']).as('admin.media.upload')

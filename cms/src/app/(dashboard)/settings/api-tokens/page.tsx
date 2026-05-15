@@ -30,7 +30,7 @@ const expirationOptions: Array<{ value: TokenExpirationOption; label: string }> 
   { value: 'no_expire', label: 'No expire' },
 ]
 
-const contentModules = new Set(['Posts', 'Categories', 'Tags', 'Pages', 'Menus', 'Projects', 'Question & Answer'])
+const contentModules = new Set(['Posts', 'Categories', 'Tags', 'Pages', 'Menus', 'Projects', 'Question & Answer', 'Media'])
 
 export default function ApiTokensSettingsPage() {
   const [isCreateOpen, setCreateOpen] = useState(false)

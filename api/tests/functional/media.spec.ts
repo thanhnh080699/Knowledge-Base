@@ -1,4 +1,6 @@
 import { test } from '@japa/runner'
+import Permission from '#models/permission'
+import Role from '#models/role'
 import User from '#models/user'
 
 test.group('Media gateway', (group) => {
@@ -64,5 +66,59 @@ test.group('Media gateway', (group) => {
 
     response.assertStatus(200)
     assert.equal((response.body() as any).data.path, 'archive/image.png')
+  })
+
+  test('lists media through automation API token', async ({ client, assert }) => {
+    const user = await User.create({
+      fullName: 'Automation Media Admin',
+      email: `automation-media-admin-${Date.now()}@example.com`,
+      password: 'password123',
+    })
+    const role = await Role.firstOrCreate(
+      { slug: `automation-media-admin-${Date.now()}` },
+      { name: 'Automation Media Admin' }
+    )
+    const manageTokens = await Permission.firstOrCreate(
+      { slug: 'api_tokens.manage' },
+      { name: 'Manage API Tokens', module: 'API Tokens' }
+    )
+    const readMedia = await Permission.firstOrCreate(
+      { slug: 'media.read' },
+      { name: 'Read Media', module: 'Media' }
+    )
+
+    await role.related('permissions').sync([manageTokens.id])
+    await user.related('roles').sync([role.id])
+
+    const tokenResponse = await client
+      .post('/api/admin/api-access-tokens')
+      .loginAs(user)
+      .json({
+        name: 'Media automation',
+        expiresIn: '1_week',
+        permissions: [readMedia.slug],
+      })
+    const plainToken = tokenResponse.body().data.token as string
+
+    globalThis.fetch = async (input) => {
+      const url = new URL(input.toString())
+      assert.equal(url.pathname, '/api/media')
+      assert.equal(url.searchParams.get('folder'), 'Posts')
+      return Response.json({
+        data: {
+          current_folder: 'Posts',
+          folders: [],
+          files: [],
+        },
+      })
+    }
+
+    const response = await client
+      .get('/api/automation/media')
+      .header('x-api-token', plainToken)
+      .qs({ folder: 'Posts' })
+
+    response.assertStatus(200)
+    assert.equal((response.body() as any).data.current_folder, 'Posts')
   })
 })
