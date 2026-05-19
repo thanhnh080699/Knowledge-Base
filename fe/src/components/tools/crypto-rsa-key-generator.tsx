@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Copy, RefreshCw } from "lucide-react"
 
@@ -45,10 +45,6 @@ export function CryptoRsaKeyGenerator() {
     const formatted = base64.match(/.{1,64}/g)?.join("\n") || base64
     return `-----BEGIN ${type}-----\n${formatted}\n-----END ${type}-----`
   }
-
-  useEffect(() => {
-    generateKeys()
-  }, [])
 
   const copyPublic = async () => {
     await navigator.clipboard.writeText(publicKey)

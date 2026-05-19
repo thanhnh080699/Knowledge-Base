@@ -29,8 +29,8 @@ const highlights = [
 
 export default function PortfolioPage() {
   return (
-    <main className="bg-slate-50">
-      <section className="relative min-h-[500px] overflow-hidden border-b border-slate-200 bg-white">
+    <main className="bg-[var(--color-surface)]">
+      <section className="relative min-h-[500px] overflow-hidden border-b border-[var(--color-hairline)] bg-[var(--color-surface)]">
         <Image
           src="/images/portfolio-bg.png"
           alt=""
@@ -39,13 +39,14 @@ export default function PortfolioPage() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(248,250,252,0.99)_0%,rgba(248,250,252,0.92)_43%,rgba(248,250,252,0.34)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(245,245,245,0.99)_0%,rgba(245,245,245,0.92)_43%,rgba(245,245,245,0.34)_100%)]" />
+        <div className="kb-orb kb-orb-peach bottom-0 right-[12%] h-72 w-72"></div>
 
         <div className="relative mx-auto flex min-h-[500px] max-w-7xl items-center px-4 py-16 md:px-6">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Portfolio</p>
-            <h1 className="mt-4 text-4xl font-bold leading-tight text-slate-950 md:text-6xl">Thanh Nguyen</h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 md:text-lg">
+            <p className="kb-eyebrow">Portfolio</p>
+            <h1 className="kb-display-mega mt-4">Thanh Nguyen</h1>
+            <p className="mt-5 max-w-xl text-base leading-7 text-[var(--color-body)] md:text-lg">
               Developer tập trung vào website nội dung, dashboard quản trị, API và hệ thống deployment gọn, dễ vận hành.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
@@ -59,13 +60,13 @@ export default function PortfolioPage() {
       </section>
 
       <section className="relative z-10 mx-auto -mt-20 max-w-6xl px-4 pb-16 md:px-6 md:pb-20">
-        <div className="grid overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:grid-cols-[0.9fr_1.1fr]">
-          <aside className="border-b border-slate-200 bg-slate-50 p-6 sm:p-8 lg:border-b-0 lg:border-r">
-            <div className="flex size-24 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-3xl font-bold text-blue-600" aria-label="Avatar thanhnh">
+        <div className="grid overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-white lg:grid-cols-[0.9fr_1.1fr]">
+          <aside className="border-b border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-6 sm:p-8 lg:border-b-0 lg:border-r">
+            <div className="kb-icon size-24 text-3xl font-medium" aria-label="Avatar thanhnh">
               TN
             </div>
-            <h2 className="mt-5 text-2xl font-bold text-slate-950">Developer / SysAdmin</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
+            <h2 className="kb-display-sm mt-5">Developer / SysAdmin</h2>
+            <p className="mt-3 text-sm leading-6 text-[var(--color-body)]">
               Kết hợp phát triển sản phẩm web với kinh nghiệm vận hành server để xây dựng hệ thống dễ bàn giao, dễ mở rộng và dễ debug.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
@@ -74,18 +75,18 @@ export default function PortfolioPage() {
           </aside>
 
           <div className="p-6 sm:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600">Capabilities</p>
-            <h2 className="mt-3 text-2xl font-bold text-slate-950">Năng lực triển khai</h2>
+            <p className="kb-eyebrow">Capabilities</p>
+            <h2 className="kb-display-sm mt-3">Năng lực triển khai</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {highlights.map((item) => (
-                <article key={item.label} className="rounded-lg border border-slate-200 bg-white p-4 transition-colors hover:border-blue-600">
+                <article key={item.label} className="rounded-2xl border border-[var(--color-hairline)] bg-white p-4 transition-colors hover:border-[var(--color-hairline-strong)]">
                   <div className="flex items-start gap-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-blue-100 bg-blue-50 text-blue-600">
+                    <span className="kb-icon size-10 shrink-0">
                       <item.icon size={18} aria-hidden />
                     </span>
                     <div>
-                      <h3 className="font-bold text-slate-950">{item.label}</h3>
-                      <p className="mt-1 text-sm leading-6 text-slate-600">{item.value}</p>
+                      <h3 className="font-medium text-[var(--color-ink)]">{item.label}</h3>
+                      <p className="mt-1 text-sm leading-6 text-[var(--color-body)]">{item.value}</p>
                     </div>
                   </div>
                 </article>
@@ -97,20 +98,20 @@ export default function PortfolioPage() {
         <section className="mt-10">
           <div>
             <Badge tone="slate">Timeline</Badge>
-            <h2 className="mt-3 text-3xl font-bold text-slate-950">Kinh nghiệm chính</h2>
+            <h2 className="kb-display-lg mt-3">Kinh nghiệm chính</h2>
           </div>
           <div className="mt-5 grid gap-4">
             {timeline.map((item) => {
               const Icon = item.icon
               return (
-                <article key={item.title} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-blue-600">
+                <article key={item.title} className="kb-card">
                   <div className="flex gap-4">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-blue-200 bg-blue-50 text-blue-600">
+                    <span className="kb-icon size-10 shrink-0">
                       <Icon size={18} aria-hidden />
                     </span>
                     <div>
-                      <h2 className="text-lg font-bold text-slate-950">{item.title}</h2>
-                      <p className="mt-1 text-sm leading-6 text-slate-600">{item.text}</p>
+                      <h2 className="text-lg font-medium text-[var(--color-ink)]">{item.title}</h2>
+                      <p className="mt-1 text-sm leading-6 text-[var(--color-body)]">{item.text}</p>
                     </div>
                   </div>
                 </article>
@@ -122,14 +123,14 @@ export default function PortfolioPage() {
         <section className="mt-10">
           <div>
             <Badge tone="slate">Skills</Badge>
-            <h2 className="mt-3 text-3xl font-bold text-slate-950">Kỹ năng thực chiến</h2>
+            <h2 className="kb-display-lg mt-3">Kỹ năng thực chiến</h2>
           </div>
           <div className="mt-5 grid gap-4 md:grid-cols-3">
             {skills.map((skill) => (
-              <article key={skill} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-blue-600">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600" aria-hidden />
-                <h2 className="mt-4 text-base font-bold text-slate-950">{skill}</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-600">Thực hành theo hướng rõ ràng, có tài liệu và ưu tiên khả năng bảo trì.</p>
+              <article key={skill} className="kb-card">
+                <CheckCircle2 className="h-5 w-5 text-[var(--color-ink)]" aria-hidden />
+                <h2 className="mt-4 text-base font-medium text-[var(--color-ink)]">{skill}</h2>
+                <p className="mt-2 text-sm leading-6 text-[var(--color-body)]">Thực hành theo hướng rõ ràng, có tài liệu và ưu tiên khả năng bảo trì.</p>
               </article>
             ))}
           </div>

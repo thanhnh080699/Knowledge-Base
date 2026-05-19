@@ -34,14 +34,14 @@ export default async function ToolPage({ params }: Props) {
   const allTools = response.data
 
   return (
-    <main className="bg-slate-50">
+    <main className="bg-[var(--color-surface)]">
       <section className="mx-auto max-w-[1600px] px-4 py-8 md:px-6">
-        <div className="flex gap-6">
+        <div className="flex flex-col gap-6 lg:flex-row">
           <ToolSidebar tools={allTools} currentSlug={slug} />
-          <div className="flex-1 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-            <h1 className="mb-2 break-words text-3xl font-bold text-slate-950">{tool.name}</h1>
+          <div className="flex-1 rounded-2xl border border-[var(--color-hairline)] bg-white p-6">
+            <h1 className="kb-display-lg mb-2 break-words">{tool.name}</h1>
             {tool.description && (
-              <p className="mb-6 break-words text-slate-600">{tool.description}</p>
+              <p className="mb-6 break-words text-[var(--color-body)]">{tool.description}</p>
             )}
             <ToolRenderer slug={tool.slug} />
           </div>

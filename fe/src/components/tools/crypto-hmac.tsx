@@ -4,10 +4,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Copy } from "lucide-react"
 
+const hmacAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"] as const
+type HmacAlgorithm = (typeof hmacAlgorithms)[number]
+
 export function CryptoHmac() {
   const [plainText, setPlainText] = useState("")
   const [secretKey, setSecretKey] = useState("")
-  const [algorithm, setAlgorithm] = useState<"SHA-1" | "SHA-256" | "SHA-384" | "SHA-512">("SHA-256")
+  const [algorithm, setAlgorithm] = useState<HmacAlgorithm>("SHA-256")
   const [encoding, setEncoding] = useState<"hex" | "base64">("hex")
   const [output, setOutput] = useState("")
   const [copied, setCopied] = useState(false)
@@ -72,13 +75,12 @@ export function CryptoHmac() {
         <label className="mb-2 block text-sm font-medium text-slate-700">Hashing Function</label>
         <select
           value={algorithm}
-          onChange={(e) => setAlgorithm(e.target.value as any)}
+          onChange={(e) => setAlgorithm(e.target.value as HmacAlgorithm)}
           className="w-full rounded-md border border-slate-300 px-3 py-2"
         >
-          <option value="SHA-1">SHA-1</option>
-          <option value="SHA-256">SHA-256</option>
-          <option value="SHA-384">SHA-384</option>
-          <option value="SHA-512">SHA-512</option>
+          {hmacAlgorithms.map((item) => (
+            <option key={item} value={item}>{item}</option>
+          ))}
         </select>
       </div>
       <div>

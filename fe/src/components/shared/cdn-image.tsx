@@ -7,10 +7,11 @@ interface CdnImageProps extends Omit<ImageProps, "loader"> {
   useCdnLoader?: boolean
 }
 
-export function CdnImage({ useCdnLoader = true, ...props }: CdnImageProps) {
+export function CdnImage({ useCdnLoader = true, alt, ...props }: CdnImageProps) {
   return (
     <Image
       loader={useCdnLoader ? cdnLoader : undefined}
+      alt={alt ?? ""}
       {...props}
     />
   )

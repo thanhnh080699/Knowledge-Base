@@ -32,17 +32,17 @@ export default async function DocsPage({
   const categories = categoriesResponse.length ? categoriesResponse : fallbackCategories
 
   return (
-    <main className="mx-auto grid max-w-[1600px] gap-6 px-4 py-8 md:grid-cols-[280px_1fr] md:px-6">
+    <main className="kb-wide-container grid gap-6 py-8 md:grid-cols-[280px_1fr]">
       <Sidebar categories={categories} activeCategory={params.category} />
       <section>
-        <div className="mb-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
+        <div className="mb-6 rounded-2xl border border-[var(--color-hairline)] bg-white p-6">
+          <p className="kb-eyebrow">
             {currentCategory ? `Danh mục: ${currentCategory.name}` : "Trung tâm tài liệu"}
           </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
+          <h1 className="kb-display-xl mt-4">
             {currentCategory?.name ?? "Tài liệu kỹ thuật"}
           </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--color-body)]">
             {currentCategory?.description ?? "Tổng hợp ghi chú vận hành hệ thống, Docker, Linux, web server, lập trình và xử lý sự cố theo dạng knowledge base dễ tra cứu."}
           </p>
         </div>

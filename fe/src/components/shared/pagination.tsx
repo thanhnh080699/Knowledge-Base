@@ -22,21 +22,21 @@ export function Pagination({
   }
 
   return (
-    <nav className="flex items-center justify-between border-t border-slate-200 pt-5" aria-label="Pagination">
+    <nav className="flex items-center justify-between border-t border-[var(--color-hairline)] pt-5" aria-label="Pagination">
       <Link
         href={makeHref(Math.max(1, currentPage - 1))}
         aria-disabled={currentPage <= 1}
-        className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-600 hover:text-blue-600 aria-disabled:pointer-events-none aria-disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-full border border-[var(--color-hairline-strong)] px-4 py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-ink)] aria-disabled:pointer-events-none aria-disabled:opacity-50"
       >
         <ChevronLeft size={16} aria-hidden /> Trang trước
       </Link>
-      <span className="text-sm text-slate-600">
+      <span className="text-sm text-[var(--color-body)]">
         Trang {currentPage} / {lastPage}
       </span>
       <Link
         href={makeHref(Math.min(lastPage, currentPage + 1))}
         aria-disabled={currentPage >= lastPage}
-        className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-600 hover:text-blue-600 aria-disabled:pointer-events-none aria-disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-full border border-[var(--color-hairline-strong)] px-4 py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-ink)] aria-disabled:pointer-events-none aria-disabled:opacity-50"
       >
         Trang sau <ChevronRight size={16} aria-hidden />
       </Link>

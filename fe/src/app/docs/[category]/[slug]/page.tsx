@@ -48,30 +48,30 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
   const toc = buildTocFromContent(post.content)
 
   return (
-    <main className="mx-auto grid max-w-[1600px] gap-8 px-4 py-8 md:px-6 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_300px]">
+    <main className="kb-wide-container grid gap-8 py-8 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_300px]">
       <Sidebar categories={categories} activeCategory={post.category?.slug ?? category} />
       
       <DocReader toc={toc}>
-        <article className="min-w-0 rounded-xl border border-slate-200 bg-white p-6 shadow-sm md:p-10">
-          <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb">
-            <Link href="/docs" className="hover:text-blue-600">Tài liệu</Link>
+        <article className="min-w-0 rounded-2xl border border-[var(--color-hairline)] bg-white p-6 md:p-10">
+          <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]" aria-label="Breadcrumb">
+            <Link href="/docs" className="hover:text-[var(--color-ink)]">Tài liệu</Link>
             <span>/</span>
-            <Link href={`/docs/categories/${post.category?.slug ?? category}`} className="hover:text-blue-600">
+            <Link href={`/docs/categories/${post.category?.slug ?? category}`} className="hover:text-[var(--color-ink)]">
               {post.category?.name ?? category}
             </Link>
             <span>/</span>
-            <span className="text-slate-900 font-medium truncate max-w-[200px]">{post.title}</span>
+            <span className="max-w-[200px] truncate font-medium text-[var(--color-ink)]">{post.title}</span>
           </nav>
 
           <Badge tone="blue">{post.category?.name ?? "Tài liệu"}</Badge>
           
           <header className="mt-4 space-y-4">
-            <h1 className="text-3xl font-extrabold leading-tight text-slate-950 md:text-5xl">
+            <h1 className="kb-display-xl">
               {post.title}
             </h1>
 
             {post.coverImage && (
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)]">
                 <CdnImage
                   src={absoluteCdnUrl(post.coverImage)}
                   alt={post.title}
@@ -83,7 +83,7 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
             )}
 
             {post.excerpt && (
-              <p className="text-lg leading-relaxed text-slate-600 border-l-4 border-blue-100 pl-4 py-1">
+              <p className="border-l border-[var(--color-hairline-strong)] py-1 pl-4 text-lg leading-relaxed text-[var(--color-body)]">
                 {post.excerpt}
               </p>
             )}

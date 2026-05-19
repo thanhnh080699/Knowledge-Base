@@ -36,33 +36,33 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
       <div className="space-y-4">
         <button
           onClick={handleShare}
-          className="flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors"
+          className="flex items-center gap-2 font-medium text-[var(--color-ink)] transition-colors"
         >
-          <div className="flex size-8 items-center justify-center rounded-lg bg-blue-100">
+          <div className="kb-icon size-8">
             <Share2 size={16} />
           </div>
           <span>Share this Doc</span>
         </button>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
+          <div className="flex items-center rounded-full border border-[var(--color-hairline)] bg-white p-1">
             <button
               onClick={() => setFontSize(Math.max(12, fontSize - 2))}
-              className="flex size-8 items-center justify-center rounded hover:bg-slate-100 text-sm font-medium"
+              className="flex size-8 items-center justify-center rounded-full text-sm font-medium hover:bg-[var(--color-surface-strong)]"
               aria-label="Decrease font size"
             >
               A-
             </button>
             <button
               onClick={() => setFontSize(16)}
-              className="flex size-8 items-center justify-center rounded hover:bg-slate-100 text-base font-medium border-x border-slate-100"
+              className="flex size-8 items-center justify-center border-x border-[var(--color-hairline)] text-base font-medium hover:bg-[var(--color-surface-strong)]"
               aria-label="Reset font size"
             >
               A
             </button>
             <button
               onClick={() => setFontSize(Math.min(24, fontSize + 2))}
-              className="flex size-8 items-center justify-center rounded hover:bg-slate-100 text-lg font-medium"
+              className="flex size-8 items-center justify-center rounded-full text-lg font-medium hover:bg-[var(--color-surface-strong)]"
               aria-label="Increase font size"
             >
               A+
@@ -71,7 +71,7 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
 
           <button
             onClick={handlePrint}
-            className="flex size-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all"
+            className="flex size-10 items-center justify-center rounded-full border border-[var(--color-hairline)] bg-white text-[var(--color-muted)] transition-all hover:border-[var(--color-hairline-strong)] hover:text-[var(--color-ink)]"
             aria-label="Print document"
           >
             <Printer size={20} />
@@ -81,17 +81,17 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
 
       {/* Table of Contents */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
           <List size={14} />
           <span>CONTENTS</span>
         </div>
-        <nav className="grid gap-2 border-l border-slate-100 pl-4" aria-label="Mục lục">
+        <nav className="grid gap-2 border-l border-[var(--color-hairline)] pl-4" aria-label="Mục lục">
           {items.length ? (
             items.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className={`text-sm text-slate-500 hover:text-blue-600 transition-colors line-clamp-2 ${
+                className={`line-clamp-2 text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)] ${
                   item.level === 3 ? "pl-4" : ""
                 }`}
               >
@@ -99,17 +99,17 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
               </a>
             ))
           ) : (
-            <span className="text-sm text-slate-400 italic">Chưa có đề mục</span>
+            <span className="text-sm italic text-[var(--color-muted)]">Chưa có đề mục</span>
           )}
         </nav>
       </div>
 
       {/* Suggestions for additional content */}
-      <div className="pt-8 space-y-4 border-t border-slate-100">
-        <div className="rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 p-4 border border-blue-100">
-          <p className="text-xs font-bold text-blue-800 uppercase tracking-tight">Mẹo hữu ích</p>
-          <p className="mt-2 text-xs text-blue-600 leading-relaxed">
-            Sử dụng phím <kbd className="rounded border border-blue-200 bg-white px-1">Ctrl</kbd> + <kbd className="rounded border border-blue-200 bg-white px-1">F</kbd> để tìm kiếm nhanh trong tài liệu.
+      <div className="space-y-4 border-t border-[var(--color-hairline)] pt-8">
+        <div className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-ink)]">Mẹo hữu ích</p>
+          <p className="mt-2 text-xs leading-relaxed text-[var(--color-body)]">
+            Sử dụng phím <kbd className="rounded border border-[var(--color-hairline)] bg-white px-1">Ctrl</kbd> + <kbd className="rounded border border-[var(--color-hairline)] bg-white px-1">F</kbd> để tìm kiếm nhanh trong tài liệu.
           </p>
         </div>
       </div>

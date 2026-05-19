@@ -57,17 +57,17 @@ export function ToolSidebar({ tools, currentSlug }: Props) {
   }
 
   return (
-    <aside className="w-64 flex-shrink-0">
-      <div className="sticky top-4 rounded-lg border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-200 p-4">
-          <h2 className="font-semibold text-slate-900">Tools</h2>
+    <aside className="w-full flex-shrink-0 lg:w-64">
+      <div className="sticky top-20 rounded-2xl border border-[var(--color-hairline)] bg-white">
+        <div className="border-b border-[var(--color-hairline)] p-4">
+          <h2 className="font-medium text-[var(--color-ink)]">Tools</h2>
         </div>
         <nav className="p-2">
           {toolsByCategory.map(({ category, tools: categoryTools }) => (
             <div key={category} className="mb-2">
               <button
                 onClick={() => toggleCategory(category)}
-                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[var(--color-body)] hover:bg-[var(--color-surface-soft)]"
               >
                 {expandedCategories.has(category) ? (
                   <ChevronDown size={16} />
@@ -84,8 +84,8 @@ export function ToolSidebar({ tools, currentSlug }: Props) {
                       href={`/tools/${tool.slug}`}
                       className={`block rounded-md px-3 py-2 text-sm transition-colors ${
                         tool.slug === currentSlug
-                          ? "bg-blue-50 text-blue-700 font-medium"
-                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                          ? "bg-[var(--color-surface-strong)] text-[var(--color-ink)] font-medium"
+                          : "text-[var(--color-body)] hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-ink)]"
                       }`}
                     >
                       {tool.name}

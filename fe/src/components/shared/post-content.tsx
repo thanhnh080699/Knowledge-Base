@@ -28,7 +28,7 @@ export function PostContent({ content }: { content: string }) {
       // but we can use a simple button and event listener for HTML blocks.
       const button = document.createElement("button")
       button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`
-      button.className = "rounded-md border border-slate-700 bg-slate-800 p-1.5 text-slate-400 transition-all hover:bg-slate-700 hover:text-white"
+      button.className = "rounded-full border border-[var(--color-surface-dark-elevated)] bg-[var(--color-surface-dark-elevated)] p-1.5 text-white/70 transition-all hover:text-white"
       button.title = "Copy code"
       
       button.onclick = async () => {
@@ -78,14 +78,15 @@ export function PostContent({ content }: { content: string }) {
             if (!src || typeof src !== 'string') return null
             return (
               <span className="block my-8">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
                   src={absoluteCdnUrl(src)} 
                   alt={alt ?? ""} 
                   {...props} 
-                  className="mx-auto block rounded-xl border border-slate-200 shadow-sm" 
+                  className="mx-auto block rounded-2xl border border-[var(--color-hairline)]" 
                 />
                 {alt && (
-                  <span className="mt-3 block text-center text-sm italic text-slate-500">
+                  <span className="mt-3 block text-center text-sm italic text-[var(--color-muted)]">
                     {alt}
                   </span>
                 )}

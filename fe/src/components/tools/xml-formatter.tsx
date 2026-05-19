@@ -36,7 +36,7 @@ export function XmlFormatter() {
       setOutput(formatted.trim())
       setError("")
       setCopied(false)
-    } catch (e) {
+    } catch {
       setError("Invalid XML")
       setOutput("")
     }
@@ -48,7 +48,7 @@ export function XmlFormatter() {
       setOutput(minified)
       setError("")
       setCopied(false)
-    } catch (e) {
+    } catch {
       setError("Invalid XML")
       setOutput("")
     }

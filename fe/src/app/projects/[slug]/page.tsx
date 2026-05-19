@@ -52,16 +52,16 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
   const imageSrc = absoluteCdnUrl(project.thumbnailUrl)
 
   return (
-    <main className="bg-white">
+    <main className="bg-[var(--color-surface)]">
       <article className="mx-auto max-w-[1200px] px-4 py-10 md:px-6">
-        <header className="border-b border-slate-200 pb-10">
+        <header className="border-b border-[var(--color-hairline)] pb-10">
           <div className="flex flex-wrap gap-2">
             {project.featured ? <Badge tone="amber">Featured</Badge> : null}
             {(project.techStack ?? []).map((tech) => <Badge key={tech} tone="slate">{tech}</Badge>)}
           </div>
-          <h1 className="mt-5 text-4xl font-bold leading-tight text-slate-950 md:text-5xl">{project.title}</h1>
+          <h1 className="kb-display-xl mt-5">{project.title}</h1>
           
-          <div className="mt-8 relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+          <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)]">
             <CdnImage
               useCdnLoader={!!project.thumbnailUrl}
               src={imageSrc}
@@ -72,7 +72,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             />
           </div>
 
-          <p className="mt-8 max-w-3xl text-base leading-7 text-slate-600">
+          <p className="mt-8 max-w-3xl text-base leading-7 text-[var(--color-body)]">
             {project.description ?? "Case study dự án đã triển khai với giao diện, backend và hạ tầng tùy biến."}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -91,14 +91,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
         </header>
 
         <div className="grid gap-8 py-10 lg:grid-cols-[260px_1fr]">
-          <aside className="h-fit rounded-lg border border-slate-200 bg-slate-50 p-5">
-            <h2 className="text-sm font-bold uppercase text-slate-950">Project stack</h2>
+          <aside className="h-fit rounded-2xl border border-[var(--color-hairline)] bg-white p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-ink)]">Project stack</h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {(project.techStack ?? []).map((tech) => <Badge key={tech} tone="blue">{tech}</Badge>)}
             </div>
           </aside>
           <section>
-            <h2 className="text-2xl font-bold text-slate-950">Nội dung triển khai</h2>
+            <h2 className="kb-display-md">Nội dung triển khai</h2>
             <PostContent content={project.thumbnailUrl ? stripFirstImage(project.content || "") : (project.content || "")} />
           </section>
         </div>

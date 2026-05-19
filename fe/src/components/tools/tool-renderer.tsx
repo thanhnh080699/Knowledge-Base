@@ -13,5 +13,9 @@ export function ToolRenderer({ slug }: Props) {
     return <p className="text-slate-600">Tool implementation coming soon.</p>
   }
 
-  return <ToolComponent />
+  return (
+    <div className="tool-workspace">
+      <ToolComponent />
+    </div>
+  )
 }

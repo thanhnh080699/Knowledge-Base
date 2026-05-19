@@ -19,19 +19,19 @@ type ButtonLinkProps = ButtonBaseProps &
   }
 
 const variants = {
-  primary: "border-blue-200 bg-blue-50 text-blue-700 hover:border-blue-600 hover:bg-white hover:text-blue-700",
-  secondary: "border-slate-200 bg-slate-50 text-slate-800 hover:border-slate-400 hover:bg-white hover:text-slate-950",
-  outline: "border-slate-300 bg-white text-slate-900 hover:border-blue-600 hover:text-blue-600",
-  ghost: "border-transparent bg-transparent text-slate-700 hover:border-slate-300 hover:bg-white"
+  primary: "border-[var(--color-primary)] bg-[var(--color-primary)] text-white hover:border-[var(--color-primary-active)] hover:bg-[var(--color-primary-active)]",
+  secondary: "border-[var(--color-hairline)] bg-[var(--color-surface-strong)] text-[var(--color-ink)] hover:border-[var(--color-hairline-strong)] hover:bg-white",
+  outline: "border-[var(--color-hairline-strong)] bg-transparent text-[var(--color-ink)] hover:border-[var(--color-ink)] hover:bg-white",
+  ghost: "border-transparent bg-transparent text-[var(--color-ink)] hover:border-[var(--color-hairline)] hover:bg-white"
 }
 
 export function Button(props: ButtonProps | ButtonLinkProps) {
   const { children, variant = "primary", size = "default", className = "", ...rest } = props
   const sizes = {
-    default: "min-h-10 px-4 py-2",
-    sm: "min-h-9 px-3 py-1.5"
+    default: "min-h-10 px-5 py-2.5",
+    sm: "min-h-9 px-4 py-2"
   }
-  const classes = `inline-flex items-center justify-center gap-2 rounded-md border text-sm font-medium transition-colors cursor-pointer ${sizes[size]} ${variants[variant]} ${className}`
+  const classes = `inline-flex items-center justify-center gap-2 rounded-full border text-[15px] font-medium leading-none tracking-normal transition-colors cursor-pointer disabled:pointer-events-none disabled:opacity-50 ${sizes[size]} ${variants[variant]} ${className}`
 
   if ("href" in rest && rest.href) {
     return (

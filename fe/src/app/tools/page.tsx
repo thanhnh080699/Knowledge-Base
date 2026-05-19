@@ -50,17 +50,18 @@ export default async function ToolsPage() {
     })
 
   return (
-    <main className="bg-slate-50">
-      <section className="border-b border-slate-200 bg-white">
+    <main className="bg-[var(--color-surface)]">
+      <section className="relative overflow-hidden border-b border-[var(--color-hairline)] bg-[var(--color-surface)]">
+        <div className="kb-orb kb-orb-lavender right-[12%] top-0 h-64 w-64"></div>
         <div className="mx-auto max-w-[1600px] px-4 py-12 md:px-6">
-          <div className="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+          <div className="kb-eyebrow">
             <Wrench size={16} aria-hidden />
             Developer Tools
           </div>
-          <h1 className="mt-5 text-4xl font-bold text-slate-950">
+          <h1 className="kb-display-xl mt-5">
             Công cụ hữu ích cho Developer
           </h1>
-          <p className="mt-4 max-w-3xl text-base text-slate-600">
+          <p className="mt-4 max-w-3xl text-base text-[var(--color-body)]">
             Bộ sưu tập các công cụ encode, decode, converter và generator giúp tăng năng suất làm việc.
           </p>
         </div>
@@ -70,19 +71,19 @@ export default async function ToolsPage() {
         <div className="space-y-12">
           {toolsByCategory.map(({ category, tools: categoryTools }) => (
             <div key={category}>
-              <h2 className="mb-4 text-2xl font-semibold text-slate-950">{category}</h2>
+              <h2 className="kb-display-sm mb-4">{category}</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {categoryTools.map((tool) => (
                   <Link
                     key={tool.id}
                     href={`/tools/${tool.slug}`}
-                    className="group rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50"
+                    className="kb-card group block"
                   >
-                    <h3 className="font-semibold text-slate-950 group-hover:text-blue-700">
+                    <h3 className="font-medium text-[var(--color-ink)]">
                       {tool.name}
                     </h3>
                     {tool.description && (
-                      <p className="mt-2 text-sm text-slate-600">{tool.description}</p>
+                      <p className="mt-2 text-sm text-[var(--color-body)]">{tool.description}</p>
                     )}
                   </Link>
                 ))}

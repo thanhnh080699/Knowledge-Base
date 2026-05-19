@@ -3,7 +3,7 @@ import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react"
 export function Input({ className = "", ...props }: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      className={`min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-600 ${className}`}
+      className={`min-h-11 w-full rounded-lg border border-[var(--color-hairline-strong)] bg-white px-4 py-3 text-base text-[var(--color-ink)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-ink)] focus:ring-1 focus:ring-[var(--color-ink)] ${className}`}
       {...props}
     />
   )
@@ -12,7 +12,7 @@ export function Input({ className = "", ...props }: InputHTMLAttributes<HTMLInpu
 export function Textarea({ className = "", ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
-      className={`min-h-32 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-600 ${className}`}
+      className={`min-h-32 w-full rounded-lg border border-[var(--color-hairline-strong)] bg-white px-4 py-3 text-base text-[var(--color-ink)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-ink)] focus:ring-1 focus:ring-[var(--color-ink)] ${className}`}
       {...props}
     />
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Copy, Check } from "lucide-react"
 
@@ -10,15 +10,9 @@ export function ChmodCalculator() {
     group: { read: true, write: false, execute: false },
     public: { read: true, write: false, execute: false },
   })
-  const [octal, setOctal] = useState("644")
-  const [symbolic, setSymbolic] = useState("-rw-r--r--")
   const [copied, setCopied] = useState(false)
 
-  useEffect(() => {
-    calculate()
-  }, [permissions])
-
-  const calculate = () => {
+  const { octal, symbolic } = useMemo(() => {
     const calcValue = (p: { read: boolean; write: boolean; execute: boolean }) => {
       let val = 0
       if (p.read) val += 4
@@ -35,9 +29,11 @@ export function ChmodCalculator() {
     const g = calcValue(permissions.group)
     const p = calcValue(permissions.public)
 
-    setOctal(`${o}${g}${p}`)
-    setSymbolic(`-${calcSym(permissions.owner)}${calcSym(permissions.group)}${calcSym(permissions.public)}`)
-  }
+    return {
+      octal: `${o}${g}${p}`,
+      symbolic: `-${calcSym(permissions.owner)}${calcSym(permissions.group)}${calcSym(permissions.public)}`
+    }
+  }, [permissions])
 
   const toggle = (target: "owner" | "group" | "public", type: "read" | "write" | "execute") => {
     setPermissions({

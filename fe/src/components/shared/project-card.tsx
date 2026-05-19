@@ -9,8 +9,8 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
   const imageSrc = absoluteCdnUrl(project.thumbnailUrl)
 
   return (
-    <article className="group overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-colors hover:border-blue-600">
-      <div className="relative aspect-[16/9] border-b border-slate-200 bg-slate-50">
+    <article className="group overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-white transition-colors hover:border-[var(--color-hairline-strong)] hover:shadow-[var(--shadow-soft)]">
+      <div className="relative aspect-[16/9] border-b border-[var(--color-hairline)] bg-[var(--color-surface-soft)]">
         <CdnImage
           useCdnLoader={!!project.thumbnailUrl}
           src={imageSrc}
@@ -27,23 +27,23 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
             <Badge key={tech} tone="slate">{tech}</Badge>
           ))}
         </div>
-        <h2 className="mt-3 text-lg font-bold text-slate-950">
-          <Link href={`/projects/${project.slug}`} className="transition-colors group-hover:text-blue-700">
+        <h2 className="mt-4 text-lg font-medium leading-snug text-[var(--color-ink)]">
+          <Link href={`/projects/${project.slug}`} className="transition-colors group-hover:text-[var(--color-body-strong)]">
             {project.title}
           </Link>
         </h2>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{project.description ?? "Dự án thực tế với giao diện và backend tùy biến."}</p>
+        <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--color-body)]">{project.description ?? "Dự án thực tế với giao diện và backend tùy biến."}</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <a className="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 transition-colors hover:border-blue-600 hover:bg-white" href={`/projects/${project.slug}`}>
+          <a className="inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)] bg-[var(--color-primary)] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-active)]" href={`/projects/${project.slug}`}>
             Chi tiết
           </a>
           {project.demoUrl ? (
-            <a className="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 transition-colors hover:border-blue-600 hover:bg-white" href={project.demoUrl} target="_blank" rel="noreferrer">
+            <a className="inline-flex items-center gap-2 rounded-full border border-[var(--color-hairline-strong)] bg-transparent px-3 py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-ink)] hover:bg-white" href={project.demoUrl} target="_blank" rel="noreferrer">
               <ExternalLink size={15} aria-hidden /> Demo
             </a>
           ) : null}
           {project.repoUrl ? (
-            <a className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-950 hover:text-slate-950" href={project.repoUrl} target="_blank" rel="noreferrer">
+            <a className="inline-flex items-center gap-2 rounded-full border border-[var(--color-hairline-strong)] px-3 py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-ink)]" href={project.repoUrl} target="_blank" rel="noreferrer">
               <Github size={15} aria-hidden /> Repo
             </a>
           ) : null}

@@ -1,6 +1,6 @@
 "use client"
 
-import { Camera, Clock, Facebook, Github, Gitlab, Linkedin, Mail, MapPin, Phone, Send, Share2, UserRound, Video } from "lucide-react"
+import { Camera, Clock, Facebook, Github, Gitlab, Linkedin, Mail, MapPin, Phone, Send, Share2, Video } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { FormEvent, useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,15 @@ const socialLinks = [
   { key: "social_youtube", label: "YouTube", icon: Video },
   { key: "social_instagram", label: "Instagram", icon: Camera }
 ] as const
+
+function getErrorMessage(error: unknown) {
+  if (typeof error === "object" && error !== null && "response" in error) {
+    const response = (error as { response?: { data?: { message?: string; errors?: { message?: string }[] } } }).response
+    return response?.data?.message || response?.data?.errors?.[0]?.message
+  }
+
+  return undefined
+}
 
 export function ContactForm({ settings }: { settings: SiteSettings }) {
   const params = useSearchParams()
@@ -41,14 +50,14 @@ export function ContactForm({ settings }: { settings: SiteSettings }) {
       setStatus("success")
       setMessage("Yêu cầu đã được gửi thành công.")
       form.reset()
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus("error")
-      const apiMessage = error.response?.data?.message || error.response?.data?.errors?.[0]?.message
+      const apiMessage = getErrorMessage(error)
       setMessage(apiMessage || "Không thể gửi yêu cầu. Vui lòng thử lại.")
     }
   }
 
-  const inputClass = "min-h-12 border-slate-200 bg-white px-4 focus:border-blue-600"
+  const inputClass = "min-h-12 border-[var(--color-hairline-strong)] bg-white px-4 focus:border-[var(--color-ink)]"
   const phoneHref = settings.contact_phone ? `tel:${settings.contact_phone.replace(/[^\d+]/g, "")}` : ""
   const visibleSocialLinks = socialLinks
     .map((item) => ({ ...item, url: settings[item.key] }))
@@ -63,43 +72,43 @@ export function ContactForm({ settings }: { settings: SiteSettings }) {
   )
 
   return (
-    <div className="grid overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:grid-cols-[1.15fr_0.85fr]">
+    <div className="grid overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-white lg:grid-cols-[1.15fr_0.85fr]">
       <form onSubmit={onSubmit} className="px-5 py-8 sm:px-8 md:px-10">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Let&apos;s talk</p>
-          <h2 className="mt-3 text-2xl font-bold text-slate-950 md:text-3xl">Kể mình nghe về dự án</h2>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600">
+          <p className="kb-eyebrow">Let&apos;s talk</p>
+          <h2 className="kb-display-md mt-4">Kể mình nghe về dự án</h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--color-body)]">
             Mô tả ngắn vấn đề, phạm vi và deadline dự kiến. Mình sẽ phản hồi với hướng triển khai phù hợp.
           </p>
         </div>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2">
-          <label className="grid gap-2 text-sm font-semibold text-slate-700">
+          <label className="grid gap-2 text-sm font-medium text-[var(--color-body-strong)]">
             Họ tên
             <Input name="name" required autoComplete="name" placeholder="Nguyễn Văn A" className={inputClass} />
           </label>
-          <label className="grid gap-2 text-sm font-semibold text-slate-700">
+          <label className="grid gap-2 text-sm font-medium text-[var(--color-body-strong)]">
             Email
             <Input name="email" type="email" required autoComplete="email" placeholder="you@example.com" className={inputClass} />
           </label>
-          <label className="grid gap-2 text-sm font-semibold text-slate-700 md:col-span-2">
+          <label className="grid gap-2 text-sm font-medium text-[var(--color-body-strong)] md:col-span-2">
             Số điện thoại
             <Input name="phone" type="tel" autoComplete="tel" placeholder="0123456789" className={inputClass} />
           </label>
-          <label className="grid gap-2 text-sm font-semibold text-slate-700 md:col-span-2">
+          <label className="grid gap-2 text-sm font-medium text-[var(--color-body-strong)] md:col-span-2">
             Nội dung
             <Textarea
               name="message"
               required
               defaultValue={params.get("message") ?? ""}
               placeholder="Website, CMS, API, DevOps..."
-              className="min-h-36 border-slate-200 bg-white px-4 py-3 focus:border-blue-600"
+              className="min-h-36 border-[var(--color-hairline-strong)] bg-white px-4 py-3 focus:border-[var(--color-ink)]"
             />
           </label>
         </div>
 
         {message ? (
-          <div className={`mt-5 rounded-md border px-3 py-2 text-sm ${status === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-red-200 bg-red-50 text-red-600"}`} role="status">
+          <div className={`mt-5 rounded-lg border px-3 py-2 text-sm ${status === "success" ? "border-[var(--color-success)]/30 bg-white text-[var(--color-success)]" : "border-[var(--color-error)]/30 bg-white text-[var(--color-error)]"}`} role="status">
             {message}
           </div>
         ) : null}
@@ -107,60 +116,60 @@ export function ContactForm({ settings }: { settings: SiteSettings }) {
         <Button
           type="submit"
           disabled={status === "loading"}
-          className="mt-6 min-h-12 border-blue-600 bg-blue-600 px-6 text-white hover:border-blue-600 hover:bg-white hover:text-blue-600"
+          className="mt-6 min-h-12 px-6"
         >
           <Send size={16} aria-hidden />
           {status === "loading" ? "Đang gửi..." : "Gửi liên hệ"}
         </Button>
       </form>
 
-      <aside className="border-t border-slate-200 bg-slate-50 px-5 py-8 text-slate-700 sm:px-8 md:px-10 lg:border-l lg:border-t-0" aria-label="Thông tin liên hệ">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600">Contact info</p>
-        <h2 className="mt-3 text-2xl font-bold text-slate-950">Thông tin liên hệ</h2>
-        <p className="mt-3 text-sm leading-6 text-slate-600">
+      <aside className="border-t border-[var(--color-hairline)] bg-[var(--color-surface-soft)] px-5 py-8 text-[var(--color-body)] sm:px-8 md:px-10 lg:border-l lg:border-t-0" aria-label="Thông tin liên hệ">
+        <p className="kb-eyebrow">Contact info</p>
+        <h2 className="kb-display-sm mt-4">Thông tin liên hệ</h2>
+        <p className="mt-3 text-sm leading-6 text-[var(--color-body)]">
           Phù hợp cho dự án cá nhân, doanh nghiệp nhỏ và hệ thống nội bộ cần triển khai gọn, dễ vận hành.
         </p>
 
         <div className="mt-8 grid gap-5 text-sm">
           {settings.contact_email ? (
-            <a href={`mailto:${settings.contact_email}`} className="flex gap-3 text-slate-600 transition-colors hover:text-blue-600">
-              <Mail className="mt-0.5 shrink-0 text-blue-600" size={18} aria-hidden />
+            <a href={`mailto:${settings.contact_email}`} className="flex gap-3 text-[var(--color-body)] transition-colors hover:text-[var(--color-ink)]">
+              <Mail className="mt-0.5 shrink-0 text-[var(--color-ink)]" size={18} aria-hidden />
               <span>
-                <span className="block font-semibold text-slate-950">Email</span>
+                <span className="block font-medium text-[var(--color-ink)]">Email</span>
                 {settings.contact_email}
               </span>
             </a>
           ) : null}
           {settings.contact_phone ? (
-            <a href={phoneHref} className="flex gap-3 text-slate-600 transition-colors hover:text-blue-600">
-              <Phone className="mt-0.5 shrink-0 text-blue-600" size={18} aria-hidden />
+            <a href={phoneHref} className="flex gap-3 text-[var(--color-body)] transition-colors hover:text-[var(--color-ink)]">
+              <Phone className="mt-0.5 shrink-0 text-[var(--color-ink)]" size={18} aria-hidden />
               <span>
-                <span className="block font-semibold text-slate-950">Phone</span>
+                <span className="block font-medium text-[var(--color-ink)]">Phone</span>
                 {settings.contact_phone}
               </span>
             </a>
           ) : null}
           {settings.contact_address ? (
-            <span className="flex gap-3 text-slate-600">
-              <MapPin className="mt-0.5 shrink-0 text-blue-600" size={18} aria-hidden />
+            <span className="flex gap-3 text-[var(--color-body)]">
+              <MapPin className="mt-0.5 shrink-0 text-[var(--color-ink)]" size={18} aria-hidden />
               <span>
-                <span className="block font-semibold text-slate-950">Location</span>
+                <span className="block font-medium text-[var(--color-ink)]">Location</span>
                 {settings.contact_address}
               </span>
             </span>
           ) : null}
           {settings.working_hours ? (
-            <span className="flex gap-3 text-slate-600">
-              <Clock className="mt-0.5 shrink-0 text-blue-600" size={18} aria-hidden />
+            <span className="flex gap-3 text-[var(--color-body)]">
+              <Clock className="mt-0.5 shrink-0 text-[var(--color-ink)]" size={18} aria-hidden />
               <span>
-                <span className="block font-semibold text-slate-950">Working hours</span>
+                <span className="block font-medium text-[var(--color-ink)]">Working hours</span>
                 {settings.working_hours}
               </span>
             </span>
           ) : null}
           {visibleSocialLinks.length ? (
-            <div className="border-t border-slate-200 pt-5">
-              <span className="block font-semibold text-slate-950">Social links</span>
+            <div className="border-t border-[var(--color-hairline)] pt-5">
+              <span className="block font-medium text-[var(--color-ink)]">Social links</span>
               <div className="mt-3 flex flex-wrap gap-2">
                 {visibleSocialLinks.map((item) => {
                   const Icon = item.icon
@@ -172,7 +181,7 @@ export function ContactForm({ settings }: { settings: SiteSettings }) {
                       target="_blank"
                       rel="noreferrer"
                       aria-label={item.label}
-                      className="inline-flex size-10 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:border-blue-600 hover:text-blue-600"
+                      className="inline-flex size-10 items-center justify-center rounded-full border border-[var(--color-hairline)] bg-white text-[var(--color-body)] transition-colors hover:border-[var(--color-hairline-strong)] hover:text-[var(--color-ink)]"
                     >
                       <Icon size={17} aria-hidden />
                     </a>
@@ -182,7 +191,7 @@ export function ContactForm({ settings }: { settings: SiteSettings }) {
             </div>
           ) : null}
           {!hasContactInfo ? (
-            <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
+            <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-4 text-sm leading-6 text-[var(--color-body)]">
               Thông tin liên hệ sẽ hiển thị sau khi được cấu hình trong CMS.
             </div>
           ) : null}

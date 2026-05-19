@@ -39,10 +39,10 @@ const capabilities = [
 ]
 
 const counters = [
-  { label: "dự án triển khai", value: 18, suffix: "+", tone: "border-blue-200 bg-blue-50 text-blue-700" },
-  { label: "module nghiệp vụ", value: 42, suffix: "+", tone: "border-slate-200 bg-slate-50 text-slate-800" },
-  { label: "stack production", value: 12, suffix: "+", tone: "border-emerald-200 bg-emerald-50 text-emerald-700" },
-  { label: "quy trình bàn giao", value: 100, suffix: "%", tone: "border-amber-200 bg-amber-50 text-amber-700" }
+  { label: "dự án triển khai", value: 18, suffix: "+" },
+  { label: "module nghiệp vụ", value: 42, suffix: "+" },
+  { label: "stack production", value: 12, suffix: "+" },
+  { label: "quy trình bàn giao", value: 100, suffix: "%" }
 ]
 
 const whyChooseUs = [
@@ -75,18 +75,20 @@ export default async function ProjectsPage() {
   const totalTech = new Set(projects.flatMap((project) => project.techStack ?? [])).size
 
   return (
-    <main className="bg-slate-50">
-      <section className="border-b border-slate-200 bg-white">
+    <main className="bg-[var(--color-surface)]">
+      <section className="relative overflow-hidden border-b border-[var(--color-hairline)] bg-[var(--color-surface)]">
+        <div className="kb-orb kb-orb-rose right-[10%] top-8 h-72 w-72"></div>
+        <div className="kb-orb kb-orb-mint bottom-0 left-[6%] h-64 w-64"></div>
         <div className="mx-auto grid max-w-[1600px] gap-8 px-4 py-12 md:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:py-16">
-          <div className="flex flex-col justify-center">
-            <div className="inline-flex w-fit items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+          <div className="relative z-10 flex flex-col justify-center">
+            <div className="kb-eyebrow w-fit">
               <BriefcaseBusiness size={16} aria-hidden />
               Project Portfolio
             </div>
-            <h1 className="mt-5 max-w-4xl text-4xl font-bold leading-tight text-slate-950 md:text-5xl">
+            <h1 className="kb-display-xl mt-5 max-w-4xl">
               Dự án đã triển khai cho website, API và hệ thống quản trị
             </h1>
-            <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+            <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--color-body)]">
               Case study thực tế cho website nội dung, dashboard quản trị, API và hạ tầng media. Mỗi project tập trung vào khả năng vận hành lâu dài, SEO kỹ thuật và workflow quản trị rõ ràng.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
@@ -97,61 +99,61 @@ export default async function ProjectsPage() {
             </div>
             <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
               {capabilities.map((item) => (
-                <div key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <item.icon className="h-5 w-5 text-blue-600" aria-hidden />
-                  <div className="mt-3 text-sm font-bold text-slate-950">{item.label}</div>
-                  <div className="mt-1 text-xs leading-5 text-slate-600">{item.value}</div>
+                <div key={item.label} className="rounded-2xl border border-[var(--color-hairline)] bg-white p-4">
+                  <item.icon className="h-5 w-5 text-[var(--color-ink)]" aria-hidden />
+                  <div className="mt-3 text-sm font-medium text-[var(--color-ink)]">{item.label}</div>
+                  <div className="mt-1 text-xs leading-5 text-[var(--color-body)]">{item.value}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="relative min-h-[420px] rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm">
+          <div className="relative z-10 min-h-[420px] rounded-3xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-5">
             <div className="grid h-full gap-4 lg:grid-cols-[0.9fr_1.1fr]">
               <div className="space-y-4">
-                <div className="rounded-lg border border-slate-200 bg-white p-5">
+                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-slate-600">Delivery board</span>
-                    <BadgeCheck className="h-5 w-5 text-emerald-600" aria-hidden />
+                    <span className="text-sm font-medium text-[var(--color-body)]">Delivery board</span>
+                    <BadgeCheck className="h-5 w-5 text-[var(--color-ink)]" aria-hidden />
                   </div>
                   <div className="mt-5 space-y-3">
                     {["Discovery", "Design system", "API contract", "Deploy checklist"].map((item) => (
-                      <div key={item} className="flex items-center gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden />
-                        <span className="text-sm text-slate-700">{item}</span>
+                      <div key={item} className="flex items-center gap-3 rounded-full border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] px-3 py-2">
+                        <CheckCircle2 className="h-4 w-4 text-[var(--color-ink)]" aria-hidden />
+                        <span className="text-sm text-[var(--color-body)]">{item}</span>
                       </div>
                     ))}
                   </div>
                 </div>
-                <div className="rounded-lg border border-blue-200 bg-blue-50 p-5 text-blue-700">
-                  <div className="animate-[stat-pop_500ms_ease-out] text-4xl font-bold">
+                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5 text-[var(--color-ink)]">
+                  <div className="animate-[stat-pop_500ms_ease-out] font-display text-4xl font-normal">
                     {projects.length || 18}+
                   </div>
-                  <div className="mt-1 text-sm font-semibold text-blue-700">project entries ready to review</div>
+                  <div className="mt-1 text-sm font-medium text-[var(--color-body)]">project entries ready to review</div>
                 </div>
               </div>
 
               <div className="grid content-between gap-4">
-                <div className="rounded-lg border border-slate-200 bg-white p-5 text-slate-950">
+                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5 text-[var(--color-ink)]">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-slate-500">Featured case studies</span>
-                    <Sparkles className="h-5 w-5 text-amber-500" aria-hidden />
+                    <span className="text-sm font-medium text-[var(--color-muted)]">Featured case studies</span>
+                    <Sparkles className="h-5 w-5 text-[var(--color-ink)]" aria-hidden />
                   </div>
                   <div className="mt-5 grid grid-cols-2 gap-3">
-                    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                      <div className="text-3xl font-bold">{featured.length}</div>
-                      <div className="mt-1 text-xs font-semibold text-slate-500">featured</div>
+                    <div className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-4">
+                      <div className="font-display text-3xl font-normal">{featured.length}</div>
+                      <div className="mt-1 text-xs font-medium text-[var(--color-muted)]">featured</div>
                     </div>
-                    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                      <div className="text-3xl font-bold">{totalTech}</div>
-                      <div className="mt-1 text-xs font-semibold text-slate-500">technologies</div>
+                    <div className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-4">
+                      <div className="font-display text-3xl font-normal">{totalTech}</div>
+                      <div className="mt-1 text-xs font-medium text-[var(--color-muted)]">technologies</div>
                     </div>
                   </div>
                 </div>
-                <div className="rounded-lg border border-slate-200 bg-white p-5">
-                  <FileCode2 className="h-8 w-8 text-blue-600" aria-hidden />
-                  <h2 className="mt-4 text-xl font-bold text-slate-950">Build rõ phạm vi, bàn giao có kiểm soát</h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5">
+                  <FileCode2 className="h-8 w-8 text-[var(--color-ink)]" aria-hidden />
+                  <h2 className="mt-4 text-xl font-medium text-[var(--color-ink)]">Build rõ phạm vi, bàn giao có kiểm soát</h2>
+                  <p className="mt-2 text-sm leading-6 text-[var(--color-body)]">
                     Mỗi dự án được đóng gói theo module, tài liệu vận hành và tiêu chí nghiệm thu để khách hàng tiếp quản dễ hơn.
                   </p>
                 </div>
@@ -161,15 +163,15 @@ export default async function ProjectsPage() {
         </div>
       </section>
 
-      <section className="border-b border-slate-200 bg-white">
+      <section className="border-b border-[var(--color-hairline)] bg-white">
         <div className="mx-auto grid max-w-[1600px] gap-4 px-4 py-8 md:grid-cols-4 md:px-6">
           {counters.map((item) => (
-            <div key={item.label} className={`rounded-lg border p-5 shadow-sm ${item.tone}`}>
-              <div className="animate-[stat-pop_500ms_ease-out] text-4xl font-bold leading-none">
+            <div key={item.label} className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5 text-[var(--color-ink)]">
+              <div className="animate-[stat-pop_500ms_ease-out] font-display text-4xl font-normal leading-none">
                 {item.value}
                 {item.suffix}
               </div>
-              <div className="mt-2 text-sm font-semibold opacity-90">{item.label}</div>
+              <div className="mt-2 text-sm font-medium text-[var(--color-body)]">{item.label}</div>
             </div>
           ))}
         </div>
@@ -179,19 +181,19 @@ export default async function ProjectsPage() {
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <Badge tone="slate">Why customers choose us</Badge>
-            <h2 className="mt-4 max-w-xl text-3xl font-bold leading-tight text-slate-950">Vì sao khách hàng chọn cách triển khai này</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
+            <h2 className="kb-display-lg mt-4 max-w-xl">Vì sao khách hàng chọn cách triển khai này</h2>
+            <p className="mt-3 text-sm leading-6 text-[var(--color-body)]">
               Không chỉ dựng giao diện. Mục tiêu là tạo một hệ thống có cấu trúc rõ, nội dung dễ quản trị và có thể vận hành ổn định khi lên production.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {whyChooseUs.map((item) => (
-              <article key={item.title} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-blue-600">
-                <div className="flex h-11 w-11 items-center justify-center rounded-md border border-blue-100 bg-blue-50 text-blue-600">
+              <article key={item.title} className="kb-card">
+                <div className="kb-icon h-11 w-11">
                   <item.icon className="h-5 w-5" aria-hidden />
                 </div>
-                <h3 className="mt-4 text-lg font-bold text-slate-950">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+                <h3 className="mt-4 text-lg font-medium text-[var(--color-ink)]">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[var(--color-body)]">{item.description}</p>
               </article>
             ))}
           </div>
@@ -203,10 +205,10 @@ export default async function ProjectsPage() {
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <Badge tone="amber">Featured</Badge>
-              <h2 className="mt-3 text-2xl font-bold text-slate-950">Dự án nổi bật</h2>
+              <h2 className="kb-display-md mt-3">Dự án nổi bật</h2>
             </div>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600">
-              <CheckCircle2 size={16} className="text-emerald-600" aria-hidden />
+            <div className="inline-flex items-center gap-2 text-sm font-medium text-[var(--color-body)]">
+              <CheckCircle2 size={16} className="text-[var(--color-ink)]" aria-hidden />
               Có nội dung case study từ CMS
             </div>
           </div>
@@ -218,8 +220,8 @@ export default async function ProjectsPage() {
 
       <section className="mx-auto max-w-[1600px] px-4 pb-12 md:px-6">
         <div className="mb-5">
-          <h2 className="text-2xl font-bold text-slate-950">Tất cả dự án</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Lọc theo stack để xem nhanh những mảng đã triển khai.</p>
+          <h2 className="kb-display-md">Tất cả dự án</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--color-body)]">Lọc theo stack để xem nhanh những mảng đã triển khai.</p>
         </div>
         <ProjectsFilter projects={projects} />
       </section>

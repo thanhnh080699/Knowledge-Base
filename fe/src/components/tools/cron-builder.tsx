@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy, Info, Clock, Calendar } from "lucide-react"
+import { Copy, Info, Calendar } from "lucide-react"
 
 export function CronBuilder() {
   const [expression, setExpression] = useState("* * * * *")

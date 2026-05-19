@@ -1,24 +1,19 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy, Check, Calendar } from "lucide-react"
+import { Copy, Check } from "lucide-react"
 
 export function DateFormatter() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [time, setTime] = useState("12:00")
-  const [formats, setFormats] = useState<Record<string, string>>({})
   const [copied, setCopied] = useState("")
 
-  useEffect(() => {
-    format()
-  }, [date, time])
-
-  const format = () => {
+  const formats = useMemo(() => {
     const d = new Date(`${date}T${time}`)
-    if (isNaN(d.getTime())) return
+    if (isNaN(d.getTime())) return {}
 
-    const results: Record<string, string> = {
+    return {
       "ISO 8601": d.toISOString(),
       "UTC": d.toUTCString(),
       "Local": d.toLocaleString(),
@@ -28,8 +23,7 @@ export function DateFormatter() {
       "Short": d.toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
       "Full": d.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
     }
-    setFormats(results)
-  }
+  }, [date, time])
 
   const copy = async (key: string, value: string) => {
     await navigator.clipboard.writeText(value)
