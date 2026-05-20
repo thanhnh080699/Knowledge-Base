@@ -11,7 +11,7 @@ export function CategoryNav({ categories, active }: { categories: Category[]; ac
             key={category.slug}
             href={`/docs?category=${category.slug}`}
             className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-              active === category.slug ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white" : "border-transparent text-[var(--color-body)] hover:border-[var(--color-hairline-strong)] hover:text-[var(--color-ink)]"
+              active === category.slug ? "border-[var(--color-primary)] bg-[var(--color-primary)] !text-[var(--color-on-primary)]" : "border-transparent text-[var(--color-body)] hover:border-[var(--color-hairline-strong)] hover:text-[var(--color-ink)]"
             }`}
           >
             {category.name}

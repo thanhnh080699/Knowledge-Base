@@ -34,7 +34,7 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
         </h2>
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--color-body)]">{project.description ?? "Dự án thực tế với giao diện và backend tùy biến."}</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <a className="inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)] bg-[var(--color-primary)] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-active)]" href={`/projects/${project.slug}`}>
+          <a className="inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)] bg-[var(--color-primary)] px-3 py-2 text-sm font-medium !text-[var(--color-on-primary)] transition-colors hover:bg-[var(--color-primary-active)]" href={`/projects/${project.slug}`}>
             Chi tiết
           </a>
           {project.demoUrl ? (

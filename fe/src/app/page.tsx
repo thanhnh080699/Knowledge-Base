@@ -125,7 +125,7 @@ export default async function HomePage() {
                     placeholder="Nhập từ khóa, ví dụ: Docker, Linux, Nginx..." 
                   />
                 </div>
-                <button className="min-h-14 bg-[var(--color-primary)] px-8 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-active)]" type="submit">
+                <button className="min-h-14 bg-[var(--color-primary)] px-8 text-sm font-medium !text-[var(--color-on-primary)] transition-colors hover:bg-[var(--color-primary-active)]" type="submit">
                   Tìm kiếm
                 </button>
               </form>

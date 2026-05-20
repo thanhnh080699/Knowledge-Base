@@ -28,7 +28,7 @@ export function Header({ siteName, logoUrl }: { siteName?: string; logoUrl?: str
               unoptimized
             />
           ) : (
-            <span className="flex size-9 items-center justify-center rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-primary)] text-white">{displayName.charAt(0).toUpperCase()}</span>
+            <span className="flex size-9 items-center justify-center rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-primary)] !text-[var(--color-on-primary)]">{displayName.charAt(0).toUpperCase()}</span>
           )}
           <span>{displayName}</span>
         </Link>

@@ -19,7 +19,7 @@ type ButtonLinkProps = ButtonBaseProps &
   }
 
 const variants = {
-  primary: "border-[var(--color-primary)] bg-[var(--color-primary)] text-white hover:border-[var(--color-primary-active)] hover:bg-[var(--color-primary-active)]",
+  primary: "border-[var(--color-primary)] bg-[var(--color-primary)] !text-[var(--color-on-primary)] hover:border-[var(--color-primary-active)] hover:bg-[var(--color-primary-active)]",
   secondary: "border-[var(--color-hairline)] bg-[var(--color-surface-strong)] text-[var(--color-ink)] hover:border-[var(--color-hairline-strong)] hover:bg-white",
   outline: "border-[var(--color-hairline-strong)] bg-transparent text-[var(--color-ink)] hover:border-[var(--color-ink)] hover:bg-white",
   ghost: "border-transparent bg-transparent text-[var(--color-ink)] hover:border-[var(--color-hairline)] hover:bg-white"
