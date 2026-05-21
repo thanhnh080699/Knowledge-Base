@@ -76,8 +76,7 @@
     "luxon": "^3.7.2",
     "mysql2": "^3.22.2",
     "nodemailer": "^8.0.6",
-    "reflect-metadata": "^0.2.2",
-    "slugify": "^1.6.9"
+    "reflect-metadata": "^0.2.2"
   },
   "hotHook": {
     "boundaries": [

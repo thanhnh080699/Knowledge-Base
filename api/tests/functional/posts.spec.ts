@@ -51,20 +51,17 @@ test.group('Posts', (group) => {
       excerpt: 'Imported excerpt',
       metaTitle: 'SEO title',
       metaDescription: 'SEO description',
-      focusKeyword: 'adonis wordpress migration',
-      wordpressId: 987654,
+      focusKeyword: 'adonis content migration',
       views: 12,
       publishedAt: '2026-04-26T08:30:00.000Z',
       status: 'PUBLISHED' as const,
     }
 
     const response = await client.post('/api/admin/posts').loginAs(admin).json(payload)
-    const createdPost = (response.body() as { data: { title: string; wordpressId: number; views: number } })
-      .data
+    const createdPost = (response.body() as { data: { title: string; views: number } }).data
 
     response.assertStatus(201)
     assert.equal(createdPost.title, payload.title)
-    assert.equal(createdPost.wordpressId, payload.wordpressId)
     assert.equal(createdPost.views, payload.views)
   })
 

@@ -17,7 +17,6 @@ export const createPostValidator = vine.compile(
   vine.object({
     title: vine.string().trim().minLength(3).maxLength(255),
     slug: slug().unique({ table: 'posts', column: 'slug' }),
-    wordpressId: vine.number().optional(),
     content: vine.string().trim(),
     excerpt: vine.string().trim().optional(),
     metaTitle: vine.string().trim().maxLength(255).optional(),
@@ -43,7 +42,6 @@ export const updatePostValidator = vine.compile(
       id: vine.number(),
     }),
     title: vine.string().trim().minLength(3).maxLength(255).optional(),
-    wordpressId: vine.number().optional(),
     slug: slug()
       .unique({
         table: 'posts',

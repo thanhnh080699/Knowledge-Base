@@ -11,9 +11,6 @@ export default class Post extends BaseModel {
   declare id: number
 
   @column()
-  declare wordpressId: number | null
-
-  @column()
   declare title: string
 
   @column()

@@ -267,7 +267,7 @@ export class PostTagSchema extends BaseModel {
 }
 
 export class PostSchema extends BaseModel {
-  static $columns = ['canonicalUrl', 'categoryId', 'content', 'coverImage', 'createdAt', 'deletedAt', 'excerpt', 'focusKeyword', 'id', 'metaDescription', 'metaTitle', 'publishedAt', 'seriesId', 'slug', 'status', 'title', 'updatedAt', 'views', 'wordpressId'] as const
+  static $columns = ['canonicalUrl', 'categoryId', 'content', 'coverImage', 'createdAt', 'deletedAt', 'excerpt', 'focusKeyword', 'id', 'metaDescription', 'metaTitle', 'publishedAt', 'seriesId', 'slug', 'status', 'title', 'updatedAt', 'views'] as const
   $columns = PostSchema.$columns
   @column()
   declare canonicalUrl: string | null
@@ -305,8 +305,6 @@ export class PostSchema extends BaseModel {
   declare updatedAt: DateTime | null
   @column()
   declare views: number
-  @column()
-  declare wordpressId: number | null
 }
 
 export class ProjectSchema extends BaseModel {
