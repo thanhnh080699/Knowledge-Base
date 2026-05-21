@@ -878,6 +878,104 @@ code {
   background: var(--color-gradient-peach);
 }
 
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-hairline);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(167, 229, 211, 0.28), transparent 24rem),
+    radial-gradient(circle at 88% 16%, rgba(168, 200, 232, 0.24), transparent 28rem),
+    var(--color-surface);
+}
+
+.page-hero-media {
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  mix-blend-mode: multiply;
+}
+
+.page-hero-media img {
+  object-fit: cover;
+}
+
+.page-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(245, 245, 245, 0.96), rgba(245, 245, 245, 0.74) 54%, rgba(245, 245, 245, 0.5)),
+    linear-gradient(180deg, rgba(245, 245, 245, 0.15), rgba(245, 245, 245, 0.78));
+}
+
+.page-visual-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-hairline);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 1.25rem;
+  box-shadow: 0 18px 60px rgba(12, 10, 9, 0.06);
+}
+
+.page-visual-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(12, 10, 9, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12, 10, 9, 0.035) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.78), transparent 80%);
+  pointer-events: none;
+}
+
+.page-visual-chip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 1.25rem;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--color-body-strong);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.62rem 0.75rem;
+}
+
+.page-visual-chip span {
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-visual-chip strong {
+  justify-self: end;
+  color: var(--color-body-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.page-visual-chip svg {
+  justify-self: end;
+}
+
+.page-motion-card {
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.page-motion-card:hover {
+  border-color: var(--color-hairline-strong);
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-3px);
+}
+
 @keyframes home-glow-drift {
   from {
     transform: translate3d(-12px, 10px, 0) scale(0.98);

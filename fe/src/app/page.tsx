@@ -86,14 +86,14 @@ const menuStories = [
   },
   {
     href: "/portfolio",
-    label: "Hồ sơ năng lực",
-    eyebrow: "Hồ sơ năng lực",
-    title: "Hồ sơ năng lực kỹ thuật của Nguyễn Huy Thành.",
+    label: "About Me",
+    eyebrow: "Delivery story",
+    title: "Câu chuyện triển khai qua các lớp sản phẩm đã xây.",
     description:
-      "Hồ sơ năng lực trình bày rõ kinh nghiệm frontend, backend, CMS, CDN và vận hành hệ thống. Đây là nơi xem nhanh năng lực thiết kế kiến trúc, triển khai sản phẩm nội dung, tối ưu hiệu năng và bàn giao hệ thống có thể duy trì lâu dài.",
+      "Khu vực này kể lại kinh nghiệm frontend, backend, CMS, CDN và vận hành hệ thống qua các mảnh ghép đã triển khai. Người đọc có thể nhìn thấy cách một sản phẩm nội dung được thiết kế, tối ưu và duy trì sau khi lên production.",
     image: "/images/home-portfolio-profile-bg.png",
     icon: MonitorCheck,
-    stats: ["Hồ sơ năng lực", "Next.js", "AdonisJS"]
+    stats: ["Delivery", "Next.js", "AdonisJS"]
   },
   {
     href: "/projects",
@@ -180,7 +180,7 @@ const projectModules = [
     flow: ["Route", "ISR", "SEO", "Render"],
     metric: "Next.js + React",
     tone: "sky",
-    modules: ["Docs", "Tools", "Portfolio", "Projects", "Contact"],
+    modules: ["Docs", "Tools", "Projects", "About Me", "Contact"],
     checks: ["Metadata", "ISR cache", "Sitemap"]
   }
 ]
@@ -215,6 +215,7 @@ export default async function HomePage() {
   const posts = postsResponse.data.length ? postsResponse.data : fallbackPosts
   const displayCategories = categories.length ? categories : fallbackCategories
   const projects = projectsResponse.data.length ? projectsResponse.data : fallbackProjects
+  const orderedMenuStories = [menuStories[0], menuStories[1], menuStories[3], menuStories[2], menuStories[4]]
 
   return (
     <main className="overflow-hidden bg-[var(--color-surface)]">
@@ -291,7 +292,7 @@ export default async function HomePage() {
                 </div>
 
                 <div className="home-signal mt-5">
-                  {["Docs", "Tools", "Hồ sơ năng lực", "Projects", "Contact"].map((item, index) => (
+                  {["Docs", "Tools", "Projects", "About Me", "Contact"].map((item, index) => (
                     <span key={item} style={{ animationDelay: `${index * 140}ms` }}>
                       {item}
                     </span>
@@ -313,7 +314,7 @@ export default async function HomePage() {
         </div>
 
         <div className="space-y-14">
-          {menuStories.map((item, index) => {
+          {orderedMenuStories.map((item, index) => {
             const Icon = item.icon
             const reversed = index % 2 === 1
 

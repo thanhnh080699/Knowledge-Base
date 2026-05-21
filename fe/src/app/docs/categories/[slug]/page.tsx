@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { ArrowRight, BookOpen, FolderOpen } from "lucide-react"
 import { getCategory, getPosts } from "@/lib/api"
 import { PostCard } from "@/components/shared/post-card"
+import { HomeReveal } from "@/components/shared/home-motion"
 import { Button } from "@/components/ui/button"
 
 type Params = { slug: string }
@@ -50,7 +51,7 @@ export default async function CategoryOverviewPage({ params }: { params: Promise
 
       <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
         {/* Main Content Area */}
-        <div className="space-y-10">
+        <HomeReveal className="space-y-10">
           {/* Header */}
           <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-8">
             <div className="flex items-center gap-5">
@@ -159,10 +160,10 @@ export default async function CategoryOverviewPage({ params }: { params: Promise
               </div>
             )}
           </div>
-        </div>
+        </HomeReveal>
 
         {/* Right Sidebar - Info Sidebar */}
-        <aside className="hidden lg:block space-y-6">
+        <HomeReveal className="hidden lg:block space-y-6" delay={0.1}>
           <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-6">
             <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-ink)]">Thông tin danh mục</h3>
             <div className="mt-4 space-y-4">
@@ -182,7 +183,7 @@ export default async function CategoryOverviewPage({ params }: { params: Promise
             <p className="mt-2 text-sm text-[var(--color-body)]">Hãy thử tìm kiếm với từ khóa chính xác hoặc liên hệ hỗ trợ.</p>
             <Button href="/docs" className="mt-4 w-full">Tìm kiếm ngay</Button>
           </div>
-        </aside>
+        </HomeReveal>
       </div>
     </main>
   )

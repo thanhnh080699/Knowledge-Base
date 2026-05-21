@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/shared/sidebar"
 import { PostContent } from "@/components/shared/post-content"
 import { DocReader } from "@/components/shared/doc-reader"
 import { CdnImage } from "@/components/shared/cdn-image"
+import { HomeReveal } from "@/components/shared/home-motion"
 import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import { fallbackCategories, fallbackPosts } from "@/lib/fallback-data"
 import { getRootCategories, getPost } from "@/lib/api"
@@ -49,10 +50,12 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
 
   return (
     <main className="kb-wide-container grid gap-8 py-8 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_300px]">
-      <Sidebar categories={categories} activeCategory={post.category?.slug ?? category} />
+      <HomeReveal>
+        <Sidebar categories={categories} activeCategory={post.category?.slug ?? category} />
+      </HomeReveal>
       
       <DocReader toc={toc}>
-        <article className="min-w-0 rounded-2xl border border-[var(--color-hairline)] bg-white p-6 md:p-10">
+        <HomeReveal className="min-w-0 rounded-2xl border border-[var(--color-hairline)] bg-white p-6 md:p-10" delay={0.08}>
           <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]" aria-label="Breadcrumb">
             <Link href="/docs" className="hover:text-[var(--color-ink)]">Tài liệu</Link>
             <span>/</span>
@@ -90,7 +93,7 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
           </header>
 
           <PostContent content={post.coverImage ? stripFirstImage(post.content) : post.content} />
-        </article>
+        </HomeReveal>
       </DocReader>
     </main>
   )

@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import { ProjectsFilter } from "@/components/shared/projects-filter"
 import { ProjectCard } from "@/components/shared/project-card"
+import { HomeReveal } from "@/components/shared/home-motion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { fallbackProjects } from "@/lib/fallback-data"
@@ -76,11 +77,11 @@ export default async function ProjectsPage() {
 
   return (
     <main className="bg-[var(--color-surface)]">
-      <section className="relative overflow-hidden border-b border-[var(--color-hairline)] bg-[var(--color-surface)]">
+      <section className="page-hero">
         <div className="kb-orb kb-orb-rose right-[10%] top-8 h-72 w-72"></div>
         <div className="kb-orb kb-orb-mint bottom-0 left-[6%] h-64 w-64"></div>
         <div className="mx-auto grid max-w-[1600px] gap-8 px-4 py-12 md:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:py-16">
-          <div className="relative z-10 flex flex-col justify-center">
+          <HomeReveal className="relative z-10 flex flex-col justify-center">
             <div className="kb-eyebrow w-fit">
               <BriefcaseBusiness size={16} aria-hidden />
               Project Portfolio
@@ -106,9 +107,9 @@ export default async function ProjectsPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </HomeReveal>
 
-          <div className="relative z-10 min-h-[420px] rounded-3xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-5">
+          <HomeReveal className="relative z-10 min-h-[420px] rounded-3xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-5" delay={0.1}>
             <div className="grid h-full gap-4 lg:grid-cols-[0.9fr_1.1fr]">
               <div className="space-y-4">
                 <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5">
@@ -159,25 +160,27 @@ export default async function ProjectsPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </HomeReveal>
         </div>
       </section>
 
       <section className="border-b border-[var(--color-hairline)] bg-white">
         <div className="mx-auto grid max-w-[1600px] gap-4 px-4 py-8 md:grid-cols-4 md:px-6">
-          {counters.map((item) => (
-            <div key={item.label} className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5 text-[var(--color-ink)]">
+          {counters.map((item, index) => (
+            <HomeReveal key={item.label} delay={index * 0.04}>
+              <div className="page-motion-card rounded-2xl border border-[var(--color-hairline)] bg-white p-5 text-[var(--color-ink)]">
               <div className="animate-[stat-pop_500ms_ease-out] font-display text-4xl font-normal leading-none">
                 {item.value}
                 {item.suffix}
               </div>
               <div className="mt-2 text-sm font-medium text-[var(--color-body)]">{item.label}</div>
-            </div>
+              </div>
+            </HomeReveal>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1600px] px-4 py-12 md:px-6">
+      <HomeReveal className="mx-auto max-w-[1600px] px-4 py-12 md:px-6">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <Badge tone="slate">Why customers choose us</Badge>
@@ -198,10 +201,10 @@ export default async function ProjectsPage() {
             ))}
           </div>
         </div>
-      </section>
+      </HomeReveal>
 
       {featured.length ? (
-        <section className="mx-auto max-w-[1600px] px-4 pb-10 md:px-6">
+        <HomeReveal className="mx-auto max-w-[1600px] px-4 pb-10 md:px-6">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <Badge tone="amber">Featured</Badge>
@@ -215,16 +218,16 @@ export default async function ProjectsPage() {
           <div className="grid gap-5 md:grid-cols-3">
             {featured.map((project, index) => <ProjectCard key={project.id} project={project} priority={index === 0} />)}
           </div>
-        </section>
+        </HomeReveal>
       ) : null}
 
-      <section className="mx-auto max-w-[1600px] px-4 pb-12 md:px-6">
+      <HomeReveal className="mx-auto max-w-[1600px] px-4 pb-12 md:px-6">
         <div className="mb-5">
           <h2 className="kb-display-md">Tất cả dự án</h2>
           <p className="mt-2 text-sm leading-6 text-[var(--color-body)]">Lọc theo stack để xem nhanh những mảng đã triển khai.</p>
         </div>
         <ProjectsFilter projects={projects} />
-      </section>
+      </HomeReveal>
     </main>
   )
 }

@@ -6,8 +6,8 @@ import { absoluteCdnUrl } from "@/lib/cdn-loader"
 const nav = [
   { href: "/docs", label: "Tài liệu", icon: BookOpen },
   { href: "/tools", label: "Tools", icon: Wrench },
-  { href: "/portfolio", label: "Portfolio", icon: BriefcaseBusiness },
   { href: "/projects", label: "Dự án", icon: Code2 },
+  { href: "/portfolio", label: "About Me", icon: BriefcaseBusiness },
   { href: "/contact", label: "Liên hệ", icon: Mail }
 ]
 
