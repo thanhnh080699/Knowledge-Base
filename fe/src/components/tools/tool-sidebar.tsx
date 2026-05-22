@@ -1,16 +1,19 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import { useState } from "react"
 import type { Tool } from "@/types/tool"
 
 interface Props {
   tools: Tool[]
-  currentSlug: string
+  currentSlug?: string
 }
 
-export function ToolSidebar({ tools, currentSlug }: Props) {
+export function ToolSidebar({ tools, currentSlug: propSlug }: Props) {
+  const pathname = usePathname()
+  const currentSlug = propSlug || pathname?.split("/").pop() || ""
   const toolsByCategory = Array.from(new Set(tools.map(t => t.category === "Generator" ? "Crypto" : t.category)))
     .map(category => {
       const categoryTools = tools.filter(t => 

@@ -24,7 +24,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { HomeReveal, MouseFollowCard } from "@/components/shared/home-motion"
+import { HomeReveal, MouseFollowCard, TypingText } from "@/components/shared/home-motion"
 import { fallbackCategories, fallbackPosts, fallbackProjects } from "@/lib/fallback-data"
 import { getProjects, getRootCategories, getPosts } from "@/lib/api"
 import type { Category } from "@/types/category"
@@ -235,8 +235,10 @@ export default async function HomePage() {
         <div className="relative z-10 mx-auto grid min-h-[calc(100vh-4rem)] max-w-[1600px] items-center gap-12 px-4 py-16 md:px-6 lg:grid-cols-[1.03fr_0.97fr] lg:py-20">
           <HomeReveal>
             <h1 className="home-typing-title mt-6">
-              <span className="home-title-line">Knowledge</span>
-              <span className="home-title-line home-title-line-nowrap">Base vận hành thực <span className="home-type-word">chiến</span></span>
+              <span className="home-title-line">Knowledge Base</span>
+              <span className="home-title-line home-title-line-nowrap">
+                <TypingText text="Vận hành thực chiến" />
+              </span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-[var(--color-body)] md:text-lg">
               Ghi chú kỹ thuật, checklist hardening và kinh nghiệm tối ưu hệ thống cho sysadmin, developer và người đang phải giữ dịch vụ chạy ổn định. Nội dung được viết từ các tình huống triển khai website, API, CMS, CDN và hạ tầng production.

@@ -32,8 +32,8 @@ export function SearchBox({
 
       if (trimmed === currentQ) return
 
-      // Only search if empty (clear) or >= 3 chars
-      if (trimmed === "" || trimmed.length >= 3) {
+      // Only search if empty (clear) or >= 2 chars (e.g. Go, IP, OS, VM)
+      if (trimmed === "" || trimmed.length >= 2) {
         if (trimmed) {
           params.set("q", trimmed)
         } else {
@@ -42,7 +42,7 @@ export function SearchBox({
         params.set("page", "1") // Reset to first page on new search
         router.push(`${pathname}?${params.toString()}`, { scroll: false })
       }
-    }, 750) // 750ms debounce time
+    }, 300) // Snappy 300ms debounce time
 
     return () => clearTimeout(timer)
   }, [query, pathname, router, searchParams])
