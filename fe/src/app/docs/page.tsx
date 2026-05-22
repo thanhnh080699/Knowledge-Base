@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import Image from "next/image"
+import Link from "next/link"
 import { BookOpen, Search, Server, ShieldCheck } from "lucide-react"
 import { Sidebar } from "@/components/shared/sidebar"
 import { SearchBox } from "@/components/shared/search-box"
@@ -48,27 +50,65 @@ export default async function DocsPage({
               {currentCategory?.name ?? "Tài liệu kỹ thuật"}
             </h1>
             <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--color-body)]">
-              {currentCategory?.description ?? "Tổng hợp ghi chú vận hành hệ thống, Docker, Linux, web server, lập trình và xử lý sự cố theo dạng knowledge base dễ tra cứu."}
+              {currentCategory?.description ?? "Tổng hợp ghi chú vận hành hệ thống, Docker, Linux, web server, lập trình và xử lý sự cố theo dạng knowledge base dễ tra cứu. Các bài viết được đúc kết từ quá trình triển khai thực tế, tối ưu hóa bảo mật và hiệu suất hạ tầng."}
             </p>
-          </HomeReveal>
-          <HomeReveal delay={0.1}>
-            <div className="page-visual-panel">
-              <div className="grid gap-3">
-                {[
-                  { label: "Linux", text: "Hardening notes", icon: Server },
-                  { label: "Docker", text: "Production checklist", icon: ShieldCheck },
-                  { label: "Search", text: "Tra cứu nhanh", icon: Search }
-                ].map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <div key={item.label} className="page-visual-chip">
-                      <span>{item.label}</span>
-                      <strong>{item.text}</strong>
-                      <Icon size={16} aria-hidden />
-                    </div>
-                  )
-                })}
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                  <Server size={20} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">Hệ thống</h4>
+                  <p className="text-xs text-[var(--color-muted)]">Linux, Web Server, Security</p>
+                </div>
               </div>
+              
+              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <ShieldCheck size={20} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">DevOps</h4>
+                  <p className="text-xs text-[var(--color-muted)]">Docker, CI/CD, Monitoring</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                  <Search size={20} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">Tra cứu</h4>
+                  <p className="text-xs text-[var(--color-muted)]">Tìm kiếm bài viết nhanh</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-[var(--color-muted)]">
+              <span className="font-medium text-[var(--color-body)]">Từ khóa phổ biến:</span>
+              {["Docker", "Nginx", "Linux", "SSL", "CI/CD", "Security", "Shell Script"].map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/docs?q=${tag}`}
+                  className="rounded-full bg-[var(--color-surface-strong)] px-2.5 py-1 font-medium hover:text-[var(--color-ink)] transition-colors cursor-pointer"
+                >
+                  #{tag}
+                </Link>
+              ))}
+            </div>
+          </HomeReveal>
+          <HomeReveal delay={0.1} className="hidden md:block">
+            <div className="page-visual-panel page-visual-panel-clean flex items-center justify-center">
+              <Image
+                src="/images/knowledge.svg"
+                alt="Knowledge Base Illustration"
+                width={280}
+                height={368}
+                priority
+                unoptimized
+                className="h-auto w-auto object-contain max-h-[220px] lg:max-h-[360px] max-w-[160px] lg:max-w-[280px]"
+              />
             </div>
           </HomeReveal>
         </div>

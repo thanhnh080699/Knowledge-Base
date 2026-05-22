@@ -929,6 +929,17 @@ code {
   pointer-events: none;
 }
 
+.page-visual-panel-clean {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.page-visual-panel-clean::before {
+  display: none !important;
+}
+
 .page-visual-chip {
   position: relative;
   z-index: 1;

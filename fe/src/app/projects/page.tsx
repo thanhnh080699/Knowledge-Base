@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import {
   ArrowRight,
   BadgeCheck,
@@ -109,56 +110,17 @@ export default async function ProjectsPage() {
             </div>
           </HomeReveal>
 
-          <HomeReveal className="relative z-10 min-h-[420px] rounded-3xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-5" delay={0.1}>
-            <div className="grid h-full gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="space-y-4">
-                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[var(--color-body)]">Delivery board</span>
-                    <BadgeCheck className="h-5 w-5 text-[var(--color-ink)]" aria-hidden />
-                  </div>
-                  <div className="mt-5 space-y-3">
-                    {["Discovery", "Design system", "API contract", "Deploy checklist"].map((item) => (
-                      <div key={item} className="flex items-center gap-3 rounded-full border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] px-3 py-2">
-                        <CheckCircle2 className="h-4 w-4 text-[var(--color-ink)]" aria-hidden />
-                        <span className="text-sm text-[var(--color-body)]">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5 text-[var(--color-ink)]">
-                  <div className="animate-[stat-pop_500ms_ease-out] font-display text-4xl font-normal">
-                    {projects.length || 18}+
-                  </div>
-                  <div className="mt-1 text-sm font-medium text-[var(--color-body)]">project entries ready to review</div>
-                </div>
-              </div>
-
-              <div className="grid content-between gap-4">
-                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5 text-[var(--color-ink)]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[var(--color-muted)]">Featured case studies</span>
-                    <Sparkles className="h-5 w-5 text-[var(--color-ink)]" aria-hidden />
-                  </div>
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-4">
-                      <div className="font-display text-3xl font-normal">{featured.length}</div>
-                      <div className="mt-1 text-xs font-medium text-[var(--color-muted)]">featured</div>
-                    </div>
-                    <div className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-4">
-                      <div className="font-display text-3xl font-normal">{totalTech}</div>
-                      <div className="mt-1 text-xs font-medium text-[var(--color-muted)]">technologies</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-5">
-                  <FileCode2 className="h-8 w-8 text-[var(--color-ink)]" aria-hidden />
-                  <h2 className="mt-4 text-xl font-medium text-[var(--color-ink)]">Build rõ phạm vi, bàn giao có kiểm soát</h2>
-                  <p className="mt-2 text-sm leading-6 text-[var(--color-body)]">
-                    Mỗi dự án được đóng gói theo module, tài liệu vận hành và tiêu chí nghiệm thu để khách hàng tiếp quản dễ hơn.
-                  </p>
-                </div>
-              </div>
+          <HomeReveal delay={0.1} className="hidden md:block">
+            <div className="page-visual-panel page-visual-panel-clean flex items-center justify-center">
+              <Image
+                src="/images/project.svg"
+                alt="Projects Illustration"
+                width={280}
+                height={280}
+                priority
+                unoptimized
+                className="h-auto w-auto object-contain max-h-[220px] lg:max-h-[360px] max-w-[220px] lg:max-w-[360px]"
+              />
             </div>
           </HomeReveal>
         </div>

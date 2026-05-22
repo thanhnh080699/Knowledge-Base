@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import { CalendarClock, KeyRound, Code2, Wrench } from "lucide-react"
 import { HomeReveal } from "@/components/shared/home-motion"
@@ -72,21 +73,70 @@ export default async function ToolsPage() {
             <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--color-body)]">
               Bộ công cụ encode, decode, converter, formatter và generator giúp xử lý nhanh các việc nhỏ khi debug, viết tài liệu hoặc chuẩn bị cấu hình.
             </p>
-          </HomeReveal>
-          <HomeReveal delay={0.1}>
-            <div className="page-visual-panel">
-              <div className="grid gap-3">
-                {toolsByCategory.slice(0, 4).map(({ category, tools: categoryTools }) => {
-                  const Icon = categoryIcons[category] ?? Wrench
-                  return (
-                    <div key={category} className="page-visual-chip">
-                      <span>{category}</span>
-                      <strong>{categoryTools.length} tools</strong>
-                      <Icon size={16} aria-hidden />
-                    </div>
-                  )
-                })}
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                  <KeyRound size={20} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">Mã hóa</h4>
+                  <p className="text-xs text-[var(--color-muted)]">Base64, MD5, SHA-256</p>
+                </div>
               </div>
+              
+              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-pink-50 text-pink-600">
+                  <CalendarClock size={20} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">Thời gian & Cron</h4>
+                  <p className="text-xs text-[var(--color-muted)]">Timestamp, Cron parser</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600">
+                  <Code2 size={20} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">Định dạng</h4>
+                  <p className="text-xs text-[var(--color-muted)]">JSON, XML, SQL Parser</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-[var(--color-muted)]">
+              <span className="font-medium text-[var(--color-body)]">Từ khóa phổ biến:</span>
+              {[
+                { name: "Base64 Encoder", slug: "base64-encoder-decoder" },
+                { name: "Cron Builder", slug: "cron-builder" },
+                { name: "Timestamp", slug: "timestamp-converter" },
+                { name: "UUID Generator", slug: "uuid-generator" },
+                { name: "JSON Formatter", slug: "json-formatter" },
+                { name: "SQL Format", slug: "sql-formatter" }
+              ].map((tag) => (
+                <Link
+                  key={tag.slug}
+                  href={`/tools/${tag.slug}`}
+                  className="rounded-full bg-[var(--color-surface-strong)] px-2.5 py-1 font-medium hover:text-[var(--color-ink)] transition-colors cursor-pointer"
+                >
+                  #{tag.name}
+                </Link>
+              ))}
+            </div>
+          </HomeReveal>
+          <HomeReveal delay={0.1} className="hidden md:block">
+            <div className="page-visual-panel page-visual-panel-clean flex items-center justify-center">
+              <Image
+                src="/images/tools.svg"
+                alt="Developer Tools Illustration"
+                width={280}
+                height={280}
+                priority
+                unoptimized
+                className="h-auto w-auto object-contain max-h-[220px] lg:max-h-[360px] max-w-[220px] lg:max-w-[360px]"
+              />
             </div>
           </HomeReveal>
         </div>

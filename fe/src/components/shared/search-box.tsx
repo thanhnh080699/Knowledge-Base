@@ -1,6 +1,6 @@
 "use client"
 
-import { Folder, Search, ChevronRight } from "lucide-react"
+import { Folder, Search, ChevronRight, X } from "lucide-react"
 import { useMemo, useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
@@ -22,6 +22,11 @@ export function SearchBox({
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [query, setQuery] = useState(initialQuery)
+
+  // Sync state when initialQuery changes (e.g. from page navigation)
+  useEffect(() => {
+    setQuery(initialQuery)
+  }, [initialQuery])
 
   // Debounce search update to URL
   useEffect(() => {
@@ -63,7 +68,17 @@ export function SearchBox({
     <section aria-label="Tìm kiếm tài liệu" className="space-y-5">
       <div className="relative">
         <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)]" size={18} aria-hidden />
-        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm nhanh trong danh sách tài liệu..." className="pl-10" />
+        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm nhanh trong danh sách tài liệu..." className="pl-10 pr-10" />
+        {query && (
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors p-1 rounded-full hover:bg-[var(--color-surface-soft)] flex items-center justify-center"
+            aria-label="Xóa tìm kiếm"
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       {!query.trim() && subcategories.length > 0 && (

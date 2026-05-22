@@ -116,6 +116,21 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
 ---
 
+## HOME / Landing Page Standard
+
+Trang `fe/src/app/page.tsx` là mặt tiền của `thanhnh.id.vn`, không phải nơi mô tả implementation UI. Khi chỉnh HOME:
+
+- Lấy content từ thực tế dự án: đọc `README.md`; nếu API local đang chạy, gọi `/api/categories?roots=true`, `/api/posts`, `/api/tools`, `/api/projects` để hiểu dữ liệu live.
+- Copy chính phải phản ánh đúng mục đích site: knowledge base kỹ thuật SysAdmin/DevOps/Development, câu chuyện triển khai/kinh nghiệm sản phẩm, dự án/module hệ thống, và công cụ vận hành.
+- Hero headline giữ cấu trúc: dòng 1 `Knowledge`, dòng 2 `Base vận hành thực chiến`; caret/typing chỉ nằm ở chữ `chiến`.
+- Dùng generated bitmap assets đúng ngữ cảnh cho hero và menu sections. Lưu asset project-bound vào `fe/public/images/home-*.png`; không tham chiếu trực tiếp file trong `$CODEX_HOME/generated_images`.
+- Section menu phải có ảnh/context đan xen trái/phải, nhưng nội dung phải nói về giá trị thực tế của Docs, Tools, Projects, About Me, Contact.
+- Menu trỏ tới `/portfolio` nên hiển thị là `About Me` và đặt cạnh `Liên hệ`. Nội dung section này vẫn phải né cụm **Hồ sơ năng lực**; nên diễn đạt theo hướng "câu chuyện triển khai", "kinh nghiệm xây sản phẩm", "delivery story", hoặc "các lớp sản phẩm đã xây".
+- `Projects` trên HOME bám README: API (AdonisJS/MariaDB), FE (Next.js/ISR/SEO), CMS (React Query/Zustand), CDN (Go/Gin). Tránh card trắng/trống; visual của CMS phải liệt kê module quản trị như Bài viết, Danh mục, Tags, Media, Dự án, Menu, Pages, Settings, Contacts, Users, Roles, API Tokens.
+- Motion chỉ dùng client component nhỏ trong `src/components/shared`; luôn tôn trọng `prefers-reduced-motion`.
+
+---
+
 ## Build check
 
 ```bash

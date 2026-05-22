@@ -142,6 +142,16 @@ thanhnh.id.vn/
   - **Tool Behavior**: Phải bấm nút Generate/Refresh/Convert mới hiển thị kết quả (TUYỆT ĐỐI KHÔNG tự động chạy khi mount).
   - **Action Buttons**: Các nút bấm hành động (Generate, Refresh, Convert...) phải được đặt PHÍA TRÊN ô hiển thị kết quả (Result Box).
 
+#### HOME / Landing Page Standard (FE)
+- Trang chủ hiện dùng editorial motion theo `fe/DESIGN.md`, không áp dụng cứng chuẩn flat UI cũ cho hero/marketing sections.
+- Trước khi viết copy cho HOME, đọc `README.md` và nếu API local chạy được thì quét dữ liệu thật qua `GET /api/categories?roots=true`, `/api/posts?limit=...`, `/api/tools?featured=true`, `/api/projects?...`.
+- Nội dung HOME phải nói về mục đích thật của `thanhnh.id.vn`: knowledge base kỹ thuật, câu chuyện triển khai/kinh nghiệm sản phẩm, dự án/module hệ thống, công cụ vận hành. Không viết copy mô tả implementation UI/animation.
+- Hero headline hiện theo cấu trúc: dòng 1 `Knowledge`, dòng 2 `Base vận hành thực chiến`; caret/typing chỉ đặt tại chữ `chiến`, không làm cả headline bị typing.
+- Mục menu/section phải dùng ảnh bitmap đúng ngữ cảnh, ưu tiên generated assets trong `fe/public/images/home-*.png`; không tái dùng placeholder hoặc ảnh sai content.
+- Menu trỏ tới `/portfolio` nên hiển thị là `About Me` và đặt cạnh `Liên hệ`. Nội dung section này vẫn phải né cụm **Hồ sơ năng lực**; diễn đạt mềm hơn theo hướng "câu chuyện triển khai", "kinh nghiệm xây sản phẩm", "delivery story", hoặc "các lớp sản phẩm đã xây".
+- Mục `Projects` phải bám README: 4 lớp API, FE, CMS, CDN. Card CMS/Admin Workspace cần liệt kê module thật như Bài viết, Danh mục, Tags, Media, Dự án, Menu, Pages, Settings, Contacts, Users, Roles, API Tokens; không để panel/bento có khoảng trắng lớn.
+- Khi tạo motion client, tách thành component nhỏ trong `src/components/shared`, tôn trọng `prefers-reduced-motion`, giữ nội dung chính render server.
+
 ### CMS (Next.js + React Query + Zustand)
 - **Botble CMS UI Standard** — Giao diện PHẢI mô phỏng phong cách Botble CMS:
   - **Main Layout**: BẮT BUỘC dùng cấu trúc `flex flex-1 flex-col p-8` cho nội dung chính. KHÔNG dùng `grid` cho layout bao ngoài.
