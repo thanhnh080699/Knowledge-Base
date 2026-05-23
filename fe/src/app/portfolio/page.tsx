@@ -43,8 +43,8 @@ export default function PortfolioPage() {
         <div className="page-hero-overlay" />
         <div className="home-glow home-glow-peach bottom-0 right-[12%] h-72 w-72"></div>
 
-        <div className="relative z-10 mx-auto flex min-h-[500px] max-w-7xl items-center px-4 py-16 md:px-6">
-          <HomeReveal className="max-w-2xl">
+        <div className="relative z-10 mx-auto grid min-h-[500px] max-w-7xl items-center gap-8 px-4 py-16 md:px-6 lg:grid-cols-[1fr_0.72fr]">
+          <HomeReveal>
             <p className="kb-eyebrow">About Me</p>
             <h1 className="kb-display-mega mt-4">Thanh Nguyen</h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-[var(--color-body)] md:text-lg">
@@ -55,6 +55,19 @@ export default function PortfolioPage() {
                 Trao đổi dự án <ArrowRight size={16} aria-hidden />
               </Button>
               <Button href="/projects" variant="outline">Xem dự án</Button>
+            </div>
+          </HomeReveal>
+          <HomeReveal delay={0.1} className="hidden md:block">
+            <div className="page-visual-panel page-visual-panel-clean flex items-center justify-center">
+              <Image
+                src="/images/about-us.svg"
+                alt="About Us"
+                width={280}
+                height={280}
+                priority
+                unoptimized
+                className="h-auto w-auto object-contain max-h-[220px] lg:max-h-[360px] max-w-[220px] lg:max-w-[360px]"
+              />
             </div>
           </HomeReveal>
         </div>
