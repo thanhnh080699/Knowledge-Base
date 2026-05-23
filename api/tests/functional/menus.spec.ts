@@ -85,6 +85,10 @@ test.group('Menus', () => {
     defaultResponse.assertStatus(200)
     assert.equal(defaultResponse.body().data.slug, slug)
 
+    const locationResponse = await client.get('/api/menus/location/header')
+    locationResponse.assertStatus(200)
+    assert.equal(locationResponse.body().data.slug, slug)
+
     const deleteResponse = await client.delete(`/api/admin/menus/${menu.id}`).loginAs(admin)
     deleteResponse.assertStatus(204)
   })

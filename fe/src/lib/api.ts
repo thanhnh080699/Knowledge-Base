@@ -1,6 +1,7 @@
 import axios from "axios"
 import type { Category, SiteSettings } from "@/types/category"
 import type { ContactPayload } from "@/types/contact"
+import type { Menu } from "@/types/menu"
 import type { PaginatedResponse, Post } from "@/types/post"
 import type { Project } from "@/types/project"
 import type { Tag } from "@/types/tag"
@@ -8,7 +9,7 @@ import type { Tool } from "@/types/tool"
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333/api",
-  headers: { "Content-Type": "application/json" }
+  headers: { "Content-Type": "application/json" },
 })
 
 export default api
@@ -23,18 +24,20 @@ const emptyPaginated = <T>(page = 1, limit = 10): PaginatedResponse<T> => ({
     firstPageUrl: "",
     lastPageUrl: "",
     nextPageUrl: null,
-    previousPageUrl: null
+    previousPageUrl: null,
   },
-  data: []
+  data: [],
 })
 
-export async function getPosts(params: {
-  page?: number
-  limit?: number
-  category?: string
-  tag?: string
-  search?: string
-} = {}) {
+export async function getPosts(
+  params: {
+    page?: number
+    limit?: number
+    category?: string
+    tag?: string
+    search?: string
+  } = {},
+) {
   const page = params.page ?? 1
   const limit = params.limit ?? 10
 
@@ -46,8 +49,8 @@ export async function getPosts(params: {
         status: "PUBLISHED",
         category: params.category,
         tag: params.tag,
-        q: params.search
-      }
+        q: params.search,
+      },
     })
     return data
   } catch {
@@ -76,7 +79,7 @@ export async function getCategories() {
 export async function getRootCategories() {
   try {
     const { data } = await api.get<{ data: Category[] }>("/categories", {
-      params: { roots: "true" }
+      params: { roots: "true" },
     })
     return data.data
   } catch {
@@ -86,7 +89,9 @@ export async function getRootCategories() {
 
 export async function getCategory(slugOrId: string) {
   try {
-    const { data } = await api.get<{ data: Category }>(`/categories/${slugOrId}`)
+    const { data } = await api.get<{ data: Category }>(
+      `/categories/${slugOrId}`,
+    )
     return data.data
   } catch {
     return null
@@ -113,17 +118,38 @@ export async function getSettings(): Promise<SiteSettings> {
     social_github: "",
     social_gitlab: "",
     social_youtube: "",
-    social_instagram: ""
+    social_instagram: "",
   }
 
   try {
-    const { data } = await api.get<{ data: Record<string, unknown> }>("/settings/public")
+    const { data } = await api.get<{ data: Record<string, unknown> }>(
+      "/settings/public",
+    )
     return { ...fallback, ...data.data } as SiteSettings
   } catch {
     return fallback
   }
 }
 
+export async function getMenu(identifier: string) {
+  try {
+    const { data } = await api.get<{ data: Menu }>(`/menus/${identifier}`)
+    return data.data
+  } catch {
+    return null
+  }
+}
+
+export async function getMenuByLocation(location: string) {
+  try {
+    const { data } = await api.get<{ data: Menu }>(
+      `/menus/location/${location}`,
+    )
+    return data.data
+  } catch {
+    return null
+  }
+}
 
 export async function getTags() {
   try {
@@ -134,14 +160,16 @@ export async function getTags() {
   }
 }
 
-export async function getProjects(params: { page?: number; limit?: number; featured?: boolean } = {}) {
+export async function getProjects(
+  params: { page?: number; limit?: number; featured?: boolean } = {},
+) {
   try {
     const { data } = await api.get<PaginatedResponse<Project>>("/projects", {
       params: {
         page: params.page ?? 1,
         limit: params.limit ?? 10,
-        featured: params.featured
-      }
+        featured: params.featured,
+      },
     })
     return data
   } catch {
@@ -158,15 +186,22 @@ export async function getProject(slug: string) {
   }
 }
 
-export async function getTools(params: { page?: number; limit?: number; category?: string; featured?: boolean } = {}) {
+export async function getTools(
+  params: {
+    page?: number
+    limit?: number
+    category?: string
+    featured?: boolean
+  } = {},
+) {
   try {
     const { data } = await api.get<PaginatedResponse<Tool>>("/tools", {
       params: {
         page: params.page ?? 1,
         limit: params.limit ?? 100,
         category: params.category,
-        featured: params.featured
-      }
+        featured: params.featured,
+      },
     })
     return data
   } catch {
@@ -188,7 +223,7 @@ export async function submitContact(payload: ContactPayload) {
     name: payload.name,
     email: payload.email,
     phone: payload.phone || undefined,
-    message: payload.message
+    message: payload.message,
   })
   return data
 }

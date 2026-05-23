@@ -43,7 +43,7 @@ export default function PortfolioPage() {
         <div className="page-hero-overlay" />
         <div className="home-glow home-glow-peach bottom-0 right-[12%] h-72 w-72"></div>
 
-        <div className="relative z-10 mx-auto grid min-h-[500px] max-w-7xl items-center gap-8 px-4 py-16 md:px-6 lg:grid-cols-[1fr_0.72fr]">
+        <div className="relative z-10 mx-auto grid min-h-[500px] max-w-7xl items-center gap-8 px-4 py-16 md:px-6 lg:grid-cols-[1fr_0.92fr]">
           <HomeReveal>
             <p className="kb-eyebrow">About Me</p>
             <h1 className="kb-display-mega mt-4">Thanh Nguyen</h1>
@@ -62,11 +62,11 @@ export default function PortfolioPage() {
               <Image
                 src="/images/about-us.svg"
                 alt="About Us"
-                width={280}
-                height={280}
+                width={640}
+                height={360}
                 priority
                 unoptimized
-                className="h-auto w-auto object-contain max-h-[220px] lg:max-h-[360px] max-w-[220px] lg:max-w-[360px]"
+                className="h-auto w-full max-w-[420px] object-contain lg:max-w-[620px] xl:max-w-[680px]"
               />
             </div>
           </HomeReveal>

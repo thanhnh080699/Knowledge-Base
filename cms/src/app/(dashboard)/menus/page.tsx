@@ -554,6 +554,42 @@ export default function MenusPage() {
                             </Button>
                           </div>
                         </div>
+                        <div className="mt-3 grid gap-3 border-t border-[var(--app-border)] pt-3 md:grid-cols-2">
+                          <div className="space-y-1">
+                            <Label
+                              htmlFor={`menu-item-css-class-${item.id}`}
+                              className="text-xs text-[var(--app-muted)]"
+                            >
+                              CSS / icon class
+                            </Label>
+                            <Input
+                              id={`menu-item-css-class-${item.id}`}
+                              value={item.cssClass ?? ""}
+                              placeholder="book-open, wrench, code-2..."
+                              onChange={(event) =>
+                                updateItem(item.id, {
+                                  cssClass: event.target.value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label
+                              htmlFor={`menu-item-rel-${item.id}`}
+                              className="text-xs text-[var(--app-muted)]"
+                            >
+                              Rel
+                            </Label>
+                            <Input
+                              id={`menu-item-rel-${item.id}`}
+                              value={item.rel ?? ""}
+                              placeholder="noopener noreferrer"
+                              onChange={(event) =>
+                                updateItem(item.id, { rel: event.target.value })
+                              }
+                            />
+                          </div>
+                        </div>
                       </div>
                     ))
                   )}
