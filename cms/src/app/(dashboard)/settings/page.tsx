@@ -12,6 +12,7 @@ import {
   Settings,
   Share2,
   KeyRound,
+  Bot,
 } from 'lucide-react'
 
 type SettingItem = {
@@ -71,6 +72,12 @@ const sections: SettingSection[] = [
         description: 'Create access tokens for automation, content and marketing data',
         href: '/settings/api-tokens',
         icon: KeyRound,
+      },
+      {
+        title: 'LLM',
+        description: 'Configure AI provider, model, key and endpoint',
+        href: '/settings/llm',
+        icon: Bot,
       },
     ],
   },

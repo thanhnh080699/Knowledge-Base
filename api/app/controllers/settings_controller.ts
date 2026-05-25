@@ -1,10 +1,13 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Setting, { type SettingValue } from '#models/setting'
 import EmailService from '#services/email_service'
+import LlmProviderService from '#services/llm_provider_service'
 import { normalizeMediaPath } from '#helpers/media'
 import {
+  listLlmModelsValidator,
   sendTestEmailValidator,
   showSettingsGroupValidator,
+  testLlmConnectionValidator,
   updateSettingsGroupValidator,
 } from '#validators/setting'
 
@@ -21,6 +24,7 @@ function formatGroupPayload(group: string, settings: Setting[]) {
 
 export default class SettingsController {
   private emailService = new EmailService()
+  private llmProviderService = new LlmProviderService()
 
   private settingValueForStorage(group: string, key: string, value: SettingValue | null) {
     if (
@@ -130,6 +134,60 @@ export default class SettingsController {
     } catch (error) {
       return response.badRequest({
         message: error instanceof Error ? error.message : 'Unable to send test email',
+      })
+    }
+  }
+
+  /**
+   * @listLlmModels
+   * @tag SETTINGS
+   * @description List available LLM models for a provider
+   * @queryParam driver - LLM driver
+   * @queryParam apiKey - Provider API key
+   * @queryParam baseUrl - Provider base URL
+   * @responseBody 200 - { data: { driver: string, baseUrl: string, models: [{ id: string, name: string }] } }
+   */
+  async listLlmModels({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(listLlmModelsValidator)
+
+    try {
+      const defaults = this.llmProviderService.getDefaultConfig(payload.driver)
+      const models = await this.llmProviderService.listModels(payload)
+
+      return response.ok({
+        data: {
+          driver: payload.driver,
+          baseUrl: payload.baseUrl || defaults.baseUrl,
+          models,
+        },
+      })
+    } catch (error) {
+      return response.badRequest({
+        message: error instanceof Error ? error.message : 'Unable to list LLM models',
+      })
+    }
+  }
+
+  /**
+   * @testLlmConnection
+   * @tag SETTINGS
+   * @description Test an LLM provider API key and base URL
+   * @requestBody { driver: "openai", apiKey: "sk-...", baseUrl: "https://api.openai.com/v1", modelName: "gpt-5.2" }
+   * @responseBody 200 - { data: { connected: boolean, modelFound: boolean|null, modelsCount: number } }
+   */
+  async testLlmConnection({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(testLlmConnectionValidator)
+
+    try {
+      const result = await this.llmProviderService.testConnection(payload)
+
+      return response.ok({
+        data: result,
+        message: 'LLM connection verified successfully',
+      })
+    } catch (error) {
+      return response.badRequest({
+        message: error instanceof Error ? error.message : 'Unable to connect to LLM provider',
       })
     }
   }

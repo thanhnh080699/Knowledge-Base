@@ -124,6 +124,7 @@ thanhnh.id.vn/
 - **Swagger** — Mọi bộ CRUD sau khi hoàn thiện PHẢI được bổ sung vào Swagger documentation. Truy cập tại `/swagger`.
 - **ACL Sync** — Sau khi thêm module hoặc permission mới vào `ACL_MODULES`, PHẢI chạy `node ace sync:permissions` để cập nhật database.
 - **Seeding** — `AclSeeder` chịu trách nhiệm đồng bộ quyền, khởi tạo role và tạo admin mặc định. Luôn chạy seeder này khi setup môi trường mới.
+- **LLM Providers** — Cấu hình LLM dùng bảng `llm_providers`, KHÔNG dùng một setting key-value duy nhất. Cho phép nhiều provider active cùng lúc (`is_active`) để phục vụ từng workload; provider gồm `name`, `driver`, `model_name`, `api_key`, `base_url`, `tasks`, `input_tokens`, `output_tokens`, `total_tokens`, `sort_order`, soft delete. API key không serialize ra response; seed riêng bằng `llm_providers_seeder.ts` để không ảnh hưởng seeder settings hiện tại.
 
 ### FE (Next.js 15)
 - **KHÔNG glassmorphism** — Border + flat color tuyệt đối.
@@ -200,6 +201,7 @@ thanhnh.id.vn/
     - Form card dùng `rounded-xl border bg-surface shadow-sm p-5`, các field xếp dọc với `Label`, control, help text.
     - Nút hành động chính đặt cuối trang trong cột phải, gồm `Save settings` và `Reset` khi cần.
     - Không dùng sidebar phụ cho setting detail nếu màn hình là form cấu hình; ưu tiên block rõ ràng như `License`, `General Information`, `Website Identity`.
+  - **LLM Settings UI** — `/settings/llm` là màn hình list provider, không phải form một provider. List hiển thị provider, driver, model, `Total Usage`, `In / Out`, status và action; không hiển thị Tasks trên list. Modal create có Tasks; modal edit ẩn Tasks, giữ Status, API key bắt buộc có `*`, mặc định ẩn với nút eye open/close để xem key.
   - **Settings Assets** — Toàn bộ ảnh cấu hình hệ thống (Logo, Favicon, ...) PHẢI được upload vào thư mục `settings` trên CDN để quản lý tập trung.
   - **Modal/Popup Scroll Standard** — Mọi popup/modal trong CMS PHẢI dùng component modal dùng chung có `max-height` theo viewport và vùng nội dung `overflow-y-auto`. Khi viewport thấp do DevTools/F12 hoặc màn hình nhỏ, modal không được bị cắt mất header/footer/action; người dùng phải cuộn được nội dung bên trong popup. Không khóa cứng chiều cao popup theo `h-screen`, `fixed height`, hoặc center-only layout không có scroll container.
 
