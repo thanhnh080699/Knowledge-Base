@@ -16,8 +16,33 @@ export const revalidate = 60
 
 type Params = { category: string; slug: string }
 
+const DEFAULT_SITE_URL = "https://thanhnh.id.vn"
+
+function normalizeSiteUrl(value?: string | null) {
+  return (value || process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, "")
+}
+
+function postPath(category: string, slug: string) {
+  return `/docs/${category}/${slug}`
+}
+
+function absoluteSiteUrl(path: string) {
+  const siteUrl = normalizeSiteUrl()
+  return `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`
+}
+
+function uniqueKeywords(values: Array<string | null | undefined>) {
+  return Array.from(
+    new Set(
+      values
+        .filter((value): value is string => Boolean(value?.trim()))
+        .map((value) => value.trim())
+    )
+  )
+}
+
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
-  const { slug } = await params
+  const { category, slug } = await params
   const post = (await getPost(slug)) ?? fallbackPosts.find((item) => item.slug === slug)
 
   if (!post) {
@@ -27,14 +52,42 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     }
   }
 
+  const title = post.metaTitle ?? post.title
+  const description = post.metaDescription ?? post.excerpt ?? `Tài liệu ${post.title}`
+  const categorySlug = post.category?.slug ?? category
+  const canonicalUrl = post.canonicalUrl ?? absoluteSiteUrl(postPath(categorySlug, post.slug))
+  const coverImageUrl = post.coverImage ? absoluteCdnUrl(post.coverImage) : undefined
+  const keywords = uniqueKeywords([
+    post.focusKeyword,
+    post.category?.name,
+    ...(post.tags?.map((tag) => tag.name) ?? []),
+  ])
+
   return {
-    title: post.metaTitle ?? post.title,
-    description: post.metaDescription ?? post.excerpt ?? `Tài liệu ${post.title}`,
-    alternates: post.canonicalUrl ? { canonical: post.canonicalUrl } : undefined,
+    title,
+    description,
+    keywords: keywords.length ? keywords : undefined,
+    alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: post.metaTitle ?? post.title,
-      description: post.metaDescription ?? post.excerpt ?? `Tài liệu ${post.title}`
-    }
+      title,
+      description,
+      url: canonicalUrl,
+      type: "article",
+      images: coverImageUrl
+        ? [
+            {
+              url: coverImageUrl,
+              alt: post.title,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: coverImageUrl ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: coverImageUrl ? [coverImageUrl] : undefined,
+    },
   }
 }
 
