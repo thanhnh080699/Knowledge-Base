@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Image from "next/image"
-import { Mail, MessageSquareText, Send } from "lucide-react"
+import { Mail } from "lucide-react"
 import { Suspense } from "react"
 import { ContactForm } from "@/components/shared/contact-form"
 import { HomeReveal } from "@/components/shared/home-motion"
@@ -22,7 +22,7 @@ export default async function ContactPage() {
     <main className="bg-[var(--color-surface)]">
       <section className="page-hero relative min-h-[500px]">
         <Image
-          src="/images/home-contact-collab-bg.png"
+          src="/images/contact-bg.png"
           alt=""
           fill
           priority
@@ -32,7 +32,7 @@ export default async function ContactPage() {
         <div className="page-hero-overlay" />
         <div className="home-glow home-glow-sky bottom-0 right-[16%] h-72 w-72"></div>
 
-        <div className="relative z-10 mx-auto grid min-h-[500px] max-w-7xl items-center gap-8 px-4 py-16 md:px-6 lg:grid-cols-[1fr_0.72fr]">
+        <div className="relative z-10 mx-auto grid min-h-[500px] max-w-7xl items-center gap-8 px-4 py-16 md:px-6 lg:grid-cols-[1fr_0.86fr]">
           <HomeReveal>
             <div className="kb-eyebrow w-fit">
               <Mail size={16} aria-hidden />
@@ -43,25 +43,17 @@ export default async function ContactPage() {
               Gửi thông tin nhu cầu để trao đổi về website, dashboard quản trị, API hoặc deployment.
             </p>
           </HomeReveal>
-          <HomeReveal delay={0.1}>
-            <div className="page-visual-panel">
-              <div className="grid gap-3">
-                <div className="page-visual-chip">
-                  <span>Email</span>
-                  <strong>{settings.contact_email || "nguyenhuythanh0806@gmail.com"}</strong>
-                  <Mail size={16} aria-hidden />
-                </div>
-                <div className="page-visual-chip">
-                  <span>Brief</span>
-                  <strong>Website / API / CMS</strong>
-                  <MessageSquareText size={16} aria-hidden />
-                </div>
-                <div className="page-visual-chip">
-                  <span>Response</span>
-                  <strong>{settings.working_hours || "Mon - Fri"}</strong>
-                  <Send size={16} aria-hidden />
-                </div>
-              </div>
+          <HomeReveal delay={0.1} className="hidden md:block">
+            <div className="page-visual-panel page-visual-panel-clean flex items-center justify-center">
+              <Image
+                src="/images/contact-us.svg"
+                alt="Contact Us"
+                width={420}
+                height={280}
+                priority
+                unoptimized
+                className="h-auto w-auto object-contain max-h-[300px] max-w-[340px] lg:max-h-[460px] lg:max-w-[520px] xl:max-w-[580px]"
+              />
             </div>
           </HomeReveal>
         </div>

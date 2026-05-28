@@ -5,6 +5,9 @@ const MenusController = () => import('#controllers/menus_controller')
 
 export default function menusRoutes() {
   router.get('menus/default', [MenusController, 'defaultMenu']).as('menus.public.default')
+  router
+    .get('menus/location/:location', [MenusController, 'byLocation'])
+    .as('menus.public.location')
   router.get('menus', [MenusController, 'index']).as('menus.public.index')
   router.get('menus/:id', [MenusController, 'show']).as('menus.public.show')
 

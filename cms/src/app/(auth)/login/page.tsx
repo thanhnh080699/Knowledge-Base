@@ -12,11 +12,19 @@ import { Lock, Mail, LayoutDashboard, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
+const loginBackgrounds = Array.from(
+  { length: 10 },
+  (_, index) => `/vendor/core/core/acl/images/backgrounds/${index + 1}.jpg`
+);
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [backgroundImage] = useState(
+    () => loginBackgrounds[Math.floor(Math.random() * loginBackgrounds.length)]
+  );
   const router = useRouter();
   const { setAuth, isAuthenticated } = useAuthStore();
   const hydrated = useHydrated();
@@ -60,10 +68,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen bg-[var(--app-bg)]">
-      {/* Left side - Image Placeholder */}
+      {/* Left side - Randomized background */}
       <div className="hidden w-1/2 lg:block relative bg-slate-900 overflow-hidden">
-        {/* Placeholder gradient / pattern until image is added */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-90" />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${backgroundImage})` }}
+        />
+        <div className="absolute inset-0 bg-slate-950/45" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
         
         <div className="absolute inset-0 flex flex-col justify-center px-16 text-white">

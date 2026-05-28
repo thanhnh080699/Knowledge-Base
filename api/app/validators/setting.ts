@@ -50,3 +50,22 @@ export const sendTestEmailValidator = vine.compile(
     recipient: vine.string().email().normalizeEmail(),
   })
 )
+
+const llmDriver = () => vine.enum(['openai', 'gemini', 'nvidia', 'openrouter', 'custom'] as const)
+
+export const listLlmModelsValidator = vine.compile(
+  vine.object({
+    driver: llmDriver(),
+    apiKey: vine.string().trim().optional(),
+    baseUrl: vine.string().trim().optional(),
+  })
+)
+
+export const testLlmConnectionValidator = vine.compile(
+  vine.object({
+    driver: llmDriver(),
+    apiKey: vine.string().trim(),
+    baseUrl: vine.string().trim().optional(),
+    modelName: vine.string().trim().optional(),
+  })
+)

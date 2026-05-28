@@ -79,6 +79,18 @@ export default class MenusController {
     return response.ok({ data: menu })
   }
 
+  async byLocation({ params, response }: HttpContext) {
+    const menu = await Menu.query()
+      .where('location', params.location)
+      .whereNull('deleted_at')
+      .orderBy('is_default', 'desc')
+      .orderBy('id', 'asc')
+      .preload('items', (query) => query.orderBy('sort_order', 'asc').orderBy('id', 'asc'))
+      .firstOrFail()
+
+    return response.ok({ data: menu })
+  }
+
   async update({ params, request, response }: HttpContext) {
     const menu = await Menu.query().where('id', params.id).whereNull('deleted_at').firstOrFail()
     const {
@@ -161,7 +173,11 @@ export default class MenusController {
     }
 
     for (const { item, payload } of created) {
-      if (payload.parentId !== undefined && payload.parentId !== null && idMap.has(payload.parentId)) {
+      if (
+        payload.parentId !== undefined &&
+        payload.parentId !== null &&
+        idMap.has(payload.parentId)
+      ) {
         item.parentId = idMap.get(payload.parentId!) ?? null
         await item.save()
       }
