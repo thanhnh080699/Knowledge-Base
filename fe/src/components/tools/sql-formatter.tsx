@@ -2,12 +2,11 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy, Check } from "lucide-react"
+import { CopyButton } from "@/components/shared/copy-button"
 
 export function SqlFormatter() {
   const [input, setInput] = useState("")
   const [output, setOutput] = useState("")
-  const [copied, setCopied] = useState(false)
 
   const format = () => {
     let sql = input
@@ -29,19 +28,11 @@ export function SqlFormatter() {
     })
 
     setOutput(sql.trim())
-    setCopied(false)
   }
 
   const minify = () => {
     const minified = input.replace(/\s+/g, " ").trim()
     setOutput(minified)
-    setCopied(false)
-  }
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -64,25 +55,18 @@ export function SqlFormatter() {
           Minify
         </Button>
       </div>
-      <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
         <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Result</label>
-        <textarea
-          value={output}
-          readOnly
-          rows={10}
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-800"
-          placeholder="Formatted SQL will appear here"
-        />
-        {output && (
-          <Button
-            onClick={copy}
-            variant="ghost"
-            size="sm"
-            className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
-          >
-            {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-          </Button>
-        )}
+        <div className="relative group">
+          <textarea
+            value={output}
+            readOnly
+            rows={10}
+            className="w-full rounded-md border border-slate-300 bg-white p-3 pr-10 font-mono text-sm text-slate-800"
+            placeholder="Formatted SQL will appear here"
+          />
+          {output && <CopyButton text={output} />}
+        </div>
       </div>
     </div>
   )

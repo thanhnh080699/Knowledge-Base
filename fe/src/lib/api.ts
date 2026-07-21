@@ -186,6 +186,261 @@ export async function getProject(slug: string) {
   }
 }
 
+const STATIC_TOOLS: Tool[] = [
+  {
+    id: 101,
+    slug: "crypto-bcrypt",
+    name: "Bcrypt Hash Generator (Bcrypt 12)",
+    description: "Generate and verify Bcrypt password hashes with cost factor 12",
+    category: "Crypto",
+    icon: null,
+    urlPath: "/tools/crypto-bcrypt",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 8,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 102,
+    slug: "cron-builder",
+    name: "Cron Expression Builder",
+    description: "Build and understand cron expressions with human-readable descriptions",
+    category: "Cron & Date Convert",
+    icon: null,
+    urlPath: "/tools/cron-builder",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 1,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 103,
+    slug: "timestamp-converter",
+    name: "Unix Timestamp Converter",
+    description: "Convert between Unix timestamps and datetime",
+    category: "Cron & Date Convert",
+    icon: null,
+    urlPath: "/tools/timestamp-converter",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 2,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 104,
+    slug: "date-formatter",
+    name: "Date Formatter",
+    description: "Format date and time to various standard formats",
+    category: "Cron & Date Convert",
+    icon: null,
+    urlPath: "/tools/date-formatter",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 3,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 105,
+    slug: "crypto-token-generator",
+    name: "Token Generator",
+    description: "Generate random tokens with uppercase, lowercase, numbers, and symbols",
+    category: "Crypto",
+    icon: null,
+    urlPath: "/tools/crypto-token-generator",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 4,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 106,
+    slug: "crypto-password-generator",
+    name: "Password Generator",
+    description: "Generate secure passwords with strength score",
+    category: "Crypto",
+    icon: null,
+    urlPath: "/tools/crypto-password-generator",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 5,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 107,
+    slug: "uuid-generator",
+    name: "UUID Generator",
+    description: "Generate random UUID v4 identifiers",
+    category: "Crypto",
+    icon: null,
+    urlPath: "/tools/uuid-generator",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 6,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 108,
+    slug: "crypto-hash-text",
+    name: "Hash Text",
+    description: "Generate SHA hashes with hex or base64 encoding",
+    category: "Crypto",
+    icon: null,
+    urlPath: "/tools/crypto-hash-text",
+    featured: false,
+    status: "PUBLISHED",
+    sortOrder: 7,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 109,
+    slug: "sql-formatter",
+    name: "SQL Prettify & Format",
+    description: "Format and beautify your SQL queries",
+    category: "Developer",
+    icon: null,
+    urlPath: "/tools/sql-formatter",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 8,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 110,
+    slug: "xml-formatter",
+    name: "XML Formatter",
+    description: "Format and minify XML data",
+    category: "Developer",
+    icon: null,
+    urlPath: "/tools/xml-formatter",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 9,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 111,
+    slug: "chmod-calculator",
+    name: "Chmod Calculator",
+    description: "Calculate Linux file permissions in octal and symbolic formats",
+    category: "Developer",
+    icon: null,
+    urlPath: "/tools/chmod-calculator",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 10,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 112,
+    slug: "json-formatter",
+    name: "JSON Formatter",
+    description: "Format and validate JSON data",
+    category: "Developer",
+    icon: null,
+    urlPath: "/tools/json-formatter",
+    featured: true,
+    status: "PUBLISHED",
+    sortOrder: 11,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 113,
+    slug: "base64-encoder-decoder",
+    name: "Base64 Encoder/Decoder",
+    description: "Encode and decode Base64 strings",
+    category: "Encoder",
+    icon: null,
+    urlPath: "/tools/base64-encoder-decoder",
+    featured: false,
+    status: "PUBLISHED",
+    sortOrder: 12,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 114,
+    slug: "url-encoder-decoder",
+    name: "URL Encoder/Decoder",
+    description: "Encode and decode URL strings",
+    category: "Encoder",
+    icon: null,
+    urlPath: "/tools/url-encoder-decoder",
+    featured: false,
+    status: "PUBLISHED",
+    sortOrder: 13,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 115,
+    slug: "case-converter",
+    name: "Case Converter",
+    description: "Convert text between camelCase, snake_case, kebab-case, etc.",
+    category: "Converter",
+    icon: null,
+    urlPath: "/tools/case-converter",
+    featured: false,
+    status: "PUBLISHED",
+    sortOrder: 14,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 116,
+    slug: "color-converter",
+    name: "Color Converter",
+    description: "Convert between HEX, RGB, and HSL color formats",
+    category: "Converter",
+    icon: null,
+    urlPath: "/tools/color-converter",
+    featured: false,
+    status: "PUBLISHED",
+    sortOrder: 15,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 117,
+    slug: "slug-generator",
+    name: "Slug Generator",
+    description: "Convert text to URL-friendly slugs",
+    category: "Text",
+    icon: null,
+    urlPath: "/tools/slug-generator",
+    featured: false,
+    status: "PUBLISHED",
+    sortOrder: 16,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+  {
+    id: 118,
+    slug: "lorem-ipsum-generator",
+    name: "Lorem Ipsum Generator",
+    description: "Generate placeholder text for designs",
+    category: "Text",
+    icon: null,
+    urlPath: "/tools/lorem-ipsum-generator",
+    featured: false,
+    status: "PUBLISHED",
+    sortOrder: 17,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  },
+]
+
 export async function getTools(
   params: {
     page?: number
@@ -203,19 +458,32 @@ export async function getTools(
         featured: params.featured,
       },
     })
-    return data
+
+    const apiTools = data.data || []
+    const existingSlugs = new Set(apiTools.map((t) => t.slug))
+    const missingStatic = STATIC_TOOLS.filter((t) => !existingSlugs.has(t.slug))
+    const merged = [...apiTools, ...missingStatic]
+
+    return {
+      ...data,
+      data: merged,
+    }
   } catch {
-    return emptyPaginated<Tool>(params.page ?? 1, params.limit ?? 100)
+    return {
+      ...emptyPaginated<Tool>(params.page ?? 1, params.limit ?? 100),
+      data: STATIC_TOOLS,
+    }
   }
 }
 
 export async function getTool(slug: string) {
   try {
     const { data } = await api.get<{ data: Tool }>(`/tools/${slug}`)
-    return data.data
+    if (data.data) return data.data
   } catch {
-    return null
+    // Ignore error
   }
+  return STATIC_TOOLS.find((t) => t.slug === slug) || null
 }
 
 export async function submitContact(payload: ContactPayload) {

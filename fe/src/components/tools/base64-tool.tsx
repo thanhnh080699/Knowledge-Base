@@ -2,13 +2,12 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy } from "lucide-react"
+import { CopyButton } from "@/components/shared/copy-button"
 
 export function Base64Tool() {
   const [input, setInput] = useState("")
   const [output, setOutput] = useState("")
   const [mode, setMode] = useState<"encode" | "decode">("encode")
-  const [copied, setCopied] = useState(false)
 
   const process = () => {
     try {
@@ -20,13 +19,6 @@ export function Base64Tool() {
     } catch {
       setOutput("Error: Invalid input")
     }
-    setCopied(false)
-  }
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -59,18 +51,17 @@ export function Base64Tool() {
         {mode === "encode" ? "Encode" : "Decode"}
       </Button>
       {output && (
-        <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
-          <label className="mb-2 block text-sm font-medium text-slate-700">Result</label>
-          <textarea
-            value={output}
-            readOnly
-            rows={4}
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-sm"
-          />
-          <Button onClick={copy} variant="ghost" size="sm" className="absolute right-3 top-3">
-            <Copy size={14} />
-            {copied ? "Copied!" : "Copy"}
-          </Button>
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Result</label>
+          <div className="relative group">
+            <textarea
+              value={output}
+              readOnly
+              rows={4}
+              className="w-full rounded-md border border-slate-300 bg-white p-3 pr-10 font-mono text-sm"
+            />
+            <CopyButton text={output} />
+          </div>
         </div>
       )}
     </div>

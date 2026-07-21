@@ -7,6 +7,7 @@ import { PostContent } from "@/components/shared/post-content"
 import { DocReader } from "@/components/shared/doc-reader"
 import { CdnImage } from "@/components/shared/cdn-image"
 import { HomeReveal } from "@/components/shared/home-motion"
+import { ReadingProgress } from "@/components/shared/reading-progress"
 import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import { fallbackCategories, fallbackPosts } from "@/lib/fallback-data"
 import { getRootCategories, getPost } from "@/lib/api"
@@ -101,53 +102,77 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
 
   const toc = buildTocFromContent(post.content)
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: post.title,
+    description: post.excerpt || post.metaDescription || post.title,
+    image: post.coverImage ? [absoluteCdnUrl(post.coverImage)] : undefined,
+    datePublished: post.publishedAt || undefined,
+    dateModified: post.updatedAt || post.publishedAt || undefined,
+    articleSection: post.category?.name || "Documentation",
+    author: {
+      "@type": "Person",
+      name: "Thanh Nguyen",
+      url: absoluteSiteUrl("/portfolio")
+    }
+  }
+
   return (
-    <main className="kb-wide-container grid gap-8 py-8 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_300px]">
-      <HomeReveal>
-        <Sidebar categories={categories} activeCategory={post.category?.slug ?? category} />
-      </HomeReveal>
-      
-      <DocReader toc={toc}>
-        <HomeReveal className="min-w-0 rounded-2xl border border-[var(--color-hairline)] bg-white p-6 md:p-10" delay={0.08}>
-          <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]" aria-label="Breadcrumb">
-            <Link href="/docs" className="hover:text-[var(--color-ink)]">Tài liệu</Link>
-            <span>/</span>
-            <Link href={`/docs/categories/${post.category?.slug ?? category}`} className="hover:text-[var(--color-ink)]">
-              {post.category?.name ?? category}
-            </Link>
-            <span>/</span>
-            <span className="max-w-[200px] truncate font-medium text-[var(--color-ink)]">{post.title}</span>
-          </nav>
-
-          <Badge tone="blue">{post.category?.name ?? "Tài liệu"}</Badge>
-          
-          <header className="mt-4 space-y-4">
-            <h1 className="kb-display-xl">
-              {post.title}
-            </h1>
-
-            {post.coverImage && (
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)]">
-                <CdnImage
-                  src={absoluteCdnUrl(post.coverImage)}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            )}
-
-            {post.excerpt && (
-              <p className="border-l border-[var(--color-hairline-strong)] py-1 pl-4 text-lg leading-relaxed text-[var(--color-body)]">
-                {post.excerpt}
-              </p>
-            )}
-          </header>
-
-          <PostContent content={post.coverImage ? stripFirstImage(post.content) : post.content} />
+    <>
+      <ReadingProgress />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main className="kb-wide-container grid gap-8 py-8 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_300px]">
+        <HomeReveal>
+          <Sidebar categories={categories} activeCategory={post.category?.slug ?? category} />
         </HomeReveal>
-      </DocReader>
-    </main>
+        
+        <DocReader toc={toc}>
+          <HomeReveal className="min-w-0 rounded-2xl border border-[var(--color-hairline)] bg-white p-6 md:p-10" delay={0.08}>
+            <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]" aria-label="Breadcrumb">
+              <Link href="/docs" className="hover:text-[var(--color-ink)]">Tài liệu</Link>
+              <span>/</span>
+              <Link href={`/docs/categories/${post.category?.slug ?? category}`} className="hover:text-[var(--color-ink)]">
+                {post.category?.name ?? category}
+              </Link>
+              <span>/</span>
+              <span className="max-w-[200px] truncate font-medium text-[var(--color-ink)]">{post.title}</span>
+            </nav>
+
+            <Badge tone="blue">{post.category?.name ?? "Tài liệu"}</Badge>
+            
+            <header className="mt-4 space-y-4">
+              <h1 className="kb-display-xl">
+                {post.title}
+              </h1>
+
+              {post.coverImage && (
+                <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)]">
+                  <CdnImage
+                    src={absoluteCdnUrl(post.coverImage)}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              )}
+
+              {post.excerpt && (
+                <p className="border-l border-[var(--color-hairline-strong)] py-1 pl-4 text-lg leading-relaxed text-[var(--color-body)]">
+                  {post.excerpt}
+                </p>
+              )}
+            </header>
+
+            <PostContent content={post.coverImage ? stripFirstImage(post.content) : post.content} />
+          </HomeReveal>
+        </DocReader>
+      </main>
+    </>
   )
 }

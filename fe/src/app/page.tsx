@@ -217,8 +217,26 @@ export default async function HomePage() {
   const projects = projectsResponse.data.length ? projectsResponse.data : fallbackProjects
   const orderedMenuStories = [menuStories[0], menuStories[1], menuStories[3], menuStories[2], menuStories[4]]
 
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Knowledge Base",
+    url: "https://thanhnh.id.vn",
+    description: "Knowledge Base kỹ thuật mở về SysAdmin, DevOps, Development và HelpDesk.",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://thanhnh.id.vn/docs?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+
   return (
-    <main className="overflow-hidden bg-[var(--color-surface)]">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+      <main id="main-content" tabIndex={-1} className="overflow-hidden bg-[var(--color-surface)] outline-none">
       <section className="home-hero relative border-b border-[var(--color-hairline)]">
         <Image
           src="/images/home-hero-ops-bg.png"
@@ -526,5 +544,6 @@ export default async function HomePage() {
         </div>
       </section>
     </main>
-  )
+  </>
+)
 }

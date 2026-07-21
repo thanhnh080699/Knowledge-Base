@@ -16,6 +16,7 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
           src={imageSrc}
           alt={`Ảnh dự án ${project.title}`}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={priority}
           className="object-cover"
         />

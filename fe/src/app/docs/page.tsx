@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { BookOpen, Search, Server, ShieldCheck } from "lucide-react"
+import { BookOpen, Server, ShieldCheck, Terminal } from "lucide-react"
 import { Sidebar } from "@/components/shared/sidebar"
 import { SearchBox } from "@/components/shared/search-box"
 import { Pagination } from "@/components/shared/pagination"
@@ -13,10 +13,10 @@ export const revalidate = 60
 
 export const metadata: Metadata = {
   title: "Tài liệu kỹ thuật",
-  description: "Danh sách tài liệu SysAdmin, DevOps, Development và HelpDesk.",
+  description: "Danh sách tài liệu SysAdmin, DevOps, Development và HelpDesk được sắp xếp khoa học, dễ tra cứu.",
   openGraph: {
     title: "Tài liệu kỹ thuật | thanhnh.id.vn",
-    description: "Tra cứu nhanh tài liệu kỹ thuật theo danh mục."
+    description: "Tra cứu nhanh tài liệu kỹ thuật theo danh mục và từ khóa."
   }
 }
 
@@ -28,7 +28,7 @@ export default async function DocsPage({
   const params = await searchParams
   const page = Number(params.page ?? 1)
   const [postsResponse, categoriesResponse, currentCategory] = await Promise.all([
-    getPosts({ page, limit: 9, category: params.category, tag: params.tag, search: params.q }),
+    getPosts({ page, limit: 12, category: params.category, tag: params.tag, search: params.q }),
     getRootCategories(),
     params.category ? getCategory(params.category) : null
   ])
@@ -37,92 +37,95 @@ export default async function DocsPage({
 
   return (
     <main className="bg-[var(--color-surface)]">
-      <section className="page-hero">
+      {/* Refined Minimalist Hero */}
+      <section className="page-hero border-b border-[var(--color-hairline)] bg-white/60 backdrop-blur-sm">
         <div className="home-glow home-glow-mint left-[8%] top-8 h-64 w-64"></div>
         <div className="home-glow home-glow-sky bottom-0 right-[12%] h-72 w-72"></div>
-        <div className="relative z-10 mx-auto grid max-w-[1600px] gap-8 px-4 py-12 md:px-6 lg:grid-cols-[1fr_0.72fr] lg:py-16">
-          <HomeReveal>
-            <div className="kb-eyebrow w-fit">
-              <BookOpen size={16} aria-hidden />
-              {currentCategory ? `Danh mục: ${currentCategory.name}` : "Trung tâm tài liệu"}
+        <div className="relative z-10 mx-auto max-w-[1600px] px-4 py-8 md:px-6 md:py-12">
+          <HomeReveal className="max-w-4xl">
+            <div className="flex items-center gap-3">
+              <div className="kb-eyebrow w-fit">
+                <BookOpen size={15} aria-hidden />
+                {currentCategory ? `Danh mục: ${currentCategory.name}` : "Documentation Hub"}
+              </div>
+              {params.tag && (
+                <span className="rounded-full bg-stone-100 px-3 py-0.5 text-xs font-medium text-[var(--color-body)]">
+                  Tag: #{params.tag}
+                </span>
+              )}
             </div>
-            <h1 className="kb-display-xl mt-4">
+
+            <h1 className="kb-display-xl mt-3">
               {currentCategory?.name ?? "Tài liệu kỹ thuật"}
             </h1>
-            <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--color-body)]">
-              {currentCategory?.description ?? "Tổng hợp ghi chú vận hành hệ thống, Docker, Linux, web server, lập trình và xử lý sự cố theo dạng knowledge base dễ tra cứu. Các bài viết được đúc kết từ quá trình triển khai thực tế, tối ưu hóa bảo mật và hiệu suất hạ tầng."}
+            
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-body)] md:text-base">
+              {currentCategory?.description ?? "Kho tri thức vận hành hệ thống, Docker, Linux, Web server và Security. Sắp xếp khoa học giúp tra cứu nhanh chóng."}
             </p>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                  <Server size={20} />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">Hệ thống</h4>
-                  <p className="text-xs text-[var(--color-muted)]">Linux, Web Server, Security</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                  <ShieldCheck size={20} />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">DevOps</h4>
-                  <p className="text-xs text-[var(--color-muted)]">Docker, CI/CD, Monitoring</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                  <Search size={20} />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sm text-[var(--color-ink)]">Tra cứu</h4>
-                  <p className="text-xs text-[var(--color-muted)]">Tìm kiếm bài viết nhanh</p>
-                </div>
-              </div>
+            {/* Quick Category Badges Bar */}
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <Link
+                href="/docs"
+                className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                  !params.category
+                    ? "bg-[var(--color-primary)] !text-white shadow-xs"
+                    : "border border-[var(--color-hairline)] bg-white text-[var(--color-body-strong)] hover:border-[var(--color-hairline-strong)] hover:bg-[var(--color-surface-soft)]"
+                }`}
+              >
+                Tất cả bài viết
+              </Link>
+              {categories.slice(0, 5).map((cat) => {
+                const isActive = params.category === cat.slug
+                return (
+                  <Link
+                    key={cat.id}
+                    href={`/docs?category=${cat.slug}`}
+                    className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                      isActive
+                        ? "bg-[var(--color-primary)] !text-white shadow-xs"
+                        : "border border-[var(--color-hairline)] bg-white text-[var(--color-body-strong)] hover:border-[var(--color-hairline-strong)] hover:bg-[var(--color-surface-soft)]"
+                    }`}
+                  >
+                    {cat.name}
+                  </Link>
+                )
+              })}
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-[var(--color-muted)]">
+            {/* Popular Topics Chips */}
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-[var(--color-muted)]">
               <span className="font-medium text-[var(--color-body)]">Từ khóa phổ biến:</span>
-              {["Docker", "Nginx", "Linux", "SSL", "CI/CD", "Security", "Shell Script"].map((tag) => (
+              {["Docker", "Nginx", "Linux", "SSL", "CI/CD", "Security"].map((tag) => (
                 <Link
                   key={tag}
                   href={`/docs?q=${tag}`}
-                  className="rounded-full bg-[var(--color-surface-strong)] px-2.5 py-1 font-medium hover:text-[var(--color-ink)] transition-colors cursor-pointer"
+                  className="rounded-md bg-stone-100 px-2 py-0.5 text-xs text-[var(--color-muted)] hover:bg-stone-200 hover:text-[var(--color-ink)] transition-colors"
                 >
                   #{tag}
                 </Link>
               ))}
             </div>
           </HomeReveal>
-          <HomeReveal delay={0.1} className="hidden md:block">
-            <div className="page-visual-panel page-visual-panel-clean flex items-center justify-center">
-              <Image
-                src="/images/knowledge.svg"
-                alt="Knowledge Base Illustration"
-                width={280}
-                height={368}
-                priority
-                unoptimized
-                className="h-auto w-auto object-contain max-h-[220px] lg:max-h-[360px] max-w-[160px] lg:max-w-[280px]"
-              />
-            </div>
-          </HomeReveal>
         </div>
       </section>
 
+      {/* Main Documentation Area */}
       <section className="kb-wide-container grid gap-6 py-8 md:grid-cols-[280px_1fr]">
         <HomeReveal>
           <Sidebar categories={categories} activeCategory={params.category} />
         </HomeReveal>
+        
         <HomeReveal delay={0.08}>
           <section>
             <SearchBox posts={posts} initialQuery={params.q ?? ""} subcategories={currentCategory?.children} />
-            <div className="mt-6">
-              <Pagination currentPage={postsResponse.meta.currentPage} lastPage={postsResponse.meta.lastPage} basePath="/docs" query={{ category: params.category, tag: params.tag, q: params.q }} />
+            <div className="mt-8">
+              <Pagination
+                currentPage={postsResponse.meta.currentPage}
+                lastPage={postsResponse.meta.lastPage}
+                basePath="/docs"
+                query={{ category: params.category, tag: params.tag, q: params.q }}
+              />
             </div>
           </section>
         </HomeReveal>

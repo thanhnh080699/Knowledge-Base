@@ -2,16 +2,16 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Copy, Check } from "lucide-react"
+import { Check } from "lucide-react"
+import { CopyButton } from "@/components/shared/copy-button"
 
 export function CryptoBcrypt() {
   const [input, setInput] = useState("")
-  const [saltRounds, setSaltRounds] = useState(10)
+  const [saltRounds, setSaltRounds] = useState(12)
   const [hash, setHash] = useState("")
   const [compareInput, setCompareInput] = useState("")
   const [compareHash, setCompareHash] = useState("")
   const [compareResult, setCompareResult] = useState<boolean | null>(null)
-  const [copied, setCopied] = useState(false)
 
   const generateHash = async () => {
     // Simple bcrypt-like hash simulation
@@ -19,17 +19,10 @@ export function CryptoBcrypt() {
     const rounds = "$2a$" + saltRounds.toString().padStart(2, "0") + "$"
     const simulated = rounds + salt + btoa(input + salt).substring(0, 31)
     setHash(simulated)
-    setCopied(false)
   }
 
   const compare = () => {
     setCompareResult(compareInput === "demo" && compareHash.includes("demo"))
-  }
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(hash)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -64,21 +57,14 @@ export function CryptoBcrypt() {
         <Button onClick={generateHash} variant="primary" disabled={!input}>
           Generate Hash
         </Button>
-        <div className="relative rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
           <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Hash Result</label>
-          <code className="block min-h-[2.5rem] break-all rounded-md border border-slate-300 bg-white p-3 text-xs text-slate-800 font-mono">
-            {hash || <span className="text-slate-400 italic">Click Generate to see hash</span>}
-          </code>
-          {hash && (
-            <Button
-              onClick={copy}
-              variant="ghost"
-              size="sm"
-              className="absolute right-2 top-2 size-8 text-slate-400 hover:text-primary transition-colors"
-            >
-              {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-            </Button>
-          )}
+          <div className="relative group">
+            <code className="block min-h-[2.5rem] break-all rounded-md border border-slate-300 bg-white p-3 pr-10 text-xs text-slate-800 font-mono">
+              {hash || <span className="text-slate-400 italic">Click Generate to see hash</span>}
+            </code>
+            {hash && <CopyButton text={hash} />}
+          </div>
         </div>
       </div>
 

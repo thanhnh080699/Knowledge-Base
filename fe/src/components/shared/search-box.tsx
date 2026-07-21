@@ -1,11 +1,12 @@
 "use client"
 
-import { Folder, Search, ChevronRight, X } from "lucide-react"
+import { Folder, Search, ChevronRight, X, LayoutGrid, List } from "lucide-react"
 import { useMemo, useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { PostCard } from "@/components/shared/post-card"
+import { PostListItem } from "@/components/shared/post-list-item"
 import type { Post } from "@/types/post"
 import type { Category } from "@/types/category"
 
@@ -22,6 +23,20 @@ export function SearchBox({
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [query, setQuery] = useState(initialQuery)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+
+  // Load preferred view mode from localStorage on mount
+  useEffect(() => {
+    const savedMode = localStorage.getItem("docs_view_mode")
+    if (savedMode === "grid" || savedMode === "list") {
+      setViewMode(savedMode)
+    }
+  }, [])
+
+  const handleSetViewMode = (mode: "grid" | "list") => {
+    setViewMode(mode)
+    localStorage.setItem("docs_view_mode", mode)
+  }
 
   // Sync state when initialQuery changes (e.g. from page navigation)
   useEffect(() => {
@@ -37,17 +52,16 @@ export function SearchBox({
 
       if (trimmed === currentQ) return
 
-      // Only search if empty (clear) or >= 2 chars (e.g. Go, IP, OS, VM)
       if (trimmed === "" || trimmed.length >= 2) {
         if (trimmed) {
           params.set("q", trimmed)
         } else {
           params.delete("q")
         }
-        params.set("page", "1") // Reset to first page on new search
+        params.set("page", "1")
         router.push(`${pathname}?${params.toString()}`, { scroll: false })
       }
-    }, 300) // Snappy 300ms debounce time
+    }, 300)
 
     return () => clearTimeout(timer)
   }, [query, pathname, router, searchParams])
@@ -66,49 +80,116 @@ export function SearchBox({
 
   return (
     <section aria-label="Tìm kiếm tài liệu" className="space-y-5">
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)]" size={18} aria-hidden />
-        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm nhanh trong danh sách tài liệu..." className="pl-10 pr-10" />
-        {query && (
-          <button
-            type="button"
-            onClick={() => setQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors p-1 rounded-full hover:bg-[var(--color-surface-soft)] flex items-center justify-center"
-            aria-label="Xóa tìm kiếm"
-          >
-            <X size={16} />
-          </button>
-        )}
+      {/* Search Input Bar & View Switcher */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)]" size={18} aria-hidden />
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Tìm nhanh trong danh sách tài liệu (vd: Docker, Linux, Nginx...)"
+            className="pl-10 pr-10 min-h-11"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors p-1 rounded-full hover:bg-[var(--color-surface-soft)] flex items-center justify-center"
+              aria-label="Xóa tìm kiếm"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+
+        {/* View Mode Toggle Buttons */}
+        <div className="flex items-center justify-between sm:justify-start gap-2 border-t border-[var(--color-hairline)] pt-3 sm:border-t-0 sm:pt-0">
+          <span className="text-xs font-medium text-[var(--color-muted)] sm:hidden">
+            {filtered.length} bài viết
+          </span>
+          <div className="flex items-center rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-1">
+            <button
+              type="button"
+              onClick={() => handleSetViewMode("grid")}
+              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                viewMode === "grid"
+                  ? "bg-white text-[var(--color-ink)] shadow-xs"
+                  : "text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+              }`}
+              title="Chế độ lưới (Grid view)"
+            >
+              <LayoutGrid size={15} />
+              <span className="hidden md:inline">Thẻ bài</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSetViewMode("list")}
+              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                viewMode === "list"
+                  ? "bg-white text-[var(--color-ink)] shadow-xs"
+                  : "text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+              }`}
+              title="Chế độ danh sách rút gọn (Compact list view)"
+            >
+              <List size={15} />
+              <span className="hidden md:inline">Rút gọn</span>
+            </button>
+          </div>
+        </div>
       </div>
 
+      {/* Subcategories (if available) */}
       {!query.trim() && subcategories.length > 0 && (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {subcategories.map((cat) => (
             <Link
               key={cat.id}
               href={`/docs?category=${cat.slug}`}
-              className="group flex items-center gap-3 rounded-2xl border border-[var(--color-hairline)] bg-white p-4 transition-all hover:border-[var(--color-hairline-strong)] hover:shadow-[var(--shadow-soft)]"
+              className="group flex items-center gap-3 rounded-xl border border-[var(--color-hairline)] bg-white p-3.5 transition-all hover:border-[var(--color-hairline-strong)] hover:shadow-xs"
             >
-              <div className="kb-icon size-10 transition-colors">
-                <Folder size={20} />
+              <div className="kb-icon size-9 transition-colors">
+                <Folder size={18} />
               </div>
               <div className="flex-1 overflow-hidden">
-                <h3 className="truncate font-medium text-[var(--color-ink)]">{cat.name}</h3>
-                <p className="truncate text-xs text-[var(--color-muted)]">Xem tài liệu</p>
+                <h3 className="truncate text-sm font-medium text-[var(--color-ink)]">{cat.name}</h3>
+                <p className="truncate text-xs text-[var(--color-muted)]">Xem danh mục</p>
               </div>
-              <ChevronRight size={16} className="text-[var(--color-muted)]" />
+              <ChevronRight size={15} className="text-[var(--color-muted)] transition-transform group-hover:translate-x-0.5" />
             </Link>
           ))}
         </div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {filtered.length ? filtered.map((post, index) => <PostCard key={post.id} post={post} eager={index === 0} />) : (
-          <div className="col-span-full rounded-2xl border border-[var(--color-hairline)] bg-white p-6 text-sm text-[var(--color-body)]">
-            Không tìm thấy tài liệu phù hợp.
-          </div>
+      {/* Results Meta Info */}
+      <div className="flex items-center justify-between text-xs text-[var(--color-muted)] pt-1">
+        <span>Hiển thị <strong>{filtered.length}</strong> bài viết</span>
+        {query && (
+          <span>Kết quả cho từ khóa &quot;<strong>{query}</strong>&quot;</span>
         )}
       </div>
+
+      {/* Post List Rendering */}
+      {viewMode === "grid" ? (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.length ? (
+            filtered.map((post, index) => <PostCard key={post.id} post={post} eager={index === 0} />)
+          ) : (
+            <div className="col-span-full rounded-2xl border border-[var(--color-hairline)] bg-white p-8 text-center text-sm text-[var(--color-body)]">
+              Không tìm thấy tài liệu nào phù hợp với tìm kiếm.
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-2.5">
+          {filtered.length ? (
+            filtered.map((post) => <PostListItem key={post.id} post={post} />)
+          ) : (
+            <div className="rounded-2xl border border-[var(--color-hairline)] bg-white p-8 text-center text-sm text-[var(--color-body)]">
+              Không tìm thấy tài liệu nào phù hợp với tìm kiếm.
+            </div>
+          )}
+        </div>
+      )}
     </section>
   )
 }

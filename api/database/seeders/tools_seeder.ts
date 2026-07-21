@@ -77,6 +77,16 @@ export default class extends BaseSeeder {
         status: 'PUBLISHED' as const,
         sortOrder: 7,
       },
+      {
+        slug: 'crypto-bcrypt',
+        name: 'Bcrypt Hash Generator (Bcrypt 12)',
+        description: 'Generate and verify Bcrypt password hashes with cost factor 12',
+        category: 'Crypto',
+        urlPath: '/tools/crypto-bcrypt',
+        featured: true,
+        status: 'PUBLISHED' as const,
+        sortOrder: 8,
+      },
 
       // Category: Developer
       {

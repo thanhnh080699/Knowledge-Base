@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Footer } from "@/components/shared/footer"
 import { Header } from "@/components/shared/header"
+import { SkipLink } from "@/components/shared/skip-link"
 import { getMenu, getMenuByLocation, getSettings } from "@/lib/api"
 import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import { ScrollToTop } from "@/components/shared/scroll-to-top"
@@ -41,8 +42,9 @@ export default async function RootLayout({
     ])
 
   return (
-    <html lang="vi">
+    <html lang="vi" data-scroll-behavior="smooth">
       <body>
+        <SkipLink />
         <Header
           siteName={settings.site_name}
           logoUrl={settings.admin_logo}

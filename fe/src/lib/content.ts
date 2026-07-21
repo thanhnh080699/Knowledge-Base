@@ -77,3 +77,31 @@ export function stripFirstImage(content: string): string {
   
   return content
 }
+
+export function estimateReadingTime(content?: string | null, excerpt?: string | null): number {
+  if (!content && !excerpt) return 3
+  const text = stripHtml(content || excerpt || "")
+  const words = text.trim().split(/\s+/).length
+  const minutes = Math.ceil(words / 180)
+  return Math.max(1, minutes)
+}
+
+export function extractFirstImage(content?: string | null): string | null {
+  if (!content) return null
+  const htmlMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i)
+  if (htmlMatch && htmlMatch[1]) return htmlMatch[1]
+  const mdMatch = content.match(/!\[.*?\]\((.*?)\)/)
+  if (mdMatch && mdMatch[1]) return mdMatch[1].split(" ")[0]
+  return null
+}
+
+export function getPostThumbnail(post: { coverImage?: string | null; content?: string | null }): string | null {
+  if (post.coverImage && post.coverImage.trim()) {
+    return absoluteCdnUrl(post.coverImage)
+  }
+  const extracted = extractFirstImage(post.content)
+  if (extracted && extracted.trim()) {
+    return absoluteCdnUrl(extracted)
+  }
+  return null
+}

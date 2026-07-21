@@ -67,6 +67,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
               src={imageSrc}
               alt={`Ảnh dự án ${project.title}`}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               priority
               className="object-cover"
             />

@@ -3,10 +3,16 @@
 import { Check, Copy } from "lucide-react"
 import { useState } from "react"
 
-export function CopyButton({ text }: { text: string }) {
+interface CopyButtonProps {
+  text: string
+  className?: string
+}
+
+export function CopyButton({ text, className }: CopyButtonProps) {
   const [isCopied, setIsCopied] = useState(false)
 
   const copy = async () => {
+    if (!text) return
     await navigator.clipboard.writeText(text)
     setIsCopied(true)
     setTimeout(() => setIsCopied(false), 2000)
@@ -15,10 +21,15 @@ export function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={copy}
-      className="absolute right-2 top-2 z-10 rounded-full border border-[var(--color-surface-dark-elevated)] bg-[var(--color-surface-dark-elevated)] p-1.5 text-white/70 transition-all hover:text-white"
-      title="Copy code"
+      type="button"
+      className={
+        className ||
+        "absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white/90 text-slate-500 shadow-xs backdrop-blur-xs transition-all hover:bg-white hover:text-slate-800 hover:border-slate-300 cursor-pointer"
+      }
+      title="Copy content"
+      aria-label="Copy content"
     >
-      {isCopied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+      {isCopied ? <Check size={14} className="text-emerald-500 font-bold" /> : <Copy size={14} />}
     </button>
   )
 }

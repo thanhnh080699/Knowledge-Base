@@ -8,8 +8,8 @@
   --color-ink: #0c0a09;
   --color-body: #4e4e4e;
   --color-body-strong: #292524;
-  --color-muted: #777169;
-  --color-muted-soft: #a8a29e;
+  --color-muted: #6b655f;
+  --color-muted-soft: #78716c;
   --color-hairline: #e7e5e4;
   --color-hairline-soft: #f0efed;
   --color-hairline-strong: #d6d3d1;
@@ -51,6 +51,13 @@ body {
   letter-spacing: 0.16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessibility: WCAG 2.4.7 Focus Visible Ring */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 a {
