@@ -75,6 +75,8 @@ export default async function ToolsPage() {
               <span className="font-medium text-[var(--color-body)]">Từ khóa phổ biến:</span>
               {[
                 { name: "Bcrypt 12", slug: "crypto-bcrypt" },
+                { name: "JWT Decoder", slug: "jwt-decoder" },
+                { name: "AES Encrypt", slug: "crypto-encrypt-decrypt" },
                 { name: "Base64 Encoder", slug: "base64-encoder-decoder" },
                 { name: "Cron Builder", slug: "cron-builder" },
                 { name: "Unix Timestamp", slug: "timestamp-converter" },

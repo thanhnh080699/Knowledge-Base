@@ -1,18 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { 
-  CalendarClock, 
-  KeyRound, 
-  Code2, 
-  Wrench, 
-  ArrowRight, 
-  Hash, 
-  Type, 
-  RefreshCw, 
-  Binary
-} from "lucide-react"
+import { ArrowRight, Flame } from "lucide-react"
 import type { Tool } from "@/types/tool"
+import { ToolIconRenderer } from "./tool-icon-map"
 
 interface ToolCardProps {
   tool: Tool
@@ -20,49 +11,7 @@ interface ToolCardProps {
   isRecent?: boolean
 }
 
-// Icon mapping per category or slug
-const getToolIcon = (category: string, slug: string) => {
-  if (slug.includes("cron") || slug.includes("timestamp") || slug.includes("date")) return CalendarClock
-  if (slug.includes("bcrypt") || slug.includes("crypto") || slug.includes("password") || slug.includes("jwt") || slug.includes("token")) return KeyRound
-  if (slug.includes("uuid") || slug.includes("hash") || slug.includes("hmac")) return Hash
-  if (slug.includes("json") || slug.includes("sql") || slug.includes("xml") || slug.includes("chmod")) return Code2
-  if (slug.includes("base64") || slug.includes("url") || slug.includes("html")) return Binary
-  if (slug.includes("case") || slug.includes("slug") || slug.includes("lorem")) return Type
-  if (slug.includes("color")) return RefreshCw
-  
-  switch (category) {
-    case "Cron & Date Convert": return CalendarClock
-    case "Crypto": return KeyRound
-    case "Developer": return Code2
-    case "Encoder": return Binary
-    case "Converter": return RefreshCw
-    case "Text": return Type
-    default: return Wrench
-  }
-}
-
-// Pastel badge colors per category
-const getCategoryBadgeClass = (category: string) => {
-  switch (category) {
-    case "Cron & Date Convert":
-      return "bg-amber-50 text-amber-700 border-amber-200/60 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/50"
-    case "Crypto":
-      return "bg-indigo-50 text-indigo-700 border-indigo-200/60 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-900/50"
-    case "Developer":
-      return "bg-cyan-50 text-cyan-700 border-cyan-200/60 dark:bg-cyan-950/40 dark:text-cyan-300 dark:border-cyan-900/50"
-    case "Encoder":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/50"
-    case "Converter":
-      return "bg-purple-50 text-purple-700 border-purple-200/60 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-900/50"
-    default:
-      return "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300"
-  }
-}
-
 export function ToolCard({ tool, onToolClick, isRecent }: ToolCardProps) {
-  const IconComponent = getToolIcon(tool.category, tool.slug)
-  const badgeClass = getCategoryBadgeClass(tool.category)
-
   const handleClick = () => {
     if (onToolClick) {
       onToolClick(tool)
@@ -78,7 +27,7 @@ export function ToolCard({ tool, onToolClick, isRecent }: ToolCardProps) {
       <div>
         <div className="flex items-center justify-between gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-xs border border-[var(--color-hairline)] text-[var(--color-brand)] group-hover:scale-105 transition-transform">
-            <IconComponent size={20} />
+            <ToolIconRenderer slug={tool.slug} category={tool.category} size={20} />
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -87,11 +36,12 @@ export function ToolCard({ tool, onToolClick, isRecent }: ToolCardProps) {
                 Gần đây
               </span>
             )}
-            {tool.featured && (
-              <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-950/60 dark:text-amber-300">
-                Phổ biến
+            {Boolean(tool.featured) ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-950/60 dark:text-amber-300">
+                <Flame size={12} className="fill-amber-500 text-amber-500" />
+                <span>Nổi bật</span>
               </span>
-            )}
+            ) : null}
           </div>
         </div>
 

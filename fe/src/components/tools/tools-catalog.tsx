@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { History, Sparkles, Inbox, Trash2 } from "lucide-react"
+import { History, Inbox, Trash2 } from "lucide-react"
 import type { Tool } from "@/types/tool"
-import { ToolCard } from "./tool-card"
 import { ToolSearchFilter } from "./tool-search-filter"
+import { ToolListItem } from "./tool-list-item"
+import { ToolCategoryColumn } from "./tool-category-column"
 import { HomeReveal } from "@/components/shared/home-motion"
 
 interface ToolsCatalogProps {
@@ -18,12 +19,15 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
   const [selectedCategory, setSelectedCategory] = useState("ALL")
   const [recentSlugs, setRecentSlugs] = useState<string[]>([])
 
-  // Load recently used tool slugs from localStorage on mount
+  // Load recently used tool slugs from localStorage on mount (async to avoid lint warning)
   useEffect(() => {
     try {
       const stored = localStorage.getItem(RECENT_TOOLS_KEY)
       if (stored) {
-        setRecentSlugs(JSON.parse(stored))
+        const parsed = JSON.parse(stored)
+        queueMicrotask(() => {
+          setRecentSlugs(parsed)
+        })
       }
     } catch {
       // Ignore localStorage errors
@@ -74,11 +78,11 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
     })
 
     const preferredOrder = [
-      "Cron & Date Convert",
       "Crypto",
       "Developer",
       "Encoder",
       "Converter",
+      "Cron & Date Convert",
       "Text",
     ]
 
@@ -121,11 +125,11 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
     })
 
     const preferredOrder = [
-      "Cron & Date Convert",
       "Crypto",
       "Developer",
       "Encoder",
       "Converter",
+      "Cron & Date Convert",
       "Text",
     ]
 
@@ -142,7 +146,7 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
   }, [filteredTools])
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {/* Search & Category Filter Header */}
       <ToolSearchFilter
         searchQuery={searchQuery}
@@ -153,31 +157,37 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
         totalTools={normalizedTools.length}
       />
 
-      {/* Recently Used Tools Section */}
+      {/* Recently Used Tools Section (Compact Pill / Row Layout) */}
       {recentTools.length > 0 && !searchQuery && selectedCategory === "ALL" && (
-        <HomeReveal className="rounded-2xl border border-blue-100 bg-blue-50/40 p-6 dark:border-blue-900/40 dark:bg-blue-950/20">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2 font-semibold text-sm text-blue-900 dark:text-blue-200">
-              <History size={18} className="text-blue-600 dark:text-blue-400" />
-              <span>Đã sử dụng gần đây ({recentTools.length})</span>
+        <HomeReveal className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-4 shadow-xs">
+          <div className="mb-3 flex items-center justify-between px-1">
+            <div className="flex items-center gap-2 font-semibold text-xs text-[var(--color-ink)]">
+              <History size={15} className="text-amber-600" />
+              <span>Đã sử dụng gần đây</span>
+              <span className="rounded-full bg-[var(--color-surface-strong)] px-2 py-0.5 font-mono text-[10px] text-[var(--color-muted)]">
+                {recentTools.length}
+              </span>
             </div>
             <button
               onClick={clearRecent}
-              className="flex items-center gap-1 text-xs text-[var(--color-muted)] hover:text-red-600 transition-colors"
+              className="flex items-center gap-1 text-[11px] text-[var(--color-muted)] hover:text-red-600 transition-colors cursor-pointer"
             >
-              <Trash2 size={13} />
+              <Trash2 size={12} />
               <span>Xóa lịch sử</span>
             </button>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
             {recentTools.map((tool) => (
-              <ToolCard
+              <div
                 key={`recent-${tool.id}`}
-                tool={tool}
-                onToolClick={handleToolClick}
-                isRecent={true}
-              />
+                className="rounded-xl border border-[var(--color-hairline)] bg-white p-0.5 shadow-2xs hover:border-[var(--color-brand)]/40 hover:shadow-xs transition-all"
+              >
+                <ToolListItem
+                  tool={tool}
+                  onToolClick={handleToolClick}
+                />
+              </div>
             ))}
           </div>
         </HomeReveal>
@@ -198,52 +208,44 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
               setSearchQuery("")
               setSelectedCategory("ALL")
             }}
-            className="mt-5 rounded-xl bg-[var(--color-brand)] px-4 py-2 text-xs font-semibold text-white shadow-sm hover:opacity-95 transition-opacity"
+            className="mt-5 rounded-xl bg-[var(--color-brand)] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:opacity-95 transition-opacity cursor-pointer"
           >
             Xóa bộ lọc &amp; tìm kiếm
           </button>
         </div>
       ) : searchQuery || selectedCategory !== "ALL" ? (
-        /* Flat Grid when filtering or searching */
+        /* Filtered/Search View: Clean compact multi-column grid */
         <div>
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex items-center justify-between px-1">
             <p className="text-sm font-medium text-[var(--color-muted)]">
               Tìm thấy <span className="font-bold text-[var(--color-ink)]">{filteredTools.length}</span> công cụ
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filteredTools.map((tool) => (
-              <ToolCard
+              <div
                 key={tool.id}
-                tool={tool}
-                onToolClick={handleToolClick}
-              />
+                className="rounded-xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-1 shadow-2xs hover:border-[var(--color-brand)]/40 transition-all"
+              >
+                <ToolListItem
+                  tool={tool}
+                  onToolClick={handleToolClick}
+                  showCategoryBadge={selectedCategory === "ALL"}
+                />
+              </div>
             ))}
           </div>
         </div>
       ) : (
-        /* Categorized Group Grid by default */
-        <div className="space-y-12">
+        /* Categorized Column Grid (Matching sample image style) */
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 items-start">
           {toolsByCategory.map(({ category, tools: categoryTools }, groupIndex) => (
             <HomeReveal key={category} delay={Math.min(groupIndex * 0.04, 0.16)}>
-              <div>
-                <div className="mb-4 flex items-center gap-2">
-                  <h2 className="kb-display-sm">{category}</h2>
-                  <span className="rounded-full bg-[var(--color-surface-strong)] px-2 py-0.5 text-xs font-semibold text-[var(--color-muted)]">
-                    {categoryTools.length}
-                  </span>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {categoryTools.map((tool) => (
-                    <ToolCard
-                      key={tool.id}
-                      tool={tool}
-                      onToolClick={handleToolClick}
-                    />
-                  ))}
-                </div>
-              </div>
+              <ToolCategoryColumn
+                category={category}
+                tools={categoryTools}
+                onToolClick={handleToolClick}
+              />
             </HomeReveal>
           ))}
         </div>
@@ -251,3 +253,4 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
     </div>
   )
 }
+

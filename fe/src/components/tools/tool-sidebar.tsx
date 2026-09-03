@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import { useState } from "react"
 import type { Tool } from "@/types/tool"
+import { ToolIconRenderer, CategoryIconRenderer } from "./tool-icon-map"
 
 interface Props {
   tools: Tool[]
@@ -36,7 +37,7 @@ export function ToolSidebar({ tools, currentSlug: propSlug }: Props) {
       }
     })
     .sort((a, b) => {
-      const order = ["Cron & Date Convert", "Crypto", "Developer", "Encoder", "Converter", "Text"]
+      const order = ["Crypto", "Developer", "Encoder", "Converter", "Cron & Date Convert", "Text"]
       const indexA = order.indexOf(a.category)
       const indexB = order.indexOf(b.category)
       if (indexA !== -1 && indexB !== -1) return indexA - indexB
@@ -60,44 +61,75 @@ export function ToolSidebar({ tools, currentSlug: propSlug }: Props) {
   }
 
   return (
-    <aside className="w-full flex-shrink-0 lg:w-64">
-      <div className="sticky top-20 rounded-2xl border border-[var(--color-hairline)] bg-white">
-        <div className="border-b border-[var(--color-hairline)] p-4">
-          <h2 className="font-medium text-[var(--color-ink)]">Tools</h2>
+    <aside className="w-full flex-shrink-0 lg:w-72">
+      <div className="sticky top-20 rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface)] shadow-xs">
+        <div className="border-b border-[var(--color-hairline)] px-4 py-3.5 flex items-center justify-between">
+          <h2 className="font-semibold text-sm text-[var(--color-ink)]">Danh mục công cụ</h2>
+          <span className="text-[11px] text-[var(--color-muted)] font-mono">{tools.length} tools</span>
         </div>
-        <nav className="p-2">
-          {toolsByCategory.map(({ category, tools: categoryTools }) => (
-            <div key={category} className="mb-2">
-              <button
-                onClick={() => toggleCategory(category)}
-                className="flex w-full items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[var(--color-body)] hover:bg-[var(--color-surface-soft)]"
-              >
-                {expandedCategories.has(category) ? (
-                  <ChevronDown size={16} />
-                ) : (
-                  <ChevronRight size={16} />
+        <nav className="p-2.5 space-y-2 max-h-[calc(100vh-140px)] overflow-y-auto">
+          {toolsByCategory.map(({ category, tools: categoryTools }) => {
+            const isExpanded = expandedCategories.has(category)
+            const hasActiveTool = categoryTools.some(t => t.slug === currentSlug)
+
+            return (
+              <div key={category} className="space-y-1">
+                <button
+                  onClick={() => toggleCategory(category)}
+                  className="flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-semibold text-[var(--color-body)] hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-ink)] transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    {isExpanded ? (
+                      <ChevronDown size={14} className="text-[var(--color-muted)]" />
+                    ) : (
+                      <ChevronRight size={14} className="text-[var(--color-muted)]" />
+                    )}
+                    <CategoryIconRenderer
+                      category={category}
+                      size={14}
+                      className={hasActiveTool ? "text-[var(--color-brand)]" : "text-slate-400"}
+                    />
+                    <span className={hasActiveTool ? "font-bold text-[var(--color-ink)]" : ""}>{category}</span>
+                  </div>
+                  <span className="rounded-full bg-[var(--color-surface-soft)] px-1.5 py-0.2 text-[10px] font-mono text-[var(--color-muted)]">
+                    {categoryTools.length}
+                  </span>
+                </button>
+
+                {isExpanded && (
+                  <div className="ml-2 pl-2 border-l border-[var(--color-hairline)] space-y-0.5 mt-1">
+                    {categoryTools.map((tool) => {
+                      const isActive = tool.slug === currentSlug
+
+                      return (
+                        <Link
+                          key={tool.id}
+                          href={`/tools/${tool.slug}`}
+                          className={`group flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-all duration-150 ${
+                            isActive
+                              ? "bg-emerald-500/15 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 font-medium"
+                              : "text-[var(--color-body)] hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-brand)]"
+                          }`}
+                        >
+                          <ToolIconRenderer
+                            slug={tool.slug}
+                            category={tool.category}
+                            size={15}
+                            className={`shrink-0 transition-colors ${
+                              isActive
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-slate-400 group-hover:text-[var(--color-brand)]"
+                            }`}
+                          />
+                          <span className="truncate">{tool.name}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
                 )}
-                {category}
-              </button>
-              {expandedCategories.has(category) && (
-                <div className="ml-4 mt-1 space-y-1">
-                  {categoryTools.map((tool) => (
-                    <Link
-                      key={tool.id}
-                      href={`/tools/${tool.slug}`}
-                      className={`block rounded-md px-3 py-2 text-sm transition-colors ${
-                        tool.slug === currentSlug
-                          ? "bg-[var(--color-surface-strong)] text-[var(--color-ink)] font-medium"
-                          : "text-[var(--color-body)] hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-ink)]"
-                      }`}
-                    >
-                      {tool.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+              </div>
+            )
+          })}
         </nav>
       </div>
     </aside>
