@@ -113,6 +113,11 @@ thanhnh.id.vn/
 - **Two-Step Upload Flow**: Frontend thực hiện upload file lên Media API trước → nhận về URL → sau đó mới gửi URL này kèm theo payload nghiệp vụ đến business API.
 - **Image Display**: Luôn dùng helper `absoluteCdnUrl` (trong CMS) hoặc logic tương đương để hiển thị ảnh. Helper này chịu trách nhiệm gắn thêm CDN URL nếu đường dẫn trong DB là tương đối.
 - **CDN Folder**: Phân loại ảnh theo module tương ứng (ví dụ: `Categories`, `Posts`, `Settings`) khi upload để quản lý tập trung.
+- **Inline Content Images & Automation Rule (BẮT BUỘC KHUÔN MẪU CHO AI / SCHEDULER TASK)**:
+  - Khi chèn ảnh trong nội dung bài viết HTML (`content`), thuộc tính `src` của thẻ `<img>` **BẮT BUỘC PHẢI DÙNG URL CDN TUYỆT ĐỐI** dạng: `src="https://cdn.thanhnh.id.vn/medias/<path>"` (ví dụ: `src="https://cdn.thanhnh.id.vn/medias/blog/eazydocs/image-name.jpg"`).
+  - TUYỆT ĐỐI KHÔNG dùng đường dẫn tương đối (như `src="blog/eazydocs/..."` hoặc `src="/medias/..."`) bên trong thuộc tính `src` của thẻ `<img>` trong HTML content, vì điều này khiến trình soạn thảo TinyMCE trong CMS (`cms.thanhnh.id.vn`) tự động nối URI thành `https://cms.thanhnh.id.vn/posts/...` gây ra lỗi GET Failed 404 (Not Found).
+  - Đối với trường `coverImage` (ảnh bìa), tiếp tục lưu dạng path tương đối trên CDN (ví dụ: `blog/eazydocs/cover.jpg`) như quy định API.
+
 
 ### API (AdonisJS v6)
 - **MariaDB Local**: host: `192.168.11.254`, user: `thanhnh.id.vn`, pass: `thanhnh.id.vn`, db: `thanhnh.id.vn`.

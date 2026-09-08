@@ -37,7 +37,7 @@ export function ToolSidebar({ tools, currentSlug: propSlug }: Props) {
       }
     })
     .sort((a, b) => {
-      const order = ["Crypto", "Developer", "Encoder", "Converter", "Cron & Date Convert", "Text"]
+      const order = ["Network", "Developer", "Crypto", "Encoder", "Converter", "Cron & Date Convert", "Text"]
       const indexA = order.indexOf(a.category)
       const indexB = order.indexOf(b.category)
       if (indexA !== -1 && indexB !== -1) return indexA - indexB

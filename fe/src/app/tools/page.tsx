@@ -75,12 +75,13 @@ export default async function ToolsPage() {
               <span className="font-medium text-[var(--color-body)]">Từ khóa phổ biến:</span>
               {[
                 { name: "Bcrypt 12", slug: "crypto-bcrypt" },
+                { name: "Docker Compose", slug: "docker-run-to-docker-compose" },
+                { name: "Subnet Calculator", slug: "ipv4-subnet-calculator" },
                 { name: "JWT Decoder", slug: "jwt-decoder" },
-                { name: "AES Encrypt", slug: "crypto-encrypt-decrypt" },
+                { name: "Regex Tester", slug: "regex-tester" },
                 { name: "Base64 Encoder", slug: "base64-encoder-decoder" },
                 { name: "Cron Builder", slug: "cron-builder" },
                 { name: "Unix Timestamp", slug: "timestamp-converter" },
-                { name: "UUID Generator", slug: "uuid-generator" },
                 { name: "JSON Formatter", slug: "json-formatter" },
                 { name: "SQL Formatter", slug: "sql-formatter" }
               ].map((tag) => (

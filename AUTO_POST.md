@@ -132,6 +132,10 @@ Chỉ gửi URL/path ảnh đã có. Không upload file trực tiếp qua endpoi
 
 Automation có thể upload ảnh vào CDN qua API token trước, sau đó dùng `path` trả về cho `coverImage` hoặc chèn vào `content`.
 
+**QUY TẮC ĐƯỜNG DẪN ẢNH (BẮT BUỘC):**
+- `coverImage`: Dùng `path` tương đối trả về từ CDN API. Ví dụ: `"blog/eazydocs/cover.jpg"`.
+- `content` (Thẻ `<img>` trong HTML): **BẮT BUỘC DÙNG URL CDN TUYỆT ĐỐI** dạng `src="https://cdn.thanhnh.id.vn/medias/blog/eazydocs/image.jpg"`. TUYỆT ĐỐI KHÔNG dùng relative path trong HTML content để tránh lỗi 404 trên CMS TinyMCE editor.
+
 Endpoint:
 
 ```http

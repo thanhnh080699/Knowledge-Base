@@ -27,6 +27,19 @@ import {
   CalendarClock,
   Wrench,
   RefreshCw,
+  Network,
+  Container,
+  Calculator,
+  ScanText,
+  BookOpen,
+  Radio,
+  GitBranch,
+  Search,
+  Cpu,
+  Maximize2,
+  Globe,
+  FileDiff,
+  FileSpreadsheet,
 } from "lucide-react"
 
 export function ToolIconRenderer({
@@ -65,6 +78,25 @@ export function CategoryIconRenderer({
  * Returns a specific Lucide icon for a given tool based on its slug and category.
  */
 export function getToolIcon(slug: string, category?: string): LucideIcon {
+  // DevOps & Network Tools
+  if (slug === "docker-run-to-docker-compose") return Container
+  if (slug === "ipv4-subnet-calculator") return Calculator
+  if (slug === "ipv4-address-converter") return Binary
+  if (slug === "ipv4-range-expander") return Maximize2
+  if (slug === "mac-address-lookup") return Search
+  if (slug === "mac-address-generator") return Cpu
+  if (slug === "random-port-generator") return Radio
+  if (slug === "git-memo") return GitBranch
+  if (slug === "regex-tester") return ScanText
+  if (slug === "regex-memo") return BookOpen
+
+  // Web & Formatters
+  if (slug === "url-parser") return Globe
+  if (slug === "user-agent-parser") return Terminal
+  if (slug === "http-status-codes") return Code2
+  if (slug === "json-diff" || slug === "text-diff") return FileDiff
+  if (slug === "json-to-csv") return FileSpreadsheet
+
   // Specific tool slug matching (matched against sample image & functionality)
   if (slug === "crypto-token-generator" || slug === "token-generator") return Shuffle
   if (slug === "crypto-hash-text" || slug === "hash-generator") return EyeOff
@@ -100,6 +132,8 @@ export function getToolIcon(slug: string, category?: string): LucideIcon {
 
   // Fallback by category
   switch (category) {
+    case "Network":
+      return Network
     case "Crypto":
       return KeyRound
     case "Developer":
@@ -122,6 +156,8 @@ export function getToolIcon(slug: string, category?: string): LucideIcon {
  */
 export function getCategoryIcon(category: string): LucideIcon {
   switch (category) {
+    case "Network":
+      return Network
     case "Crypto":
       return KeyRound
     case "Developer":

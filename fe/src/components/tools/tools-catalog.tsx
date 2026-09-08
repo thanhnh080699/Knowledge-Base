@@ -78,8 +78,9 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
     })
 
     const preferredOrder = [
-      "Crypto",
+      "Network",
       "Developer",
+      "Crypto",
       "Encoder",
       "Converter",
       "Cron & Date Convert",
@@ -125,8 +126,9 @@ export function ToolsCatalog({ initialTools }: ToolsCatalogProps) {
     })
 
     const preferredOrder = [
-      "Crypto",
+      "Network",
       "Developer",
+      "Crypto",
       "Encoder",
       "Converter",
       "Cron & Date Convert",
