@@ -5,6 +5,7 @@ import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/providers/toast-provider";
+import { absoluteCdnUrl } from "@/lib/utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,10 +17,32 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "CMS - thanhnh.id.vn",
-  description: "Content Management System",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  let icon: string | undefined;
+
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333/api";
+    const response = await fetch(`${apiUrl.replace(/\/$/, "")}/settings/public`, {
+      next: { revalidate: 60 },
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (response.ok) {
+      const { data } = (await response.json()) as {
+        data?: { admin_favicon?: string | null; admin_logo?: string | null };
+      };
+      icon = absoluteCdnUrl(data?.admin_favicon || data?.admin_logo) || undefined;
+    }
+  } catch {
+    // Keep the CMS accessible when public settings are temporarily unavailable.
+  }
+
+  return {
+    title: "CMS - thanhnh.id.vn",
+    description: "Content Management System",
+    icons: icon ? { icon } : undefined,
+  };
+}
 
 const themeScript = `
 (() => {
