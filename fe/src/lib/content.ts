@@ -1,3 +1,4 @@
+import { decodeHTML, escapeAttribute } from "entities"
 import type { TocItem } from "@/components/shared/table-of-contents"
 import { absoluteCdnUrl } from "./cdn-loader"
 
@@ -17,17 +18,9 @@ export function hasHtmlContent(content: string) {
 
 export function buildTocFromContent(content: string): TocItem[] {
   const items: TocItem[] = []
-  const htmlHeadingRegex = /<h([2-3])[^>]*>([\s\S]*?)<\/h\1>/gi
   const markdownHeadingRegex = /^#{2,3}\s+(.+)$/gm
 
-  if (hasHtmlContent(content)) {
-    for (const match of content.matchAll(htmlHeadingRegex)) {
-      const level = Number(match[1])
-      const text = stripHtml(match[2]).trim()
-      if (text) items.push({ id: slugifyHeading(text), text, level })
-    }
-    return items
-  }
+  if (hasHtmlContent(content)) return prepareHtmlHeadings(content).items
 
   for (const match of content.matchAll(markdownHeadingRegex)) {
     const raw = match[0]
@@ -38,16 +31,37 @@ export function buildTocFromContent(content: string): TocItem[] {
   return items
 }
 
-export function normalizeHtmlContent(content: string) {
-  return content
+// Share heading text and IDs between the rendered article and its navigation.
+function prepareHtmlHeadings(content: string) {
+  const items: TocItem[] = []
+  const usedIds = new Set<string>()
+  const idPattern = /\sid\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i
+  for (const match of content.matchAll(/\sid\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
+    usedIds.add(decodeHTML(match[1] ?? match[2] ?? match[3]))
+  }
+  const html = content
     .replace(/<h1(\s[^>]*)?>/gi, "<h2$1>")
     .replace(/<\/h1>/gi, "</h2>")
     .replace(/<h([2-3])([^>]*)>([\s\S]*?)<\/h\1>/gi, (match, level, attrs, inner) => {
-      if (/\sid=/i.test(attrs)) return match
-      const text = stripHtml(inner).trim()
-      const id = slugifyHeading(text)
-      return `<h${level}${attrs} id="${id}">${inner}</h${level}>`
+      const text = decodeHTML(stripHtml(inner)).trim()
+      if (!text) return match
+      const existingId = attrs.match(idPattern)
+      let id = existingId ? decodeHTML(existingId[1] ?? existingId[2] ?? existingId[3]) : ""
+      if (!existingId) {
+        const base = slugifyHeading(text) || "section"
+        id = base
+        let suffix = 2
+        while (usedIds.has(id)) id = `${base}-${suffix++}`
+        usedIds.add(id)
+      }
+      items.push({ id, text, level: Number(level) })
+      return existingId ? match : `<h${level}${attrs} id="${escapeAttribute(id)}">${inner}</h${level}>`
     })
+  return { html, items }
+}
+
+export function normalizeHtmlContent(content: string) {
+  return prepareHtmlHeadings(content).html
     .replace(/<img[^>]+src="([^">]+)"[^>]*>/gi, (match, src) => {
       if (src.startsWith("http")) return match
       return match.replace(src, absoluteCdnUrl(src))

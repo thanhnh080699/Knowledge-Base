@@ -23,20 +23,20 @@ function CategoryItem({ category, level, activeCategory }: { category: Category;
         )}
         style={{ paddingLeft: `${(level + 1) * 0.75}rem` }}
       >
-        <div className="flex flex-1 items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
           {hasChildren ? (
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="flex size-5 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-surface-strong)]"
+              className="flex size-5 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-surface-strong)]"
               aria-label="Toggle category"
             >
               {isOpen ? <ChevronDown size={14} className="text-slate-500" /> : <ChevronRight size={14} className="text-slate-500" />}
             </button>
           ) : (
-            <span className="w-5" />
+            <span className="w-5 shrink-0" />
           )}
-          {level === 0 ? <Folder size={16} className={isActive ? "text-[var(--color-ink)]" : "text-[var(--color-muted)]"} /> : <BookOpen size={14} className={isActive ? "text-[var(--color-ink)]" : "text-[var(--color-muted)]"} />}
-          <Link href={`/docs?category=${category.slug}`} className="flex-1 truncate hover:text-[var(--color-ink)]">
+          {level === 0 ? <Folder size={16} className={isActive ? "shrink-0 text-[var(--color-ink)]" : "shrink-0 text-[var(--color-muted)]"} /> : <BookOpen size={14} className={isActive ? "shrink-0 text-[var(--color-ink)]" : "shrink-0 text-[var(--color-muted)]"} />}
+          <Link href={`/docs?category=${category.slug}`} title={category.name} className="min-w-0 flex-1 truncate hover:text-[var(--color-ink)]">
             {category.name}
           </Link>
         </div>
