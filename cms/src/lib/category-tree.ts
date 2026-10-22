@@ -36,9 +36,19 @@ export function filterCategoryTree(nodes: CategoryNode[], query: string): Catego
   })
 }
 
-export function flattenCategoryTree(nodes: CategoryNode[], collapsed: ReadonlySet<number> = new Set(), level = 0): Array<{ item: CategoryNode; level: number }> {
-  return nodes.flatMap(item => [
-    { item, level },
-    ...(collapsed.has(item.id) ? [] : flattenCategoryTree(item.children, collapsed, level + 1)),
-  ])
+export interface CategoryTreeRow {
+  item: CategoryNode
+  level: number
+  isLast: boolean
+  ancestorContinues: boolean[]
+}
+
+export function flattenCategoryTree(nodes: CategoryNode[], collapsed: ReadonlySet<number> = new Set(), level = 0, ancestorContinues: boolean[] = []): CategoryTreeRow[] {
+  return nodes.flatMap((item, index) => {
+    const isLast = index === nodes.length - 1
+    return [
+      { item, level, isLast, ancestorContinues },
+      ...(collapsed.has(item.id) ? [] : flattenCategoryTree(item.children, collapsed, level + 1, level ? [...ancestorContinues, !isLast] : [])),
+    ]
+  })
 }

@@ -27,3 +27,13 @@ test('orphaned nodes, self-references and cycles remain reachable without recurs
   const tree = buildCategoryTree([category(1, 'Missing', 99), category(2, 'Self', 2), category(3, 'A', 4), category(4, 'B', 3)])
   assert.deepEqual(flattenCategoryTree(tree).map(row => row.item.id).sort(), [1, 2, 3, 4])
 })
+test('branch guides continue past nested descendants and stop at the last sibling', () => {
+  const tree = buildCategoryTree([...records, category(6, 'Debian', 1)])
+  const rows = flattenCategoryTree(tree)
+  assert.deepEqual(rows.map(({ item, isLast, ancestorContinues }) => [item.id, isLast, ancestorContinues]), [
+    [1, false, []], [2, false, []], [3, true, [true]], [6, true, []], [4, true, []], [5, true, []],
+  ])
+  assert.deepEqual(flattenCategoryTree(filterCategoryTree(tree, 'Ubuntu')).map(row => [row.item.id, row.isLast, row.ancestorContinues]), [
+    [1, true, []], [2, true, []], [3, true, [false]],
+  ])
+})

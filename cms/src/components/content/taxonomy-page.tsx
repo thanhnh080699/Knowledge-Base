@@ -95,7 +95,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
   const filteredTree = useMemo(() => filterCategoryTree(treeItems, query), [treeItems, query])
   const pageRoots = paginateItems(filteredTree, list.page, list.pageSize)
   const categoryRows = flattenCategoryTree(pageRoots, query.trim() ? new Set() : collapsedIds)
-  const rows = kind === 'category' ? categoryRows : tagItems.map(item => ({ item, level: 0 }))
+  const rows = kind === 'category' ? categoryRows : tagItems.map(item => ({ item, level: 0, isLast: true, ancestorContinues: [] as boolean[] }))
   const items = rows.map(row => row.item)
   const total = kind === 'category' ? filteredTree.length : allItems.length
 
@@ -287,7 +287,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                     </TableCell>
                   </TableRow>
                 ) : (
-                  rows.map(({ item, level }) => (
+                  rows.map(({ item, level, isLast, ancestorContinues }) => (
                     <TableRow key={item.id} className="border-b border-[var(--app-border)] transition-colors hover:bg-[var(--app-surface-hover)]">
                       <TableCell className="px-4">
                         <Checkbox checked={selectedIds.includes(item.id)} onChange={() => toggleOne(item.id)} />
@@ -295,14 +295,30 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                       <TableCell className="px-4 font-mono text-xs font-medium text-[var(--foreground)]">
                         {formatDisplayId(item.id)}
                       </TableCell>
-                      <TableCell>
-                        <div className="flex min-w-[220px] items-center gap-2" style={kind === 'category' ? { paddingInlineStart: `${level * 24}px` } : undefined}>
+                      <TableCell className="relative">
+                        {kind === 'category' ? (
+                          <span aria-hidden="true" className="pointer-events-none absolute inset-0 text-[var(--app-muted)] opacity-50">
+                            {ancestorContinues.map((continues, depth) => continues ? (
+                              <span key={depth} className="absolute inset-y-0 border-s" style={{ insetInlineStart: `${32 + depth * 24}px` }} />
+                            ) : null)}
+                            {level > 0 ? (
+                              <>
+                                <span className="absolute top-0 border-s" style={{ insetInlineStart: `${32 + (level - 1) * 24}px`, height: isLast ? '50%' : '100%' }} />
+                                <span className="absolute top-1/2 border-t" style={{ insetInlineStart: `${32 + (level - 1) * 24}px`, width: isCategory(item) && item.children?.length ? 24 : 64 }} />
+                              </>
+                            ) : null}
+                            {isCategory(item) && item.children?.length && (!!query.trim() || !collapsedIds.has(item.id)) ? (
+                              <span className="absolute bottom-0 border-s" style={{ insetInlineStart: `${32 + level * 24}px`, height: 'calc(50% - 16px)' }} />
+                            ) : null}
+                          </span>
+                        ) : null}
+                        <div className="relative flex min-w-[220px] items-center gap-2" style={kind === 'category' ? { paddingInlineStart: `${level * 24}px` } : undefined}>
                           {kind === 'category' ? (
                             isCategory(item) && item.children?.length ? (
                               <Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0" aria-label={`${collapsedIds.has(item.id) && !query.trim() ? 'Mở' : 'Thu gọn'} nhánh ${item.name}`} aria-expanded={!!query.trim() || !collapsedIds.has(item.id)} disabled={!!query.trim()} onClick={() => toggleBranch(item.id)}>
                                 {collapsedIds.has(item.id) && !query.trim() ? <ChevronRight className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                               </Button>
-                            ) : <span className="w-8 shrink-0 text-center text-[var(--app-muted)]" aria-hidden="true">{level ? '└' : ''}</span>
+                            ) : <span className="w-8 shrink-0" aria-hidden="true" />
                           ) : null}
                           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--app-accent-soft-bg)] text-[var(--app-accent-soft-fg)]">
                             <Icon className="h-4 w-4" />
