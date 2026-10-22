@@ -8,9 +8,9 @@ Reuse the existing components before adding new ones. Keep entity-specific field
 - `components/ui/select.tsx`, `input.tsx`, `textarea.tsx`, `checkbox.tsx`, `label.tsx`: form controls. Retain `w-auto` for compact filter selects. Native selects retain keyboard behavior; the shared CSS handles arrow spacing and light/dark colors.
 - `components/layout/sidebar.tsx`: one navigation implementation for the desktop sidebar and the mobile navigation modal. Keep mobile navigation separate from the saved desktop collapse preference.
 - `components/ui/modal.tsx`, `button.tsx`, `tag.tsx`, `card.tsx`: dialogs, actions, status indicators and containers.
-- `components/content/taxonomy-page.tsx`: Categories and Tags share one listing. Category list defaults to ID descending; hierarchy and drag ordering belong to the existing reorder modal and do not change public navigation ordering.
+- `components/content/taxonomy-page.tsx`: Categories and Tags share one listing. Categories display an expandable parent–child tree; paginate root branches so descendants never split across pages. Search retains ancestors and expands matching paths. Tags retain ID descending list order. Both use the shared table and pagination; drag ordering remains in the existing reorder modal.
 
-Paginated record endpoints (Posts, Pages, Projects, Comments, Q&A) receive `sort=id` explicitly. The API allowlists this opt-in and orders before pagination; public sort defaults are preserved. Full-array endpoints (Users, Roles, Permissions, Categories, Tags, Contacts, Tokens, LLM providers, Menus) use `useClientList`.
+Paginated record endpoints (Posts, Pages, Projects, Comments, Q&A) receive `sort=id` explicitly. The API allowlists this opt-in and orders before pagination; public sort defaults are preserved. Full-array endpoints (Users, Roles, Permissions, Tags, Contacts, Tokens, LLM providers, Menus) use `useClientList`.
 
 Media objects have paths rather than numeric IDs. Their existing default is modification time descending. The media page uses offset pagination; search filters the complete folder metadata before slicing because the CDN has no search endpoint. The existing media picker can keep progressive loading through the same fetch helper.
 

@@ -1,5 +1,7 @@
 'use client'
 
+import { buildCategoryTree, filterCategoryTree, flattenCategoryTree } from '@/lib/category-tree'
+import { paginateItems } from '@/lib/list-state'
 import { useClientList, useListState } from '@/hooks/use-list-state'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
@@ -29,7 +31,7 @@ import type {
   UpdateCategoryPayload,
   UpdateTagPayload,
 } from '@/types/taxonomy'
-import { FolderOpen, Pencil, Plus, RotateCcw, Search, TagIcon, Trash2 } from 'lucide-react'
+import { ChevronDown, ChevronRight, FolderOpen, Pencil, Plus, RotateCcw, Search, TagIcon, Trash2 } from 'lucide-react'
 import { absoluteCdnUrl } from '@/lib/utils'
 
 type TaxonomyKind = 'category' | 'tag'
@@ -63,27 +65,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
   const [isReorderOpen, setIsReorderOpen] = useState(false)
 
-  const buildTree = (items: Category[]): (Category & { children: Category[] })[] => {
-    const itemMap = new Map<number, Category & { children: Category[] }>()
-    const roots: (Category & { children: Category[] })[] = []
-
-    // First pass: create map of all items
-    items.forEach((item) => {
-      itemMap.set(item.id, { ...item, children: [] })
-    })
-
-    // Second pass: build tree
-    items.forEach((item) => {
-      const node = itemMap.get(item.id)!
-      if (item.parentId && itemMap.has(item.parentId)) {
-        itemMap.get(item.parentId)!.children.push(node)
-      } else {
-        roots.push(node)
-      }
-    })
-
-    return roots
-  }
+  const [collapsedIds, setCollapsedIds] = useState<Set<number>>(new Set())
 
   const list = useListState({ kind, query })
   const { selectedIds, setSelectedIds } = list
@@ -95,7 +77,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
     [query]
   )
 
-  const categoriesQuery = useCategories(filters, kind === 'category')
+  const categoriesQuery = useCategories({}, kind === 'category')
   const tagsQuery = useTags(filters, kind === 'tag')
   const createCategory = useCreateCategory()
   const updateCategory = useUpdateCategory()
@@ -105,23 +87,34 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
   const updateTag = useUpdateTag()
   const deleteTag = useDeleteTag()
 
-  const allItems: TaxonomyItem[] = kind === 'category' ? categoriesQuery.data ?? [] : tagsQuery.data ?? []
-  const items = useClientList(allItems, list)
-  const total = allItems.length
+  const allItems: TaxonomyItem[] = useMemo(() => kind === 'category' ? categoriesQuery.data ?? [] : tagsQuery.data ?? [], [kind, categoriesQuery.data, tagsQuery.data])
+  const tagItems = useClientList(allItems, list)
   const isLoading = kind === 'category' ? categoriesQuery.isLoading : tagsQuery.isLoading
+  const isFetching = kind === 'category' ? categoriesQuery.isFetching : tagsQuery.isFetching
+  const treeItems = useMemo(() => kind === 'category' ? buildCategoryTree(allItems as Category[]) : [], [allItems, kind])
+  const filteredTree = useMemo(() => filterCategoryTree(treeItems, query), [treeItems, query])
+  const pageRoots = paginateItems(filteredTree, list.page, list.pageSize)
+  const categoryRows = flattenCategoryTree(pageRoots, query.trim() ? new Set() : collapsedIds)
+  const rows = kind === 'category' ? categoryRows : tagItems.map(item => ({ item, level: 0 }))
+  const items = rows.map(row => row.item)
+  const total = kind === 'category' ? filteredTree.length : allItems.length
 
-  const treeItems = useMemo(() => {
-    if (kind !== 'category' || query.trim()) return null
-    return buildTree(allItems as Category[])
-  }, [allItems, kind, query])
-
+  function toggleBranch(id: number) {
+    setSelectedIds([])
+    setCollapsedIds(previous => {
+      const next = new Set(previous)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   const allSelected = items.length > 0 && selectedIds.length === items.length
   const partiallySelected = selectedIds.length > 0 && !allSelected
   const title = kind === 'category' ? 'Categories' : 'Tags'
   const description =
     kind === 'category'
-      ? 'Manage content categories for documentation and posts.'
+      ? 'Duyệt danh mục theo cây cha–con. Mỗi trang giữ trọn một nhóm nhánh gốc.'
       : 'Manage quick labels used to classify posts.'
   const Icon = kind === 'category' ? FolderOpen : TagIcon
   const useModalForm = !usePageForm
@@ -253,15 +246,22 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                 className="pl-9"
               />
             </div>
+            {kind === 'category' ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-sm text-[var(--app-muted)]">{allItems.length} danh mục · {filteredTree.length} nhánh gốc</span>
+                <Button type="button" variant="outline" size="sm" disabled={!!query.trim()} onClick={() => { setSelectedIds([]); setCollapsedIds(new Set()) }}>Mở tất cả</Button>
+                <Button type="button" variant="outline" size="sm" disabled={!!query.trim()} onClick={() => { setSelectedIds([]); setCollapsedIds(new Set(allItems.map(item => item.id))) }}>Thu gọn tất cả</Button>
+              </div>
+            ) : null}
           </div>
 
-          <Table pagination={{ list, total, loading: isLoading }} error={kind === 'category' ? categoriesQuery.error : tagsQuery.error} className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching, label: kind === 'category' ? 'nhánh gốc' : 'kết quả' }} error={kind === 'category' ? categoriesQuery.error : tagsQuery.error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[50px] px-4">
                     <Checkbox checked={allSelected} indeterminate={partiallySelected} onChange={toggleAll} />
                   </TableHead>
-                  <TableHead className="w-[120px] px-4" aria-sort="descending">ID ↓</TableHead>
+                  <TableHead className="w-[90px] px-4" aria-sort={kind === 'tag' ? 'descending' : undefined}>{kind === 'tag' ? 'ID ↓' : 'ID'}</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Slug</TableHead>
                   {kind === 'category' ? <TableHead>Description</TableHead> : null}
@@ -287,7 +287,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                     </TableCell>
                   </TableRow>
                 ) : (
-                  items.map((item) => (
+                  rows.map(({ item, level }) => (
                     <TableRow key={item.id} className="border-b border-[var(--app-border)] transition-colors hover:bg-[var(--app-surface-hover)]">
                       <TableCell className="px-4">
                         <Checkbox checked={selectedIds.includes(item.id)} onChange={() => toggleOne(item.id)} />
@@ -296,8 +296,15 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                         {formatDisplayId(item.id)}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--app-accent-soft-bg)] text-[var(--app-accent-soft-fg)]">
+                        <div className="flex min-w-[220px] items-center gap-2" style={kind === 'category' ? { paddingInlineStart: `${level * 24}px` } : undefined}>
+                          {kind === 'category' ? (
+                            isCategory(item) && item.children?.length ? (
+                              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0" aria-label={`${collapsedIds.has(item.id) && !query.trim() ? 'Mở' : 'Thu gọn'} nhánh ${item.name}`} aria-expanded={!!query.trim() || !collapsedIds.has(item.id)} disabled={!!query.trim()} onClick={() => toggleBranch(item.id)}>
+                                {collapsedIds.has(item.id) && !query.trim() ? <ChevronRight className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                              </Button>
+                            ) : <span className="w-8 shrink-0 text-center text-[var(--app-muted)]" aria-hidden="true">{level ? '└' : ''}</span>
+                          ) : null}
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--app-accent-soft-bg)] text-[var(--app-accent-soft-fg)]">
                             <Icon className="h-4 w-4" />
                           </div>
                           <span className="font-medium text-[var(--app-muted-strong)]">{item.name}</span>
@@ -399,7 +406,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
         <CategoryReorderModal
           isOpen={isReorderOpen}
           onClose={() => setIsReorderOpen(false)}
-          items={treeItems || []}
+          items={treeItems}
           onSave={async (items) => {
             await reorderCategories.mutateAsync(items)
           }}

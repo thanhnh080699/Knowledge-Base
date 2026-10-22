@@ -21,6 +21,8 @@ import {
   MessageSquareText,
   BriefcaseBusiness,
   Mail,
+  Palette,
+  KeyRound,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -41,30 +43,37 @@ type NavGroup = {
 
 const navigation: NavGroup[] = [
   {
-    group: "DASHBOARD",
+    group: "TỔNG QUAN",
     items: [{ name: "Dashboard", href: "/", icon: LayoutDashboard }],
   },
   {
-    group: "CONTENT",
+    group: "NỘI DUNG",
     items: [
       { name: "Posts", href: "/posts", icon: FileText },
-      { name: "Pages", href: "/pages", icon: Files },
-      { name: "Projects", href: "/projects", icon: BriefcaseBusiness },
-      { name: "Q&A", href: "/question-answers", icon: CircleHelp },
-      { name: "Comments", href: "/comments", icon: MessageSquareText },
-      { name: "Contacts", href: "/contacts", icon: Mail },
       { name: "Categories", href: "/categories", icon: FolderOpen },
       { name: "Tags", href: "/tags", icon: Tag },
-      { name: "Menus", href: "/menus", icon: Navigation },
+      { name: "Pages", href: "/pages", icon: Files },
+      { name: "Projects", href: "/projects", icon: BriefcaseBusiness },
+      { name: "Media Library", href: "/media", icon: Image },
     ],
   },
   {
-    group: "MEDIA MANAGER",
-    items: [{ name: "Media Library", href: "/media", icon: Image }],
+    group: "TƯƠNG TÁC",
+    items: [
+      { name: "Q&A", href: "/question-answers", icon: CircleHelp },
+      { name: "Comments", href: "/comments", icon: MessageSquareText },
+      { name: "Contacts", href: "/contacts", icon: Mail },
+    ],
   },
-
   {
-    group: "SYSTEM",
+    group: "GIAO DIỆN",
+    items: [
+      { name: "Menus", href: "/menus", icon: Navigation },
+      { name: "CMS Appearance", href: "/settings/admin-appearance", icon: Palette },
+    ],
+  },
+  {
+    group: "HỆ THỐNG",
     items: [
       {
         name: "Users & ACL",
@@ -75,10 +84,15 @@ const navigation: NavGroup[] = [
           { name: "Permissions", href: "/permissions" },
         ],
       },
+      { name: "API Tokens", href: "/settings/api-tokens", icon: KeyRound },
       { name: "Settings", href: "/settings", icon: Settings },
     ],
   },
 ];
+
+function matchesPath(pathname: string, href: string) {
+  return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+}
 
 export function Sidebar({ className, mobile = false, onNavigate }: { className?: string; mobile?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -153,9 +167,8 @@ export function Sidebar({ className, mobile = false, onNavigate }: { className?:
                 const hasChildren = !!item.children;
                 const isMenuOpen = openMenus.includes(item.name);
                 const isActive = item.href
-                  ? pathname === item.href ||
-                    pathname.startsWith(`${item.href}/`)
-                  : item.children?.some((c) => pathname === c.href);
+                  ? matchesPath(pathname, item.href) && !navigation.some(group => group.items.some(other => other.href && other.href !== item.href && other.href.startsWith(`${item.href}/`) && matchesPath(pathname, other.href)))
+                  : item.children?.some((c) => matchesPath(pathname, c.href));
 
                 return (
                   <div key={item.name} className="space-y-1">
@@ -170,6 +183,7 @@ export function Sidebar({ className, mobile = false, onNavigate }: { className?:
                             : "hover:bg-[var(--app-sidebar-item-hover-bg)] hover:text-[var(--app-sidebar-item-hover-text)]",
                           !isOpen && "justify-center px-2",
                         )}
+                        aria-current={isActive ? "page" : undefined}
                         title={!isOpen ? item.name : undefined}
                       >
                         <item.icon
@@ -185,6 +199,9 @@ export function Sidebar({ className, mobile = false, onNavigate }: { className?:
                       </Link>
                     ) : (
                       <button
+                        type="button"
+                        aria-label={item.name}
+                        aria-expanded={isOpen && isMenuOpen}
                         onClick={() => toggleMenu(item.name)}
                         className={cn(
                           "w-full flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors group",
@@ -222,10 +239,11 @@ export function Sidebar({ className, mobile = false, onNavigate }: { className?:
                     {isOpen && hasChildren && isMenuOpen && (
                       <div className="ml-9 space-y-1 mt-1">
                         {item.children?.map((child) => {
-                          const isChildActive = pathname === child.href;
+                          const isChildActive = matchesPath(pathname, child.href);
                           return (
                             <Link
                         onClick={onNavigate}
+                              aria-current={isChildActive ? "page" : undefined}
                               key={child.name}
                               href={child.href}
                               className={cn(
