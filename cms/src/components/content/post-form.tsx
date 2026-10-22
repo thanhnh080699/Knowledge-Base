@@ -1,5 +1,6 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -61,9 +62,6 @@ const emptyForm: FormState = {
   tagIds: [],
   publishedAt: '',
 }
-
-const SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--app-border-strong)]'
 
 function toDatetimeLocal(value: string | null) {
   if (!value) return ''
@@ -203,18 +201,18 @@ export function PostForm({ mode, post, categories, tags, isSubmitting, onSubmit 
           <p className="mt-1 text-sm text-[var(--app-muted)]">WordPress-compatible fields cho title, slug, body, excerpt và trạng thái publish.</p>
         </div>
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-5 shadow-sm">
-          <div className="grid gap-4 md:grid-cols-[1fr_180px]">
+          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_180px]">
             <div className="space-y-2">
               <Label htmlFor="post-title">Title</Label>
               <Input id="post-title" value={form.title} onChange={(event) => updateTitle(event.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="post-status">Status</Label>
-              <select id="post-status" className={SELECT_CLASS} value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as PostStatus }))}>
+              <Select id="post-status" value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as PostStatus }))}>
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
                 <option value="ARCHIVED">Archived</option>
-              </select>
+              </Select>
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="post-slug">Slug</Label>
@@ -275,10 +273,10 @@ export function PostForm({ mode, post, categories, tags, isSubmitting, onSubmit 
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="post-category">Category</Label>
-                <select id="post-category" className={SELECT_CLASS} value={form.categoryId} onChange={(event) => setForm((current) => ({ ...current, categoryId: event.target.value }))}>
+                <Select id="post-category" value={form.categoryId} onChange={(event) => setForm((current) => ({ ...current, categoryId: event.target.value }))}>
                   <option value="">Uncategorized</option>
                   {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
-                </select>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label>Tags</Label>

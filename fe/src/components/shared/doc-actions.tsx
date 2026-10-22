@@ -31,9 +31,9 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
   }
 
   return (
-    <aside className="hidden xl:block xl:sticky xl:top-24 space-y-8">
+    <aside className="hidden min-w-0 gap-6 xl:sticky xl:top-24 xl:flex xl:max-h-[calc(100dvh-7rem)] xl:flex-col xl:self-start">
       {/* Share & Actions */}
-      <div className="space-y-4">
+      <div className="shrink-0 space-y-4">
         <button
           onClick={handleShare}
           className="flex items-center gap-2 font-medium text-[var(--color-ink)] transition-colors"
@@ -80,18 +80,19 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
       </div>
 
       {/* Table of Contents */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+      <div className="flex min-h-0 flex-col gap-3">
+        <div className="flex shrink-0 items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
           <List size={14} />
           <span>CONTENTS</span>
         </div>
-        <nav className="grid gap-2 border-l border-[var(--color-hairline)] pl-4" aria-label="Mục lục">
+        <nav className="flex min-h-0 flex-col gap-2 overflow-y-auto overscroll-contain border-l border-[var(--color-hairline)] pl-4 pr-2" aria-label="Mục lục" tabIndex={0}>
           {items.length ? (
             items.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className={`line-clamp-2 text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)] ${
+                title={item.text}
+                className={`block shrink-0 truncate text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)] ${
                   item.level === 3 ? "pl-4" : ""
                 }`}
               >
@@ -105,7 +106,7 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
       </div>
 
       {/* Suggestions for additional content */}
-      <div className="space-y-4 border-t border-[var(--color-hairline)] pt-8">
+      <div className="shrink-0 space-y-4 border-t border-[var(--color-hairline)] pt-8">
         <div className="rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-surface-soft)] p-4">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-ink)]">Mẹo hữu ích</p>
           <p className="mt-2 text-xs leading-relaxed text-[var(--color-body)]">
