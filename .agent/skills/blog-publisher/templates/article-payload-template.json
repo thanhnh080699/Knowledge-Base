@@ -1,0 +1,36 @@
+{
+  "title": "Khắc phục lỗi máy in báo Offline trên Windows 11",
+  "slug": "khac-phuc-loi-may-in-bao-offline-tren-windows-11",
+  "categorySlug": "help-desk",
+  "tagSlugs": [],
+  "focusKeyword": "máy in offline windows 11",
+  "metaTitle": "Sửa lỗi máy in báo Offline trên Windows 11 hiệu quả",
+  "metaDescription": "Hướng dẫn chi tiết từng bước chẩn đoán và khắc phục sự cố máy in báo Offline trên Windows 11 từ kết nối vật lý, Print Spooler đến cổng TCP/IP.",
+  "excerpt": "Quy trình khoanh vùng lỗi máy in báo trạng thái Offline trên Windows 11 dành cho người dùng văn phòng và chuyên viên IT Help Desk.",
+  "canonicalUrl": "https://thanhnh.id.vn/docs/khac-phuc-loi-may-in-bao-offline-tren-windows-11",
+  "images": [
+    {
+      "id": "cover",
+      "localPath": "./assets/cover.webp",
+      "folder": "blog/help-desk/20261021",
+      "alt": "Minh họa sự cố máy in báo trạng thái Offline trên Windows 11",
+      "caption": "Ảnh bìa: Khắc phục sự cố máy in báo Offline trên Windows 11",
+      "isCover": true
+    },
+    {
+      "id": "flowchart",
+      "localPath": "./assets/so-do-chan-doan.webp",
+      "folder": "blog/help-desk/20261021",
+      "alt": "Sơ đồ quy trình chẩn đoán lỗi máy in offline từ phần cứng đến phần mềm",
+      "caption": "Hình 1: Sơ đồ chẩn đoán sự cố máy in Offline theo từng lớp"
+    },
+    {
+      "id": "tech-illustration",
+      "localPath": "./assets/minh-hoa-ky-thuat.webp",
+      "folder": "blog/help-desk/20261021",
+      "alt": "Minh họa cấu hình Standard TCP/IP Port cho máy in mạng trên Windows",
+      "caption": "Hình 2: Cấu hình cổng Standard TCP/IP Port trong Print Management"
+    }
+  ],
+  "content": "<p>Nội dung HTML hoàn chỉnh của bài viết tại đây. Không dùng thẻ h1 trong phần này. Dùng thẻ figure cho hình ảnh: <figure><img src=\"{{flowchart}}\" alt=\"Sơ đồ chẩn đoán lỗi máy in offline\" /><figcaption>Hình 1: Sơ đồ chẩn đoán</figcaption></figure></p>"
+}

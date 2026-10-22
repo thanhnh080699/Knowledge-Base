@@ -8,6 +8,12 @@ import testUtils from '@adonisjs/core/services/test_utils'
 import { authApiClient } from '@adonisjs/auth/plugins/api_client'
 import { sessionApiClient } from '@adonisjs/session/plugins/api_client'
 import type { Registry } from '../.adonisjs/client/registry/schema.d.ts'
+import env from '#start/env'
+
+// Migrations and test fixtures must never run against a shared application DB.
+if (env.get('DB_CONNECTION') !== 'sqlite' && !env.get('DB_DATABASE').endsWith('_test')) {
+  throw new Error('Refusing tests on an application database. Use DB_CONNECTION=sqlite or a dedicated *_test database.')
+}
 
 /**
  * This file is imported by the "bin/test.ts" entrypoint file

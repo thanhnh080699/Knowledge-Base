@@ -177,6 +177,10 @@ function CreateTokenModal({
     }, {})
   }, [permissions])
 
+  const selectedCount = permissions.filter((permission) => selectedPermissions.includes(permission.slug)).length
+  const allSelected = permissions.length > 0 && selectedCount === permissions.length
+  const missingUploadPermission = permissions.length > 0 && !permissions.some((permission) => permission.slug === 'media.create')
+
   function togglePermission(slug: string) {
     setSelectedPermissions((current) =>
       current.includes(slug) ? current.filter((item) => item !== slug) : [...current, slug]
@@ -185,11 +189,17 @@ function CreateTokenModal({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const result = await createToken.mutateAsync({
-      name,
-      expiresIn,
-      permissions: selectedPermissions,
-    })
+    let result
+    try {
+      result = await createToken.mutateAsync({
+        name: name.trim(),
+        expiresIn,
+        permissions: selectedPermissions,
+      })
+    } catch {
+      // The mutation displays the API error; preserve the form for retry.
+      return
+    }
     setName('')
     setExpiresIn('1_month')
     setSelectedPermissions([])
@@ -220,6 +230,25 @@ function CreateTokenModal({
 
         <div className="space-y-3">
           <Label>Phân quyền CMS Content</Label>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <label className="flex cursor-pointer items-center gap-3 text-sm font-medium">
+              <Checkbox
+                checked={allSelected}
+                indeterminate={selectedCount > 0 && !allSelected}
+                disabled={permissions.length === 0}
+                onChange={(event) => setSelectedPermissions(event.target.checked ? permissions.map((permission) => permission.slug) : [])}
+              />
+              Chọn tất cả quyền đang hiển thị
+            </label>
+            <span className="text-sm text-[var(--app-muted)]" aria-live="polite">
+              Đã chọn {selectedCount}/{permissions.length} quyền
+            </span>
+          </div>
+          {missingUploadPermission && (
+            <p role="status" className="text-sm text-[var(--app-muted-strong)]">
+              Danh mục quyền chưa có media.create. Token mới chưa thể upload ảnh; quản trị viên cần đồng bộ quyền Media trước khi tạo token dùng để đăng bài kèm ảnh.
+            </p>
+          )}
           <div className="space-y-4 rounded-xl border border-[var(--app-border)] p-4">
             {Object.entries(groupedPermissions).map(([module, items]) => (
               <div key={module} className="space-y-2">

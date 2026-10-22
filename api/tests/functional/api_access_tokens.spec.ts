@@ -8,6 +8,7 @@ import User from '#models/user'
 
 test.group('API access tokens', () => {
   async function createTokenAdmin() {
+    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
     const admin = await User.create({
       fullName: 'API Token Admin',
       email: `api-token-admin-${Date.now()}@example.com`,
@@ -15,8 +16,8 @@ test.group('API access tokens', () => {
     })
 
     const role = await Role.firstOrCreate(
-      { slug: `api-token-admin-${Date.now()}` },
-      { name: 'API Token Administrator' }
+      { slug: `api-token-admin-${suffix}` },
+      { name: `API Token Administrator ${suffix}` }
     )
 
     const manageTokens = await Permission.firstOrCreate(
@@ -80,6 +81,64 @@ test.group('API access tokens', () => {
 
     const stored = await ApiAccessToken.findOrFail(created.item.id)
     assert.isNotNull(stored.deletedAt)
+  })
+
+  test('create permission allows all selected scopes without manage permission', async ({ client, assert }) => {
+    const { admin } = await createTokenAdmin()
+    await admin.load('roles')
+    const createPermission = await Permission.firstOrCreate(
+      { slug: 'api_tokens.create' },
+      { name: 'Create API Tokens', module: 'API Tokens' }
+    )
+    await admin.roles[0].related('permissions').sync([createPermission.id])
+    const permissions = await Permission.query().whereNull('deleted_at')
+    const scopes = permissions.map((permission) => permission.slug)
+
+    const response = await client.post('/api/admin/api-access-tokens').loginAs(admin).json({
+      name: 'All selected permissions', expiresIn: '1_month', permissions: scopes,
+    })
+    response.assertStatus(201)
+    assert.deepEqual(response.body().data.item.permissions, scopes)
+
+    const denied = await client.delete(`/api/admin/api-access-tokens/${response.body().data.item.id}`).loginAs(admin)
+    denied.assertStatus(403)
+  })
+
+  test('content permissions alone cannot create API tokens', async ({ client }) => {
+    const { admin, readPosts } = await createTokenAdmin()
+    await admin.load('roles')
+    await admin.roles[0].related('permissions').sync([readPosts.id])
+    const response = await client.post('/api/admin/api-access-tokens').loginAs(admin).json({
+      name: 'Unauthorized token', expiresIn: '1_month', permissions: [readPosts.slug],
+    })
+    response.assertStatus(403)
+  })
+
+  test('backfilled media scopes can be selected and authorize uploads without granting other tokens access', async ({ client, assert }) => {
+    const { admin, readPosts } = await createTokenAdmin()
+    const media = await Permission.query().where('module', 'Media').whereNull('deleted_at')
+    assert.sameMembers(media.map((permission) => permission.slug), [
+      'media.create', 'media.read', 'media.update', 'media.delete', 'media.manage',
+    ])
+
+    const response = await client.post('/api/admin/api-access-tokens').loginAs(admin).json({
+      name: 'Content with media', expiresIn: '1_week',
+      permissions: [readPosts.slug, ...media.map((permission) => permission.slug)],
+    })
+    response.assertStatus(201)
+    assert.include(response.body().data.item.permissions, 'media.create')
+
+    // No file is supplied: reaching the upload validator proves the token guard
+    // accepts media.create without contacting the production CDN.
+    const upload = await client.post('/api/automation/media/upload')
+      .header('x-api-token', response.body().data.token)
+    upload.assertStatus(400)
+    assert.equal(upload.body().error, 'file is required')
+
+    const readOnly = await ApiAccessToken.create({ name: 'Posts only', permissions: [readPosts.slug] })
+    const denied = await client.post('/api/automation/media/upload')
+      .header('x-api-token', readOnly.plainToken!)
+    denied.assertStatus(403)
   })
 
   test('uses API token permissions for automation content routes', async ({ client, assert }) => {

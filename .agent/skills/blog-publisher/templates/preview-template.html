@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA Preview - ThanhNH Blog Publisher</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --warning: #ca8a04;
+      --danger: #dc2626;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+      margin: 0;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-draft { background: #fef3c7; color: #92400e; }
+    .badge-published { background: #dcfce7; color: #166534; }
+    h1 { font-size: 32px; font-weight: 800; color: #0f172a; margin-top: 0; line-height: 1.3; }
+    h2 { font-size: 24px; font-weight: 700; color: #1e293b; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-top: 36px; }
+    h3 { font-size: 18px; font-weight: 600; color: #334155; margin-top: 24px; }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      background: #f1f5f9;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin: 20px 0;
+    }
+    .meta-item strong { display: block; color: var(--text-muted); margin-bottom: 4px; }
+    img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto; }
+    figure { margin: 28px 0; }
+    figcaption { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 8px; font-style: italic; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+    th, td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; }
+    th { background: #f8fafc; font-weight: 600; }
+    pre { background: #0f172a; color: #f8fafc; padding: 16px; border-radius: 8px; overflow-x: auto; font-family: ui-monospace, Menlo, Monaco, Consolas, monospace; font-size: 13px; }
+    .qa-box {
+      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+      padding: 16px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #166534;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="qa-box">
+      <strong>QA Checklist Status:</strong> Ready for Draft Inspection. Do NOT publish before human review.
+    </div>
+
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="badge badge-draft">STATUS: DRAFT</span>
+        <span style="font-size: 13px; color: var(--text-muted);">Blog Publisher Preview</span>
+      </div>
+
+      <h1 id="article-title">{{title}}</h1>
+
+      <div class="meta-grid">
+        <div class="meta-item"><strong>Slug</strong><code>{{slug}}</code></div>
+        <div class="meta-item"><strong>Category</strong><span>{{category}}</span></div>
+        <div class="meta-item"><strong>Focus Keyword</strong><code>{{focusKeyword}}</code></div>
+        <div class="meta-item"><strong>Canonical URL</strong><a href="{{canonicalUrl}}" target="_blank">{{canonicalUrl}}</a></div>
+      </div>
+
+      <div style="font-size: 14px; color: var(--text-muted);">
+        <strong>Meta Description:</strong> {{metaDescription}}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Nội dung bài viết</h2>
+      <div class="article-content">
+        {{content}}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
