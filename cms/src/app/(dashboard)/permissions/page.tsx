@@ -1,14 +1,19 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
+import { useClientList, useListState } from '@/hooks/use-list-state'
+import { Table, TableHeader, TableBody, TableHead, TableCell, TableRow } from '@/components/ui/table'
+import { Tag } from '@/components/ui/tag'
+import { formatDisplayId } from '@/lib/admin-format'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { usePermissions } from '@/hooks/queries/use-permissions'
-import type { EntityStatusFilter, Permission } from '@/types/acl'
-import { Filter, Lock, RotateCcw, Search } from 'lucide-react'
+import type { EntityStatusFilter } from '@/types/acl'
+import { Filter, Search } from 'lucide-react'
 
 const FILTER_SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
+  'w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
 export default function PermissionsPage() {
   const [query, setQuery] = useState('')
@@ -24,18 +29,9 @@ export default function PermissionsPage() {
     [module, query, status]
   )
 
-  const { data: permissions = [], isLoading } = usePermissions(filters)
-
-  const groupedPermissions = useMemo(() => {
-    return permissions.reduce<Record<string, Permission[]>>((acc, permission) => {
-      const moduleName = permission.module || 'System'
-      if (!acc[moduleName]) {
-        acc[moduleName] = []
-      }
-      acc[moduleName].push(permission)
-      return acc
-    }, {})
-  }, [permissions])
+  const list = useListState(filters)
+  const { data: allItems = [], isLoading, isFetching, error } = usePermissions(filters)
+  const permissions = useClientList(allItems, list)
 
   function resetFilters() {
     setQuery('')
@@ -67,7 +63,7 @@ export default function PermissionsPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select
+              <Select
                 className={FILTER_SELECT_CLASS}
                 value={status}
                 onChange={(event) => setStatus(event.target.value as EntityStatusFilter)}
@@ -75,7 +71,7 @@ export default function PermissionsPage() {
                 <option value="active">Active</option>
                 <option value="deleted">Deleted</option>
                 <option value="all">All</option>
-              </select>
+              </Select>
               <Button variant="outline" size="sm" className="h-10 gap-2" onClick={resetFilters}>
                 <Filter className="h-4 w-4" />
                 Reset
@@ -83,66 +79,14 @@ export default function PermissionsPage() {
             </div>
           </div>
 
-          <div className="p-6">
-            {isLoading ? (
-              <div className="flex flex-col items-center gap-2 py-20">
-                <RotateCcw className="h-6 w-6 animate-spin text-slate-400" />
-                <span className="text-sm text-[var(--app-muted)]">Loading permissions...</span>
-              </div>
-            ) : Object.keys(groupedPermissions).length === 0 ? (
-              <div className="py-20 text-center text-[var(--app-muted)]">No permissions found.</div>
-            ) : (
-              <div className="grid gap-8">
-                {Object.entries(groupedPermissions).map(([moduleName, items]) => (
-                  <div key={moduleName} className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-px flex-1 bg-[var(--app-border)]" />
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--foreground)]">
-                          {moduleName}
-                        </h4>
-                        <span className="rounded-full bg-[var(--app-accent-soft-bg)] px-2 py-0.5 text-xs font-bold text-[var(--app-accent-soft-fg)]">
-                          {items.length}
-                        </span>
-                      </div>
-                      <div className="h-px flex-1 bg-[var(--app-border)]" />
-                    </div>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                      {items.map((permission) => (
-                        <div
-                          key={permission.id}
-                          className="group relative flex flex-col gap-1 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4 transition-all hover:border-[var(--app-accent-soft-border)] hover:shadow-md"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--app-surface-muted)] text-[var(--app-muted)] transition-colors group-hover:bg-[var(--app-accent-soft-bg)] group-hover:text-[var(--app-accent-soft-fg)]">
-                              <Lock className="h-3.5 w-3.5" />
-                            </div>
-                            <span
-                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                                permission.deletedAt
-                                  ? 'bg-[var(--app-danger-soft-bg)] text-[var(--app-danger-soft-fg)]'
-                                  : 'bg-[var(--app-success-soft-bg)] text-[var(--app-success-soft-fg)]'
-                              }`}
-                            >
-                              {permission.deletedAt ? 'Deleted' : 'Active'}
-                            </span>
-                          </div>
-                          <div className="mt-2">
-                            <div className="font-semibold text-[var(--foreground)]">
-                              {permission.name}
-                            </div>
-                            <div className="font-mono text-[10px] text-[var(--app-muted)]">
-                              {permission.slug}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <Table pagination={{ list, total: allItems.length, loading: isFetching }} error={error}>
+            <TableHeader><TableRow><TableHead>ID ↓</TableHead><TableHead>Name</TableHead><TableHead>Slug</TableHead><TableHead>Module</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
+            <TableBody>
+              {isLoading ? <TableRow><TableCell colSpan={5}>Loading permissions…</TableCell></TableRow> : permissions.length ? permissions.map(permission => (
+                <TableRow key={permission.id}><TableCell>{formatDisplayId(permission.id)}</TableCell><TableCell>{permission.name}</TableCell><TableCell>{permission.slug}</TableCell><TableCell>{permission.module}</TableCell><TableCell><Tag variant={permission.deletedAt ? 'destructive' : 'success'}>{permission.deletedAt ? 'Deleted' : 'Active'}</Tag></TableCell></TableRow>
+              )) : <TableRow><TableCell colSpan={5}>No permissions found.</TableCell></TableRow>}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>

@@ -1,23 +1,10 @@
 'use client'
 
+import type { PaginatedResponse } from '@/types/common'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import type { Project, ProjectFilters } from '@/types/project'
 
-interface PaginatedResponse<T> {
-  data: T[]
-  meta: {
-    total: number
-    perPage: number
-    currentPage: number
-    lastPage: number
-    firstPage: number
-    firstPageUrl: string | null
-    lastPageUrl: string | null
-    nextPageUrl: string | null
-    previousPageUrl: string | null
-  }
-}
 
 export function useProjects(filters: ProjectFilters = {}) {
   return useQuery({
@@ -25,6 +12,7 @@ export function useProjects(filters: ProjectFilters = {}) {
     queryFn: async () => {
       const { data } = await api.get<PaginatedResponse<Project>>('/admin/projects', {
         params: {
+          sort: 'id',
           page: filters.page,
           limit: filters.limit,
           q: filters.search,

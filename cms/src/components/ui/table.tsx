@@ -1,14 +1,26 @@
+'use client';
+
 import * as React from 'react';
+import { ListPagination, type ListPaginationProps } from '@/components/shared/list-pagination';
 import { cn } from '@/lib/utils';
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
-  ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
+interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+  pagination?: ListPaginationProps;
+  error?: unknown;
+}
+
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, pagination, error, ...props }, ref) => (
+    <div className="min-w-0">
+      {error ? <p role="alert" className="p-4 text-sm text-[var(--app-danger-soft-fg)]">Không thể tải danh sách. Vui lòng thử lại.</p> : null}
+      <div className="relative w-full overflow-auto">
       <table
         ref={ref}
         className={cn('w-full caption-bottom text-sm', className)}
         {...props}
       />
+      </div>
+      {pagination ? <ListPagination {...pagination} /> : null}
     </div>
   )
 );

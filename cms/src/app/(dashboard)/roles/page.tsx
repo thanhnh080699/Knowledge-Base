@@ -1,5 +1,7 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
+import { useClientList, useListState } from '@/hooks/use-list-state'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -20,16 +22,18 @@ interface DeleteState {
 }
 
 const FILTER_SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
+  'w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
 export default function RolesPage() {
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<EntityStatusFilter>('active')
   const [permissionId, setPermissionId] = useState<number | ''>('')
-  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingRole, setEditingRole] = useState<AclRole | null>(null)
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
+
+  const list = useListState({ permissionId, query, status })
+  const { selectedIds, setSelectedIds } = list
 
   const filters = useMemo(
     () => ({
@@ -40,7 +44,9 @@ export default function RolesPage() {
     [permissionId, query, status]
   )
 
-  const { data: roles = [], isLoading } = useRoles(filters)
+  const { data: allItems = [], isLoading, isFetching, error } = useRoles(filters)
+  const roles = useClientList(allItems, list)
+  const total = allItems.length
   const { data: meta } = useRolesMeta()
   const createRole = useCreateRole()
   const updateRole = useUpdateRole()
@@ -152,12 +158,12 @@ export default function RolesPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as EntityStatusFilter)}>
+              <Select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as EntityStatusFilter)}>
                 <option value="active">Active</option>
                 <option value="deleted">Deleted</option>
                 <option value="all">All</option>
-              </select>
-              <select
+              </Select>
+              <Select
                 className={FILTER_SELECT_CLASS}
                 value={permissionId}
                 onChange={(event) =>
@@ -170,7 +176,7 @@ export default function RolesPage() {
                     {permission.slug}
                   </option>
                 ))}
-              </select>
+              </Select>
               <Button variant="outline" size="sm" className="h-10 gap-2" onClick={resetFilters}>
                 <Filter className="h-4 w-4" />
                 Reset
@@ -178,14 +184,13 @@ export default function RolesPage() {
             </div>
           </div>
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching }} error={error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[50px] px-4">
                     <Checkbox checked={allSelected} indeterminate={partiallySelected} onChange={toggleAll} />
                   </TableHead>
-                  <TableHead className="w-[120px] px-4">ID</TableHead>
+                  <TableHead className="w-[120px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Slug</TableHead>
                   <TableHead>Permissions</TableHead>
@@ -283,7 +288,6 @@ export default function RolesPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
         </div>
       </div>
 

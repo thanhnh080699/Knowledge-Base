@@ -81,9 +81,11 @@ export default class QuestionAnswersController {
       query.where('postId', postId)
     }
 
-    if (published !== undefined) {
+    if (published !== undefined && published !== '') {
       query.where('isPublished', published === 'true' || published === '1')
     }
+
+    if (request.input('sort') === 'id') query.clearOrder().orderBy('id', 'desc')
 
     const questionAnswers = await query.paginate(page, limit)
     return response.ok(questionAnswers)

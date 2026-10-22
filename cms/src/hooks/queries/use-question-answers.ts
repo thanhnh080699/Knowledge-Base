@@ -1,5 +1,6 @@
 "use client";
 
+import type { PaginatedResponse } from '@/types/common'
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import type {
@@ -7,15 +8,6 @@ import type {
   QuestionAnswerFilters,
 } from "@/types/question-answer";
 
-interface PaginatedResponse<T> {
-  data: T[];
-  meta: {
-    total: number;
-    perPage: number;
-    currentPage: number;
-    lastPage: number;
-  };
-}
 
 export function useQuestionAnswers(filters: QuestionAnswerFilters = {}) {
   return useQuery({
@@ -23,7 +15,7 @@ export function useQuestionAnswers(filters: QuestionAnswerFilters = {}) {
     queryFn: async () => {
       const { data } = await api.get<PaginatedResponse<QuestionAnswer>>(
         "/admin/question-answers",
-        { params: filters },
+        { params: { ...filters, sort: 'id' } },
       );
       return data;
     },

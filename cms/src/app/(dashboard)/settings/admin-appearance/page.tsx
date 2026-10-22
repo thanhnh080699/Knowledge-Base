@@ -1,5 +1,6 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -109,9 +110,9 @@ export default function AdminAppearanceSettingsPage() {
   const { data, isLoading } = useSettingsGroup(APPEARANCE_GROUP)
   const updateSettings = useUpdateSettingsGroup(APPEARANCE_GROUP)
   const uploadMedia = useUploadMedia()
-  
+
   const settings = useMemo(() => (data?.settings?.length ? data.settings : FALLBACK_SETTINGS), [data])
-  
+
   const baseValues = useMemo(() => {
     return settings.reduce<Record<string, SettingValue>>((carry, setting) => {
       carry[setting.settingKey] = setting.settingValue
@@ -174,8 +175,8 @@ export default function AdminAppearanceSettingsPage() {
           <span className="text-[var(--app-muted-strong)]">Admin appearance</span>
         </div>
 
-        <SettingBlock 
-          title="Branding" 
+        <SettingBlock
+          title="Branding"
           description="Update your admin panel logo, favicon and titles to match your brand identity."
         >
           {isLoading ? (
@@ -184,48 +185,48 @@ export default function AdminAppearanceSettingsPage() {
              </div>
           ) : (
             <div className="space-y-6">
-              <ImageField 
-                setting={findSetting(settings, 'admin_logo')} 
-                value={values.admin_logo} 
-                onChange={updateValue} 
+              <ImageField
+                setting={findSetting(settings, 'admin_logo')}
+                value={values.admin_logo}
+                onChange={updateValue}
                 onUpload={(file) => handleUpload('admin_logo', file)}
                 isUploading={uploadMedia.isPending}
               />
-              <ImageField 
-                setting={findSetting(settings, 'admin_favicon')} 
-                value={values.admin_favicon} 
-                onChange={updateValue} 
+              <ImageField
+                setting={findSetting(settings, 'admin_favicon')}
+                value={values.admin_favicon}
+                onChange={updateValue}
                 onUpload={(file) => handleUpload('admin_favicon', file)}
                 isUploading={uploadMedia.isPending}
               />
-              <SettingField 
-                setting={findSetting(settings, 'admin_title')} 
-                value={values.admin_title} 
-                onChange={updateValue} 
+              <SettingField
+                setting={findSetting(settings, 'admin_title')}
+                value={values.admin_title}
+                onChange={updateValue}
               />
             </div>
           )}
         </SettingBlock>
 
-        <SettingBlock 
-          title="Layout & Style" 
+        <SettingBlock
+          title="Layout & Style"
           description="Customize the administration interface layout, sidebar style and color themes."
         >
           <div className="space-y-6">
-            <SettingField 
-              setting={findSetting(settings, 'admin_layout')} 
-              value={values.admin_layout} 
-              onChange={updateValue} 
+            <SettingField
+              setting={findSetting(settings, 'admin_layout')}
+              value={values.admin_layout}
+              onChange={updateValue}
             />
-            <SettingField 
-              setting={findSetting(settings, 'admin_sidebar_style')} 
-              value={values.admin_sidebar_style} 
-              onChange={updateValue} 
+            <SettingField
+              setting={findSetting(settings, 'admin_sidebar_style')}
+              value={values.admin_sidebar_style}
+              onChange={updateValue}
             />
-            <SettingField 
-              setting={findSetting(settings, 'admin_theme')} 
-              value={values.admin_theme} 
-              onChange={updateValue} 
+            <SettingField
+              setting={findSetting(settings, 'admin_theme')}
+              value={values.admin_theme}
+              onChange={updateValue}
             />
           </div>
         </SettingBlock>
@@ -276,7 +277,7 @@ function SettingField({
       <Label htmlFor={setting.settingKey}>{setting.label}</Label>
       <div className="mt-2">
         {setting.type === 'select' ? (
-          <select
+          <Select
             id={setting.settingKey}
             value={valueToString(value)}
             onChange={(event) => onChange(setting.settingKey, event.target.value)}
@@ -287,7 +288,7 @@ function SettingField({
                 {option.charAt(0).toUpperCase() + option.slice(1)}
               </option>
             ))}
-          </select>
+          </Select>
         ) : (
           <Input
             id={setting.settingKey}
@@ -325,9 +326,9 @@ function ImageField({
       <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start">
         <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-muted)] overflow-hidden shadow-inner group">
           {imageUrl ? (
-            <img 
-              src={absoluteCdnUrl(imageUrl)} 
-              alt={setting.label} 
+            <img
+              src={absoluteCdnUrl(imageUrl)}
+              alt={setting.label}
               className="h-full w-full object-contain p-2 transition-transform group-hover:scale-105"
               onError={(e) => {
                 e.currentTarget.src = 'https://placehold.co/100x100?text=Error'
@@ -357,7 +358,7 @@ function ImageField({
               <ImageIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             </div>
             <div className="relative">
-              <input
+              <Input
                 type="file"
                 className="absolute inset-0 z-10 cursor-pointer opacity-0"
                 accept="image/*"

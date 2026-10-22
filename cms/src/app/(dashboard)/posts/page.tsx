@@ -1,5 +1,7 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
+import { useListState } from '@/hooks/use-list-state'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -27,7 +29,7 @@ interface DeleteState {
 }
 
 const FILTER_SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
+  'w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
 function statusVariant(status: PostStatus) {
   if (status === 'PUBLISHED') return 'success'
@@ -40,22 +42,24 @@ export default function PostsPage() {
   const [status, setStatus] = useState<PostStatus | ''>('')
   const [categoryId, setCategoryId] = useState<number | ''>('')
   const [trashed, setTrashed] = useState(false)
-  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
+
+  const list = useListState({ categoryId, query, status, trashed })
+  const { selectedIds, setSelectedIds } = list
 
   const filters = useMemo(
     () => ({
-      page: 1,
-      limit: 20,
+      page: list.page,
+      limit: list.pageSize,
       search: query.trim() || undefined,
       status,
       categoryId,
       trashed,
     }),
-    [categoryId, query, status, trashed]
+    [categoryId, query, status, trashed, list.page, list.pageSize]
   )
 
-  const { data: postsResponse, isLoading } = usePosts(filters)
+  const { data: postsResponse, isLoading, isFetching, error } = usePosts(filters)
   const { data: categories = [] } = useCategories()
   const deletePost = useDeletePost()
   const restorePost = useRestorePost()
@@ -139,18 +143,18 @@ export default function PostsPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as PostStatus | '')}>
+              <Select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as PostStatus | '')}>
                 <option value="">All statuses</option>
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
                 <option value="ARCHIVED">Archived</option>
-              </select>
-              <select className={FILTER_SELECT_CLASS} value={categoryId} onChange={(event) => setCategoryId(event.target.value ? Number(event.target.value) : '')}>
+              </Select>
+              <Select className={FILTER_SELECT_CLASS} value={categoryId} onChange={(event) => setCategoryId(event.target.value ? Number(event.target.value) : '')}>
                 <option value="">All categories</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>{category.name}</option>
                 ))}
-              </select>
+              </Select>
               <Button variant="outline" size="sm" className="h-10 gap-2" onClick={resetFilters}>
                 <Filter className="h-4 w-4" />
                 Reset
@@ -179,14 +183,13 @@ export default function PostsPage() {
             </div>
           ) : null}
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching }} error={error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[50px] px-4">
                     <Checkbox checked={allSelected} indeterminate={partiallySelected} onChange={toggleAll} />
                   </TableHead>
-                  <TableHead className="w-[120px] px-4">ID</TableHead>
+                  <TableHead className="w-[120px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Title</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Status</TableHead>
@@ -267,11 +270,6 @@ export default function PostsPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3">
-            <span className="text-sm text-[var(--app-muted)]">Showing {posts.length === 0 ? 0 : 1} to {posts.length} of {total} results</span>
-          </div>
         </div>
       </div>
 

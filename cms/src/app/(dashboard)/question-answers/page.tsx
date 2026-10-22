@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from '@/components/ui/select'
+import { useListState } from '@/hooks/use-list-state'
 import { FormEvent, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -38,7 +40,7 @@ import {
 } from "lucide-react";
 
 const FILTER_SELECT_CLASS =
-  "h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]";
+  "w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]";
 
 type FormState = {
   postId: string;
@@ -87,18 +89,20 @@ export default function QuestionAnswersPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteItem, setDeleteItem] = useState<QuestionAnswer | null>(null);
 
+  const list = useListState({ postId, published, query })
+
   const filters = useMemo(
     () => ({
-      page: 1,
-      limit: 20,
+      page: list.page,
+      limit: list.pageSize,
       search: query.trim() || undefined,
       postId,
       published,
     }),
-    [postId, published, query],
+    [postId, published, query, list.page, list.pageSize],
   );
 
-  const { data: response, isLoading } = useQuestionAnswers(filters);
+  const { data: response, isLoading, isFetching, error } = useQuestionAnswers(filters);
   const { data: postsResponse } = usePosts({ page: 1, limit: 100 });
   const createQuestionAnswer = useCreateQuestionAnswer();
   const updateQuestionAnswer = useUpdateQuestionAnswer();
@@ -171,7 +175,7 @@ export default function QuestionAnswersPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select
+              <Select
                 className={FILTER_SELECT_CLASS}
                 value={published}
                 onChange={(event) =>
@@ -181,8 +185,8 @@ export default function QuestionAnswersPage() {
                 <option value="">All statuses</option>
                 <option value="true">Published</option>
                 <option value="false">Draft</option>
-              </select>
-              <select
+              </Select>
+              <Select
                 value={postId}
                 onChange={(event) =>
                   setPostId(event.target.value ? Number(event.target.value) : "")
@@ -195,7 +199,7 @@ export default function QuestionAnswersPage() {
                     {post.title}
                   </option>
                 ))}
-              </select>
+              </Select>
               <Button
                 variant="outline"
                 size="sm"
@@ -212,11 +216,10 @@ export default function QuestionAnswersPage() {
             </div>
           </div>
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching }} error={error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[120px] px-4">ID</TableHead>
+                  <TableHead className="w-[120px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Post</TableHead>
                   <TableHead>Question</TableHead>
                   <TableHead>Status</TableHead>
@@ -311,13 +314,6 @@ export default function QuestionAnswersPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3 text-sm text-[var(--app-muted)]">
-            <span>
-              Showing {items.length} of {total} results
-            </span>
-          </div>
         </div>
       </div>
 
@@ -330,7 +326,7 @@ export default function QuestionAnswersPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="postId">Post</Label>
-            <select
+            <Select
               id="postId"
               value={form.postId}
               onChange={(event) =>
@@ -350,7 +346,7 @@ export default function QuestionAnswersPage() {
                   {post.title}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="space-y-2">

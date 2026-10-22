@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from '@/components/ui/select'
+import { useListState } from '@/hooks/use-list-state'
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -42,7 +44,7 @@ interface DeleteState {
 }
 
 const FILTER_SELECT_CLASS =
-  "h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]";
+  "w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]";
 
 function statusVariant(status: PageStatus) {
   if (status === "PUBLISHED") return "success";
@@ -54,20 +56,22 @@ export default function PagesPage() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<PageStatus | "">("");
   const [trashed, setTrashed] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null);
+
+  const list = useListState({ query, status, trashed })
+  const { selectedIds, setSelectedIds } = list
 
   const filters = useMemo(
     () => ({
-      page: 1,
-      limit: 20,
+      page: list.page,
+      limit: list.pageSize,
       search: query.trim() || undefined,
       status,
       trashed,
     }),
-    [query, status, trashed],
+    [query, status, trashed, list.page, list.pageSize],
   );
-  const { data: pagesResponse, isLoading } = usePages(filters);
+  const { data: pagesResponse, isLoading, isFetching, error } = usePages(filters);
   const deletePage = useDeletePage();
   const restorePage = useRestorePage();
   const forceDeletePage = useForceDeletePage();
@@ -154,7 +158,7 @@ export default function PagesPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select
+              <Select
                 className={FILTER_SELECT_CLASS}
                 value={status}
                 onChange={(event) =>
@@ -165,7 +169,7 @@ export default function PagesPage() {
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
                 <option value="ARCHIVED">Archived</option>
-              </select>
+              </Select>
               <Button
                 variant="outline"
                 size="sm"
@@ -207,8 +211,7 @@ export default function PagesPage() {
             </div>
           ) : null}
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching }} error={error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[50px] px-4">
@@ -218,7 +221,7 @@ export default function PagesPage() {
                       onChange={toggleAll}
                     />
                   </TableHead>
-                  <TableHead className="w-[120px] px-4">ID</TableHead>
+                  <TableHead className="w-[120px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Title</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Template</TableHead>
@@ -345,13 +348,6 @@ export default function PagesPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3 text-sm text-[var(--app-muted)]">
-            <span>
-              Showing {pages.length} of {total} results
-            </span>
-          </div>
         </div>
       </div>
 

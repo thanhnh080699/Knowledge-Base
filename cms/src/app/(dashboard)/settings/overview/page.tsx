@@ -1,5 +1,8 @@
 'use client'
 
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select } from '@/components/ui/select'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -175,7 +178,7 @@ export default function OverviewSettingsPage() {
               <SettingField setting={findSetting(settings, 'date_format')} value={values.date_format} onChange={updateValue} label="Date format" />
               <SettingField setting={findSetting(settings, 'maintenance_mode')} value={values.maintenance_mode} onChange={updateValue} />
               <label className="flex items-start gap-3 text-sm text-[var(--app-muted-strong)]">
-                <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-[var(--app-border)]" />
+                <Checkbox  className="mt-0.5 h-4 w-4 rounded border-[var(--app-border)]" />
                 Redirect all Not Found requests to homepage
               </label>
               <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
@@ -248,7 +251,7 @@ function SettingField({
       <Label htmlFor={setting.settingKey}>{fieldLabel}</Label>
       <div className="mt-2">
         {setting.type === 'text' ? (
-          <textarea
+          <Textarea
             id={setting.settingKey}
             value={valueToString(value)}
             onChange={(event) => onChange(setting.settingKey, event.target.value)}
@@ -257,8 +260,8 @@ function SettingField({
         ) : setting.type === 'boolean' ? (
           <label className="inline-flex items-center gap-3 text-sm text-[var(--app-muted-strong)]">
             <span className="relative inline-flex h-5 w-9 items-center rounded-full bg-[var(--app-surface-strong)]">
-              <input
-                type="checkbox"
+              <Checkbox
+
                 checked={value === true}
                 onChange={(event) => onChange(setting.settingKey, event.target.checked)}
                 className="peer sr-only"
@@ -268,7 +271,7 @@ function SettingField({
             Enabled
           </label>
         ) : setting.type === 'select' ? (
-          <select
+          <Select
             id={setting.settingKey}
             value={valueToString(value)}
             onChange={(event) => onChange(setting.settingKey, event.target.value)}
@@ -279,7 +282,7 @@ function SettingField({
                 {option}
               </option>
             ))}
-          </select>
+          </Select>
         ) : (
           <Input
             id={setting.settingKey}

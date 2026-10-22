@@ -1,5 +1,6 @@
 'use client'
 
+import { Checkbox } from '@/components/ui/checkbox'
 import { Select } from '@/components/ui/select'
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
@@ -283,7 +284,7 @@ export function PostForm({ mode, post, categories, tags, isSubmitting, onSubmit 
                 <div className="max-h-44 space-y-2 overflow-y-auto rounded-md border border-[var(--app-border)] p-3">
                   {tags.length === 0 ? <span className="text-sm text-[var(--app-muted)]">No tags</span> : tags.map((tag) => (
                     <label key={tag.id} className="flex items-center gap-2 text-sm text-[var(--app-muted-strong)]">
-                      <input type="checkbox" checked={form.tagIds.includes(tag.id)} onChange={() => toggleTag(tag.id)} />
+                      <Checkbox  checked={form.tagIds.includes(tag.id)} onChange={() => toggleTag(tag.id)} />
                       {tag.name}
                     </label>
                   ))}
@@ -316,7 +317,7 @@ export function PostForm({ mode, post, categories, tags, isSubmitting, onSubmit 
                 </Button>
                 {preview ? <Button type="button" variant="ghost" size="sm" className="h-8 gap-2 text-[var(--app-danger-soft-fg)]" onClick={removeCoverImage}><X className="h-4 w-4" />Remove image</Button> : null}
               </div>
-              <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+              <Input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
             </aside>
           </div>
         </div>

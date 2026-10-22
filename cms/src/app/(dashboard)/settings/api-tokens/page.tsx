@@ -1,5 +1,7 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
+import { useClientList, useListState } from '@/hooks/use-list-state'
 import { type FormEvent, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Copy, KeyRound, Plus, Trash2 } from 'lucide-react'
@@ -35,7 +37,10 @@ const contentModules = new Set(['Posts', 'Categories', 'Tags', 'Pages', 'Menus',
 export default function ApiTokensSettingsPage() {
   const [isCreateOpen, setCreateOpen] = useState(false)
   const [createdToken, setCreatedToken] = useState<string | null>(null)
-  const { data: tokens = [], isLoading } = useApiAccessTokens()
+  const list = useListState()
+  const { data: allItems = [], isLoading, isFetching, error } = useApiAccessTokens()
+  const tokens = useClientList(allItems, list)
+  const total = allItems.length
   const { data: permissions = [] } = usePermissions({ status: 'active' })
   const deleteToken = useDeleteApiAccessToken()
 
@@ -89,7 +94,7 @@ export default function ApiTokensSettingsPage() {
         )}
 
         <div className="overflow-hidden rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-sm">
-          <Table>
+          <Table pagination={{ list, total, loading: isFetching }} error={error}>
             <TableHeader className="bg-[var(--app-surface-muted)]">
               <TableRow>
                 <TableHead>Name</TableHead>
@@ -132,9 +137,6 @@ export default function ApiTokensSettingsPage() {
               ))}
             </TableBody>
           </Table>
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3 text-sm text-[var(--app-muted)]">
-            <span>Showing {tokens.length} token{tokens.length === 1 ? '' : 's'}</span>
-          </div>
         </div>
       </div>
 
@@ -204,7 +206,7 @@ function CreateTokenModal({
 
         <div className="space-y-2">
           <Label htmlFor="token-expire">Expire date</Label>
-          <select
+          <Select
             id="token-expire"
             value={expiresIn}
             onChange={(event) => setExpiresIn(event.target.value as TokenExpirationOption)}
@@ -213,7 +215,7 @@ function CreateTokenModal({
             {expirationOptions.map((option) => (
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div className="space-y-3">

@@ -40,6 +40,8 @@ export default class PagesController {
       })
     }
 
+    if (request.input('sort') === 'id') query.clearOrder().orderBy('id', 'desc')
+
     const pages = await query.paginate(page, limit)
     return response.ok(pages)
   }

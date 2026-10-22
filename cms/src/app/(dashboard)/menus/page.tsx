@@ -2,6 +2,9 @@
 
 /* eslint-disable react-hooks/set-state-in-effect */
 
+import { Select } from '@/components/ui/select'
+import { ListPagination } from '@/components/shared/list-pagination'
+import { useClientList, useListState } from '@/hooks/use-list-state'
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -69,7 +72,9 @@ function normalizeOrder(items: DraftItem[]) {
 }
 
 export default function MenusPage() {
-  const { data: menus = [] } = useMenus();
+  const list = useListState()
+  const { data: menus = [], isFetching } = useMenus();
+  const visibleMenus = useClientList(menus, list)
   const { data: pagesResponse } = usePages({
     page: 1,
     limit: 100,
@@ -323,7 +328,7 @@ export default function MenusPage() {
               </h4>
             </div>
             <div className="divide-y divide-[var(--app-border)]">
-              {menus.map((menu) => (
+              {visibleMenus.map((menu) => (
                 <button
                   key={menu.id}
                   className={cn(
@@ -352,6 +357,7 @@ export default function MenusPage() {
                 </div>
               ) : null}
             </div>
+            <ListPagination list={list} total={menus.length} loading={isFetching} />
           </aside>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
@@ -377,7 +383,7 @@ export default function MenusPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="menu-location">Location</Label>
-                  <select
+                  <Select
                     id="menu-location"
                     className={SELECT_CLASS}
                     value={location}
@@ -386,7 +392,7 @@ export default function MenusPage() {
                     <option value="header">Header</option>
                     <option value="footer">Footer</option>
                     <option value="sidebar">Sidebar</option>
-                  </select>
+                  </Select>
                 </div>
                 <label className="mt-7 flex items-center gap-3 text-sm text-[var(--app-muted-strong)]">
                   <Checkbox
@@ -504,7 +510,7 @@ export default function MenusPage() {
                               updateItem(item.id, { url: event.target.value })
                             }
                           />
-                          <select
+                          <Select
                             className={SELECT_CLASS}
                             value={item.target ?? "_self"}
                             onChange={(event) =>
@@ -517,7 +523,7 @@ export default function MenusPage() {
                           >
                             <option value="_self">Same tab</option>
                             <option value="_blank">New tab</option>
-                          </select>
+                          </Select>
                           <div className="flex justify-end gap-1">
                             <Button
                               type="button"

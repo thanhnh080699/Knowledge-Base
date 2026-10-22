@@ -1,18 +1,22 @@
 'use client';
 
+import Link from 'next/link'
+import { useListState } from '@/hooks/use-list-state'
+import { usePosts } from '@/hooks/queries/use-posts'
+import { formatDateTime } from '@/lib/admin-format'
 import { Typography } from '@/components/ui/typography';
 import { Tag } from '@/components/ui/tag';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  FileText, 
-  Eye, 
-  MessageSquare, 
-  Mail, 
-  TrendingUp, 
-  Clock, 
-  Plus, 
+import {
+  FileText,
+  Eye,
+  MessageSquare,
+  Mail,
+  TrendingUp,
+  Clock,
+  Plus,
   ArrowUpRight,
   Briefcase,
   Users
@@ -70,6 +74,9 @@ const item = {
 };
 
 export default function DashboardPage() {
+  const list = useListState()
+  const { data, isLoading, isFetching, error } = usePosts({ page: list.page, limit: list.pageSize })
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -89,7 +96,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <motion.div 
+      <motion.div
         variants={container}
         initial="hidden"
         animate="show"
@@ -137,7 +144,7 @@ export default function DashboardPage() {
             </Button>
           </CardHeader>
           <CardContent>
-            <Table>
+            <Table pagination={{ list, total: data?.meta.total ?? 0, loading: isFetching }} error={error}>
               <TableHeader>
                 <TableRow>
                   <TableHead>Title</TableHead>
@@ -147,30 +154,15 @@ export default function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">Migration to AdonisJS v6</TableCell>
-                  <TableCell><Tag variant="success">Published</Tag></TableCell>
-                  <TableCell className="hidden text-[var(--app-muted)] sm:table-cell">2026-04-23</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm">Edit</Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Next.js 15 Features</TableCell>
-                  <TableCell><Tag variant="warning">Draft</Tag></TableCell>
-                  <TableCell className="hidden text-[var(--app-muted)] sm:table-cell">2026-04-22</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm">Edit</Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Tailwind CSS v4 Guide</TableCell>
-                  <TableCell><Tag variant="success">Published</Tag></TableCell>
-                  <TableCell className="hidden text-[var(--app-muted)] sm:table-cell">2026-04-20</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm">Edit</Button>
-                  </TableCell>
-                </TableRow>
+                {isLoading ? <TableRow><TableCell colSpan={4}>Loading posts…</TableCell></TableRow> : (data?.data ?? []).map(post => (
+                  <TableRow key={post.id}>
+                    <TableCell className="font-medium">#{post.id} · {post.title}</TableCell>
+                    <TableCell><Tag variant={post.status === 'PUBLISHED' ? 'success' : 'warning'}>{post.status}</Tag></TableCell>
+                    <TableCell className="hidden sm:table-cell">{formatDateTime(post.publishedAt)}</TableCell>
+                    <TableCell className="text-right"><Link href={`/posts/${post.id}`}>Edit</Link></TableCell>
+                  </TableRow>
+                ))}
+                {!isLoading && !data?.data.length ? <TableRow><TableCell colSpan={4}>No posts found.</TableCell></TableRow> : null}
               </TableBody>
             </Table>
           </CardContent>

@@ -1,5 +1,6 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
 import { useEffect, useState, type FormEvent, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -242,11 +243,11 @@ export function TaxonomyFormModal({
             />
           </div>
         </div>
-        
+
         {kind === 'category' ? (
           <div className="space-y-2">
             <Label htmlFor="category-parent">Danh mục cha</Label>
-            <select
+            <Select
               id="category-parent"
               value={form.parentId}
               onChange={(event) => setForm((current) => ({ ...current, parentId: event.target.value }))}
@@ -260,7 +261,7 @@ export function TaxonomyFormModal({
                     {i.name}
                   </option>
                 ))}
-            </select>
+            </Select>
           </div>
         ) : null}
 
@@ -304,7 +305,7 @@ export function TaxonomyFormModal({
                       Xóa ảnh
                     </Button>
                   )}
-                  <input
+                  <Input
                     type="file"
                     ref={fileInputRef}
                     className="hidden"

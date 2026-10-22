@@ -1,5 +1,6 @@
 'use client'
 
+import { useClientList, useListState } from '@/hooks/use-list-state'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -28,7 +29,7 @@ import type {
   UpdateCategoryPayload,
   UpdateTagPayload,
 } from '@/types/taxonomy'
-import { ChevronDown, ChevronRight, FolderOpen, Pencil, Plus, RotateCcw, Search, TagIcon, Trash2 } from 'lucide-react'
+import { FolderOpen, Pencil, Plus, RotateCcw, Search, TagIcon, Trash2 } from 'lucide-react'
 import { absoluteCdnUrl } from '@/lib/utils'
 
 type TaxonomyKind = 'category' | 'tag'
@@ -55,156 +56,12 @@ function isCategory(item: TaxonomyItem): item is Category {
   return 'image' in item
 }
 
-interface CategoryRowProps {
-  category: Category & { children: Category[] }
-  level: number
-  selectedIds: number[]
-  expandedIds: Set<number>
-  onToggleOne: (id: number) => void
-  onToggleExpand: (id: number) => void
-  onEdit: (item: Category) => void
-  onDelete: (ids: number[], title: string, description: string) => void
-  basePath: string
-  useModalForm: boolean
-}
-
-function CategoryRow({
-  category,
-  level,
-  selectedIds,
-  expandedIds,
-  onToggleOne,
-  onToggleExpand,
-  onEdit,
-  onDelete,
-  basePath,
-  useModalForm,
-}: CategoryRowProps) {
-  const isExpanded = expandedIds.has(category.id)
-  const hasChildren = category.children.length > 0
-
-  return (
-    <>
-      <TableRow className="border-b border-[var(--app-border)] transition-colors hover:bg-[var(--app-surface-hover)]">
-        <TableCell className="px-4">
-          <Checkbox checked={selectedIds.includes(category.id)} onChange={() => onToggleOne(category.id)} />
-        </TableCell>
-        <TableCell className="px-4 font-mono text-xs font-medium text-[var(--foreground)]">
-          {formatDisplayId(category.id)}
-        </TableCell>
-        <TableCell>
-          <div className="flex items-center gap-2" style={{ paddingLeft: `${level * 24}px` }}>
-            {hasChildren ? (
-              <button
-                type="button"
-                onClick={() => onToggleExpand(category.id)}
-                className="flex h-5 w-5 items-center justify-center rounded-md hover:bg-[var(--app-surface-muted)]"
-              >
-                {isExpanded ? (
-                  <ChevronDown className="h-3.5 w-3.5 text-[var(--app-muted)]" />
-                ) : (
-                  <ChevronRight className="h-3.5 w-3.5 text-[var(--app-muted)]" />
-                )}
-              </button>
-            ) : (
-              <div className="w-5" />
-            )}
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--app-accent-soft-bg)] text-[var(--app-accent-soft-fg)]">
-              <FolderOpen className="h-4 w-4" />
-            </div>
-            <span className="font-medium text-[var(--app-muted-strong)]">{category.name}</span>
-          </div>
-        </TableCell>
-        <TableCell className="font-mono text-xs text-[var(--app-muted)]">{category.slug}</TableCell>
-        <TableCell className="max-w-[340px] text-[var(--app-muted)]">
-          <span className="line-clamp-2">{category.description || 'No description'}</span>
-        </TableCell>
-        <TableCell>
-          {category.image ? (
-            <div className="relative h-10 w-10 overflow-hidden rounded border border-[var(--app-border)]">
-              <img
-                src={absoluteCdnUrl(category.image)}
-                alt={category.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          ) : (
-            <span className="text-sm text-[var(--app-muted)]">No Image</span>
-          )}
-        </TableCell>
-        <TableCell className="text-sm text-[var(--app-muted)]">{formatDateTime(category.createdAt)}</TableCell>
-        <TableCell className="pr-6 text-right">
-          <div className="flex items-center justify-end gap-2">
-            {useModalForm ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)] hover:text-[var(--app-accent-soft-fg)]"
-                onClick={() => onEdit(category)}
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Link
-                href={`${basePath}/${category.id}`}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--app-muted)] transition-colors hover:bg-[var(--app-surface-hover)] hover:text-[var(--app-accent-soft-fg)]"
-              >
-                <Pencil className="h-4 w-4" />
-              </Link>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-[var(--app-muted)] hover:bg-[var(--app-danger-soft-bg)] hover:text-[var(--app-danger-soft-fg)]"
-              onClick={() =>
-                onDelete([category.id], `Delete ${category.name}`, `Are you sure you want to delete "${category.name}"?`)
-              }
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </TableCell>
-      </TableRow>
-      {isExpanded &&
-        category.children.map((child) => (
-          <CategoryRow
-            key={child.id}
-            category={child as Category & { children: Category[] }}
-            level={level + 1}
-            selectedIds={selectedIds}
-            expandedIds={expandedIds}
-            onToggleOne={onToggleOne}
-            onToggleExpand={onToggleExpand}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            basePath={basePath}
-            useModalForm={useModalForm}
-          />
-        ))}
-    </>
-  )
-}
-
 export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: TaxonomyPageProps) {
   const [query, setQuery] = useState('')
-  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<TaxonomyItem | null>(null)
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
-  const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set())
   const [isReorderOpen, setIsReorderOpen] = useState(false)
-
-  const toggleExpand = (id: number) => {
-    setExpandedIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) {
-        next.delete(id)
-      } else {
-        next.add(id)
-      }
-      return next
-    })
-  }
 
   const buildTree = (items: Category[]): (Category & { children: Category[] })[] => {
     const itemMap = new Map<number, Category & { children: Category[] }>()
@@ -228,6 +85,9 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
     return roots
   }
 
+  const list = useListState({ kind, query })
+  const { selectedIds, setSelectedIds } = list
+
   const filters = useMemo(
     () => ({
       q: query.trim() || undefined,
@@ -245,13 +105,15 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
   const updateTag = useUpdateTag()
   const deleteTag = useDeleteTag()
 
-  const items: TaxonomyItem[] = kind === 'category' ? categoriesQuery.data ?? [] : tagsQuery.data ?? []
+  const allItems: TaxonomyItem[] = kind === 'category' ? categoriesQuery.data ?? [] : tagsQuery.data ?? []
+  const items = useClientList(allItems, list)
+  const total = allItems.length
   const isLoading = kind === 'category' ? categoriesQuery.isLoading : tagsQuery.isLoading
 
   const treeItems = useMemo(() => {
     if (kind !== 'category' || query.trim()) return null
-    return buildTree(items as Category[])
-  }, [items, kind, query])
+    return buildTree(allItems as Category[])
+  }, [allItems, kind, query])
 
 
   const allSelected = items.length > 0 && selectedIds.length === items.length
@@ -393,14 +255,13 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
             </div>
           </div>
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isLoading }} error={kind === 'category' ? categoriesQuery.error : tagsQuery.error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[50px] px-4">
                     <Checkbox checked={allSelected} indeterminate={partiallySelected} onChange={toggleAll} />
                   </TableHead>
-                  <TableHead className="w-[120px] px-4">ID</TableHead>
+                  <TableHead className="w-[120px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Slug</TableHead>
                   {kind === 'category' ? <TableHead>Description</TableHead> : null}
@@ -425,22 +286,6 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                       No {title.toLowerCase()} found.
                     </TableCell>
                   </TableRow>
-                ) : treeItems ? (
-                  treeItems.map((item) => (
-                    <CategoryRow
-                      key={item.id}
-                      category={item}
-                      level={0}
-                      selectedIds={selectedIds}
-                      expandedIds={expandedIds}
-                      onToggleOne={toggleOne}
-                      onToggleExpand={toggleExpand}
-                      onEdit={setEditingItem}
-                      onDelete={(ids, title, description) => setDeleteState({ ids, title, description })}
-                      basePath={basePath}
-                      useModalForm={useModalForm}
-                    />
-                  ))
                 ) : (
                   items.map((item) => (
                     <TableRow key={item.id} className="border-b border-[var(--app-border)] transition-colors hover:bg-[var(--app-surface-hover)]">
@@ -522,12 +367,6 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                 )}
               </TableBody>
             </Table>
-          </div>
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3">
-            <span className="text-sm text-[var(--app-muted)]">
-              Showing {items.length === 0 ? 0 : 1} to {items.length} of {items.length} results
-            </span>
-          </div>
         </div>
       </div>
 
@@ -540,7 +379,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
             isSubmitting={isSubmitting}
             onClose={() => setIsCreateOpen(false)}
             onSubmit={handleCreate}
-            items={items}
+            items={allItems}
           />
 
           <TaxonomyFormModal
@@ -551,7 +390,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
             isSubmitting={isSubmitting}
             onClose={() => setEditingItem(null)}
             onSubmit={handleUpdate}
-            items={items}
+            items={allItems}
           />
         </>
       ) : null}

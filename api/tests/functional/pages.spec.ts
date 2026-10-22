@@ -104,4 +104,39 @@ test.group('Pages', () => {
 
     response.assertStatus(403)
   })
+  test('orders admin pages by ID before pagination even after older records are updated', async ({
+    client,
+    assert,
+  }) => {
+    const admin = await createAdminUser()
+    const prefix = `id-pagination-${Date.now()}`
+    const older = await Page.create({
+      title: `${prefix}-older`,
+      slug: `${prefix}-older`,
+      content: 'Original',
+      status: 'DRAFT',
+    })
+    const newer = await Page.create({
+      title: `${prefix}-newer`,
+      slug: `${prefix}-newer`,
+      content: 'Newer',
+      status: 'DRAFT',
+    })
+    await older.merge({ content: 'Edited after the newer record' }).save()
+    const first = await client
+      .get('/api/admin/pages')
+      .loginAs(admin)
+      .qs({ search: prefix, sort: 'id', page: 1, limit: 1 })
+    first.assertStatus(200)
+    assert.equal(first.body().data[0].id, newer.id)
+    assert.equal(first.body().meta.total, 2)
+    const second = await client
+      .get('/api/admin/pages')
+      .loginAs(admin)
+      .qs({ search: prefix, sort: 'id', page: 2, limit: 1 })
+    second.assertStatus(200)
+    assert.equal(second.body().data[0].id, older.id)
+    await older.delete()
+    await newer.delete()
+  })
 })

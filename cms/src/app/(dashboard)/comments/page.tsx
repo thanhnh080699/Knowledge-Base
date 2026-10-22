@@ -1,5 +1,7 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
+import { useListState } from '@/hooks/use-list-state'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -26,7 +28,7 @@ interface DeleteState {
 }
 
 const FILTER_SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
+  'w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
 function statusVariant(status: CommentStatus) {
   if (status === 'APPROVED') return 'success'
@@ -38,22 +40,24 @@ export default function CommentsPage() {
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<CommentStatus | ''>('')
   const [trashed, setTrashed] = useState(false)
-  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [replyState, setReplyState] = useState<ReplyState | null>(null)
   const [deleteState, setDeleteState] = useState<DeleteState | null>(null)
 
+  const list = useListState({ query, status, trashed })
+  const { selectedIds, setSelectedIds } = list
+
   const filters = useMemo(
     () => ({
-      page: 1,
-      limit: 20,
+      page: list.page,
+      limit: list.pageSize,
       search: query.trim() || undefined,
       status,
       trashed,
     }),
-    [query, status, trashed]
+    [query, status, trashed, list.page, list.pageSize]
   )
 
-  const { data: commentsResponse, isLoading } = useComments(filters)
+  const { data: commentsResponse, isLoading, isFetching, error } = useComments(filters)
   const updateStatus = useUpdateCommentStatus()
   const replyComment = useReplyComment()
   const deleteComment = useDeleteComment()
@@ -136,12 +140,12 @@ export default function CommentsPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as CommentStatus | '')}>
+              <Select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as CommentStatus | '')}>
                 <option value="">All statuses</option>
                 <option value="PENDING">Pending</option>
                 <option value="APPROVED">Approved</option>
                 <option value="SPAM">Spam</option>
-              </select>
+              </Select>
               <Button variant="outline" size="sm" className="h-10 gap-2" onClick={resetFilters}>
                 <Filter className="h-4 w-4" />
                 Reset
@@ -170,14 +174,13 @@ export default function CommentsPage() {
             </div>
           ) : null}
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching }} error={error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[50px] px-4">
                     <Checkbox checked={allSelected} indeterminate={partiallySelected} onChange={toggleAll} />
                   </TableHead>
-                  <TableHead className="w-[110px] px-4">ID</TableHead>
+                  <TableHead className="w-[110px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Comment</TableHead>
                   <TableHead>Post</TableHead>
                   <TableHead>Status</TableHead>
@@ -279,11 +282,6 @@ export default function CommentsPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3">
-            <span className="text-sm text-[var(--app-muted)]">Showing {comments.length === 0 ? 0 : 1} to {comments.length} of {total} results</span>
-          </div>
         </div>
       </div>
 

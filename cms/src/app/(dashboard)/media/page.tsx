@@ -1,5 +1,6 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { ReactNode } from 'react'
@@ -10,7 +11,9 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Modal } from '@/components/ui/modal'
-import { useMedia } from '@/hooks/queries/use-media'
+import { ListPagination } from '@/components/shared/list-pagination'
+import { useListState, useScopedSelection } from '@/hooks/use-list-state'
+import { useMediaPage } from '@/hooks/queries/use-media'
 import {
   useCreateFolder,
   useDeleteFolder,
@@ -37,8 +40,7 @@ import {
 import { absoluteCdnUrl } from '@/lib/utils'
 
 const SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
-const MEDIA_PAGE_SIZE = 100
+  'w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
 export default function MediaPage() {
   const router = useRouter()
@@ -48,30 +50,23 @@ export default function MediaPage() {
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState<MediaFilters['sort']>('updated_at')
   const [direction, setDirection] = useState<MediaFilters['direction']>('desc')
-  const [selectedPaths, setSelectedPaths] = useState<string[]>([])
+  const list = useListState({ folder, sort, direction, query })
+  const listPageScope = `${list.page}:${list.pageSize}`
+  const [selectedPaths, setSelectedPaths] = useScopedSelection<string>([folder, query, sort, direction, listPageScope])
   const [uploadOpen, setUploadOpen] = useState(false)
   const [folderOpen, setFolderOpen] = useState(false)
   const [moveOpen, setMoveOpen] = useState(false)
   const [renameFolder, setRenameFolder] = useState<MediaFolder | null>(null)
   const [deleteFolder, setDeleteFolder] = useState<MediaFolder | null>(null)
 
-  const filters = useMemo(() => ({ folder, sort, direction, limit: MEDIA_PAGE_SIZE }), [direction, folder, sort])
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useMedia(filters)
+  const filters = useMemo(() => ({ folder, sort, direction, search: query.trim(), limit: list.pageSize, offset: (list.page - 1) * list.pageSize }), [direction, folder, sort, query, list.page, list.pageSize])
+  const { data, isFetching, isLoading, error } = useMediaPage(filters)
   const uploadMedia = useUploadMedia()
   const deleteMedia = useDeleteMedia()
   const moveMedia = useMoveMedia()
 
   const folders = data?.folders ?? []
-  const files = useMemo(() => {
-    const items = data?.files ?? []
-    if (!query.trim()) return items
-    const normalized = query.trim().toLowerCase()
-    return items.filter((file) =>
-      [file.original_name, file.file_name, file.path, file.mime_type].some((value) =>
-        value.toLowerCase().includes(normalized)
-      )
-    )
-  }, [data?.files, query])
+  const files = data?.files ?? []
 
   const visibleItemsCount = folders.length + files.length
   const totalFiles = data?.total ?? files.length
@@ -146,11 +141,11 @@ export default function MediaPage() {
               <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search media by name, path, or MIME" className="pl-9" />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select className={SELECT_CLASS} value={sort} onChange={(event) => setSort(event.target.value as MediaFilters['sort'])}>
+              <Select className={SELECT_CLASS} value={sort} onChange={(event) => setSort(event.target.value as MediaFilters['sort'])}>
                 <option value="updated_at">Latest</option>
                 <option value="name">Name</option>
                 <option value="size">Size</option>
-              </select>
+              </Select>
               <Button
                 variant="outline"
                 size="icon"
@@ -222,27 +217,8 @@ export default function MediaPage() {
             </div>
           )}
 
-          {!isLoading && hasNextPage && (
-            <div className="flex justify-center border-t border-[var(--app-border)] px-4 py-4">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-10 gap-2"
-                disabled={isFetchingNextPage}
-                onClick={() => fetchNextPage()}
-              >
-                {isFetchingNextPage && <RotateCcw className="h-4 w-4 animate-spin" />}
-                Show more
-              </Button>
-            </div>
-          )}
-
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3 text-sm text-[var(--app-muted)]">
-            <span>
-              Showing {folders.length} folders and {files.length} of {totalFiles} files
-            </span>
-            <span>{folder || 'root'}</span>
-          </div>
+          {error ? <p role="alert" className="p-4 text-sm text-[var(--app-danger-soft-fg)]">Không thể tải media. Vui lòng thử lại.</p> : null}
+          <ListPagination list={list} total={totalFiles} loading={isFetching} label="file" />
         </div>
       </div>
 
@@ -357,11 +333,11 @@ function UploadModal({ isOpen, folder, onClose, onSubmit }: { isOpen: boolean; f
     <Modal isOpen={isOpen} onClose={onClose} title="Upload Media">
       <div className="space-y-6">
         <div className="relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-[var(--app-border)] bg-[var(--app-surface-muted)] p-10 text-center transition-colors hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-hover)]">
-          <input 
-            type="file" 
+          <Input
+            type="file"
             accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.mp4,.mov,.avi,.webm,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
             className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
-            onChange={(event) => setFile(event.target.files?.[0] || null)} 
+            onChange={(event) => setFile(event.target.files?.[0] || null)}
           />
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--app-surface)] shadow-sm">

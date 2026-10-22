@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from '@/components/ui/select'
+import { useClientList, useListState } from '@/hooks/use-list-state'
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import {
@@ -118,7 +120,10 @@ function providerToForm(provider?: LlmProvider): LlmProviderPayload {
 }
 
 export default function LlmSettingsPage() {
-  const { data: providers = [], isLoading } = useLlmProviders();
+  const list = useListState()
+  const { data: allItems = [], isLoading, isFetching, error } = useLlmProviders()
+  const providers = useClientList(allItems, list)
+  const total = allItems.length;
   const [isModalOpen, setModalOpen] = useState(false);
   const [editingProvider, setEditingProvider] = useState<LlmProvider | null>(
     null,
@@ -126,7 +131,7 @@ export default function LlmSettingsPage() {
   const deleteProvider = useDeleteLlmProvider();
   const testSavedProvider = useTestSavedLlmProvider();
 
-  const activeCount = providers.filter((provider) => provider.isActive).length;
+  const activeCount = allItems.filter((provider) => provider.isActive).length;
 
   function openCreateModal() {
     setEditingProvider(null);
@@ -170,16 +175,16 @@ export default function LlmSettingsPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <SummaryCard label="Total providers" value={providers.length} />
+          <SummaryCard label="Total providers" value={allItems.length} />
           <SummaryCard label="Active providers" value={activeCount} />
           <SummaryCard
             label="Inactive providers"
-            value={providers.length - activeCount}
+            value={allItems.length - activeCount}
           />
         </div>
 
         <div className="overflow-hidden rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-sm">
-          <Table>
+          <Table pagination={{ list, total, loading: isFetching }} error={error}>
             <TableHeader className="bg-[var(--app-surface-muted)]">
               <TableRow>
                 <TableHead>Name</TableHead>
@@ -272,12 +277,6 @@ export default function LlmSettingsPage() {
               )}
             </TableBody>
           </Table>
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3 text-sm text-[var(--app-muted)]">
-            <span>
-              Showing {providers.length} provider
-              {providers.length === 1 ? "" : "s"}
-            </span>
-          </div>
         </div>
       </div>
 
@@ -433,7 +432,7 @@ function ProviderModal({
 
           <div>
             <Label htmlFor="provider-driver">Driver</Label>
-            <select
+            <Select
               id="provider-driver"
               value={form.driver}
               onChange={(event) =>
@@ -446,7 +445,7 @@ function ProviderModal({
                   {option.label}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
@@ -499,7 +498,7 @@ function ProviderModal({
               }
               required
             />
-            <select
+            <Select
               value={
                 models.some((model) => model.id === form.modelName)
                   ? form.modelName
@@ -516,7 +515,7 @@ function ProviderModal({
                   {model.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 

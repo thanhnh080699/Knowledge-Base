@@ -1,14 +1,16 @@
 'use client'
 
+import { Checkbox } from '@/components/ui/checkbox'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { 
-  BarChart3, 
-  Settings2, 
-  Activity, 
-  Users, 
-  MousePointer2, 
-  Timer, 
+import {
+  BarChart3,
+  Settings2,
+  Activity,
+  Users,
+  MousePointer2,
+  Timer,
   RefreshCcw,
   Save,
   RotateCcw,
@@ -23,17 +25,17 @@ import { Textarea } from '@/components/ui/textarea'
 import { useSettingsGroup } from '@/hooks/queries/use-settings'
 import { useUpdateSettingsGroup } from '@/hooks/mutations/use-setting-mutations'
 import { useAnalyticsDashboard, useAnalyticsRealtime } from '@/hooks/queries/use-analytics'
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
 } from 'recharts'
 import { toast } from 'sonner'
-import type { SettingValue, UpdateSettingInput } from '@/types/settings'
+import type { SettingsGroup, SettingValue, UpdateSettingInput } from '@/types/settings'
 
 const GA_GROUP = 'google_analytics'
 
@@ -61,22 +63,22 @@ export default function GoogleAnalyticsPage() {
             <p className="text-[var(--app-muted)] text-sm">Connect and track your website performance directly in the CMS.</p>
           </div>
           <div className="flex bg-[var(--app-surface-muted)] p-1 rounded-lg border border-[var(--app-border)]">
-            <button 
+            <button
               onClick={() => setActiveTab('dashboard')}
               className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
-                activeTab === 'dashboard' 
-                  ? 'bg-white shadow-sm text-blue-600' 
+                activeTab === 'dashboard'
+                  ? 'bg-white shadow-sm text-blue-600'
                   : 'text-[var(--app-muted)] hover:text-[var(--foreground)]'
               }`}
             >
               <BarChart3 className="h-4 w-4" />
               Dashboard
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('config')}
               className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
-                activeTab === 'config' 
-                  ? 'bg-white shadow-sm text-blue-600' 
+                activeTab === 'config'
+                  ? 'bg-white shadow-sm text-blue-600'
                   : 'text-[var(--app-muted)] hover:text-[var(--foreground)]'
               }`}
             >
@@ -164,28 +166,28 @@ function AnalyticsDashboard() {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--app-border)" />
-              <XAxis 
-                dataKey="date" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fontSize: 12, fill: 'var(--app-muted)' }} 
+              <XAxis
+                dataKey="date"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12, fill: 'var(--app-muted)' }}
                 dy={10}
               />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fontSize: 12, fill: 'var(--app-muted)' }} 
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 12, fill: 'var(--app-muted)' }}
               />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ borderRadius: '12px', border: '1px solid var(--app-border)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
               />
-              <Area 
-                type="monotone" 
-                dataKey="users" 
-                stroke="#2563eb" 
+              <Area
+                type="monotone"
+                dataKey="users"
+                stroke="#2563eb"
                 strokeWidth={2}
-                fillOpacity={1} 
-                fill="url(#colorUsers)" 
+                fillOpacity={1}
+                fill="url(#colorUsers)"
                 name="Users"
               />
             </AreaChart>
@@ -200,25 +202,25 @@ function AnalyticsDashboard() {
             <h3 className="font-semibold">Top Performing Pages</h3>
           </div>
           <div className="overflow-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50/50 border-b">
-                <tr>
-                  <th className="text-left px-6 py-3 font-medium text-[var(--app-muted)]">Page Path</th>
-                  <th className="text-right px-6 py-3 font-medium text-[var(--app-muted)]">Views</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--app-border)]">
+            <Table className="w-full text-sm">
+              <TableHeader className="bg-slate-50/50 border-b">
+                <TableRow>
+                  <TableHead className="text-left px-6 py-3 font-medium text-[var(--app-muted)]">Page Path</TableHead>
+                  <TableHead className="text-right px-6 py-3 font-medium text-[var(--app-muted)]">Views</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-[var(--app-border)]">
                 {data?.pages.map((page) => (
-                  <tr key={page.path} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-3 max-w-[300px] truncate">
+                  <TableRow key={page.path} className="hover:bg-slate-50/50 transition-colors">
+                    <TableCell className="px-6 py-3 max-w-[300px] truncate">
                       <span className="font-medium text-blue-600">{page.path}</span>
                       <span className="block text-xs text-[var(--app-muted)] truncate">{page.title}</span>
-                    </td>
-                    <td className="px-6 py-3 text-right font-semibold">{page.views}</td>
-                  </tr>
+                    </TableCell>
+                    <TableCell className="px-6 py-3 text-right font-semibold">{page.views}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
 
@@ -228,22 +230,22 @@ function AnalyticsDashboard() {
             <h3 className="font-semibold">Top Traffic Sources</h3>
           </div>
           <div className="overflow-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50/50 border-b">
-                <tr>
-                  <th className="text-left px-6 py-3 font-medium text-[var(--app-muted)]">Source / Medium</th>
-                  <th className="text-right px-6 py-3 font-medium text-[var(--app-muted)]">Users</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--app-border)]">
+            <Table className="w-full text-sm">
+              <TableHeader className="bg-slate-50/50 border-b">
+                <TableRow>
+                  <TableHead className="text-left px-6 py-3 font-medium text-[var(--app-muted)]">Source / Medium</TableHead>
+                  <TableHead className="text-right px-6 py-3 font-medium text-[var(--app-muted)]">Users</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-[var(--app-border)]">
                 {data?.sources.map((source) => (
-                  <tr key={source.source} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-3 font-medium">{source.source}</td>
-                    <td className="px-6 py-3 text-right font-semibold">{source.users}</td>
-                  </tr>
+                  <TableRow key={source.source} className="hover:bg-slate-50/50 transition-colors">
+                    <TableCell className="px-6 py-3 font-medium">{source.source}</TableCell>
+                    <TableCell className="px-6 py-3 text-right font-semibold">{source.users}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>
@@ -268,10 +270,10 @@ function AnalyticsNotEnabled({ onGoToConfig }: { onGoToConfig: () => void }) {
   )
 }
 
-function AnalyticsConfig({ settingsData, isLoading }: { settingsData: any; isLoading: boolean }) {
+function AnalyticsConfig({ settingsData, isLoading }: { settingsData: SettingsGroup | undefined; isLoading: boolean }) {
   const updateSettings = useUpdateSettingsGroup(GA_GROUP)
   const [draftValues, setDraftValues] = useState<Record<string, SettingValue>>({})
-  
+
   const baseValues = useMemo(() => settingsData?.values || {}, [settingsData])
   const values = useMemo(() => ({ ...baseValues, ...draftValues }), [baseValues, draftValues])
 
@@ -281,7 +283,7 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: any; isLoa
 
   async function handleSave() {
     const settings = settingsData?.settings || []
-    const payload: UpdateSettingInput[] = settings.map((s: any) => ({
+    const payload: UpdateSettingInput[] = settings.map((s) => ({
       key: s.settingKey,
       value: values[s.settingKey] ?? null,
       type: s.type,
@@ -315,9 +317,9 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: any; isLoa
               <p className="text-xs text-blue-700">Activate gtag.js on the public website.</p>
             </div>
             <div className="flex items-center h-6">
-              <input 
+              <Checkbox
                 id="google_analytics_enabled"
-                type="checkbox" 
+
                 checked={values.google_analytics_enabled === true}
                 onChange={(e) => updateValue('google_analytics_enabled', e.target.checked)}
                 className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600"
@@ -327,7 +329,7 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: any; isLoa
 
           <div className="space-y-2">
             <Label htmlFor="google_analytics_measurement_id" className="font-semibold">Measurement ID</Label>
-            <Input 
+            <Input
               id="google_analytics_measurement_id"
               value={String(values.google_analytics_measurement_id || '')}
               onChange={(e) => updateValue('google_analytics_measurement_id', e.target.value)}
@@ -346,7 +348,7 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: any; isLoa
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-sm space-y-6">
           <div className="space-y-2">
             <Label htmlFor="google_analytics_property_id" className="font-semibold">Property ID</Label>
-            <Input 
+            <Input
               id="google_analytics_property_id"
               value={String(values.google_analytics_property_id || '')}
               onChange={(e) => updateValue('google_analytics_property_id', e.target.value)}
@@ -357,7 +359,7 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: any; isLoa
 
           <div className="space-y-2">
             <Label htmlFor="google_analytics_service_account" className="font-semibold">Service Account JSON</Label>
-            <Textarea 
+            <Textarea
               id="google_analytics_service_account"
               value={typeof values.google_analytics_service_account === 'object' ? JSON.stringify(values.google_analytics_service_account, null, 2) : String(values.google_analytics_service_account || '')}
               onChange={(e) => {

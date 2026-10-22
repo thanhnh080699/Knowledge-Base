@@ -1,5 +1,7 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
+import { useListState } from '@/hooks/use-list-state'
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,7 +17,7 @@ import type { CreateProjectPayload, Project, ProjectStatus, UpdateProjectPayload
 import { ExternalLink, Filter, Pencil, Plus, RotateCcw, Search, Star, Trash2 } from 'lucide-react'
 
 const FILTER_SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
+  'w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]'
 
 function statusVariant(status: ProjectStatus) {
   if (status === 'PUBLISHED') return 'success'
@@ -31,18 +33,20 @@ export default function ProjectsPage() {
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [deleteProject, setDeleteProject] = useState<Project | null>(null)
 
+  const list = useListState({ featured, query, status })
+
   const filters = useMemo(
     () => ({
-      page: 1,
-      limit: 20,
+      page: list.page,
+      limit: list.pageSize,
       search: query.trim() || undefined,
       status,
       featured,
     }),
-    [featured, query, status]
+    [featured, query, status, list.page, list.pageSize]
   )
 
-  const { data: projectsResponse, isLoading } = useProjects(filters)
+  const { data: projectsResponse, isLoading, isFetching, error } = useProjects(filters)
   const createProject = useCreateProject()
   const updateProject = useUpdateProject()
   const removeProject = useDeleteProject()
@@ -111,17 +115,17 @@ export default function ProjectsPage() {
               <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by title, slug or project content" className="pl-9" />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as ProjectStatus | '')}>
+              <Select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value as ProjectStatus | '')}>
                 <option value="">All statuses</option>
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
                 <option value="ARCHIVED">Archived</option>
-              </select>
-              <select className={FILTER_SELECT_CLASS} value={featured === '' ? '' : String(featured)} onChange={(event) => setFeatured(event.target.value === '' ? '' : event.target.value === 'true')}>
+              </Select>
+              <Select className={FILTER_SELECT_CLASS} value={featured === '' ? '' : String(featured)} onChange={(event) => setFeatured(event.target.value === '' ? '' : event.target.value === 'true')}>
                 <option value="">All projects</option>
                 <option value="true">Featured only</option>
                 <option value="false">Non-featured</option>
-              </select>
+              </Select>
               <Button variant="outline" size="sm" className="h-10 gap-2" onClick={resetFilters}>
                 <Filter className="h-4 w-4" />
                 Reset
@@ -129,11 +133,10 @@ export default function ProjectsPage() {
             </div>
           </div>
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching }} error={error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[120px] px-4">ID</TableHead>
+                  <TableHead className="w-[120px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Project</TableHead>
                   <TableHead>Stack</TableHead>
                   <TableHead>Status</TableHead>
@@ -198,11 +201,6 @@ export default function ProjectsPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3">
-            <span className="text-sm text-[var(--app-muted)]">Showing {projects.length === 0 ? 0 : 1} to {projects.length} of {total} results</span>
-          </div>
         </div>
       </div>
 

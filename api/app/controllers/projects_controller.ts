@@ -40,6 +40,8 @@ export default class ProjectsController {
       })
     }
 
+    if (request.input('sort') === 'id') query.clearOrder().orderBy('id', 'desc')
+
     const projects = await query.paginate(page, limit)
     return response.ok(projects)
   }
@@ -86,10 +88,13 @@ export default class ProjectsController {
    */
   async update({ params, request, response }: HttpContext) {
     const project = await Project.findOrFail(params.id)
-    const { params: _, ...projectPayload } = await request.validateUsing(updateProjectValidator, {
-      meta: { params },
-    })
-    void _
+    const { params: routeParams, ...projectPayload } = await request.validateUsing(
+      updateProjectValidator,
+      {
+        meta: { params },
+      }
+    )
+    void routeParams
     const payload = normalizeMediaFields(projectPayload, ['thumbnailUrl'])
 
     project.merge(payload)

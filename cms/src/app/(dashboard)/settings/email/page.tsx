@@ -1,5 +1,6 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { MailCheck, RotateCcw, Save, Send } from 'lucide-react'
@@ -323,7 +324,7 @@ function SettingField({
       </Label>
       <div className="mt-2">
         {setting.type === 'select' ? (
-          <select
+          <Select
             id={setting.settingKey}
             value={valueToString(value)}
             onChange={(event) => onChange(setting.settingKey, event.target.value)}
@@ -334,7 +335,7 @@ function SettingField({
                 {option}
               </option>
             ))}
-          </select>
+          </Select>
         ) : (
           <Input
             id={setting.settingKey}

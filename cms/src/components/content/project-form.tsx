@@ -1,5 +1,7 @@
 'use client'
 
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select } from '@/components/ui/select'
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -154,11 +156,11 @@ export function ProjectForm({ mode, project, isSubmitting, onSubmit }: ProjectFo
             </div>
             <div className="space-y-2">
               <Label htmlFor="project-status">Status</Label>
-              <select id="project-status" className={SELECT_CLASS} value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as ProjectStatus }))}>
+              <Select id="project-status" className={SELECT_CLASS} value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as ProjectStatus }))}>
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
                 <option value="ARCHIVED">Archived</option>
-              </select>
+              </Select>
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="project-slug">Slug</Label>
@@ -177,7 +179,7 @@ export function ProjectForm({ mode, project, isSubmitting, onSubmit }: ProjectFo
               <Input id="project-repo" value={form.repoUrl} onChange={(event) => setForm((current) => ({ ...current, repoUrl: event.target.value }))} />
             </div>
             <label className="flex items-center gap-2 text-sm text-[var(--app-muted-strong)] md:col-span-2">
-              <input type="checkbox" checked={form.featured} onChange={(event) => setForm((current) => ({ ...current, featured: event.target.checked }))} />
+              <Checkbox  checked={form.featured} onChange={(event) => setForm((current) => ({ ...current, featured: event.target.checked }))} />
               Featured project
             </label>
           </div>
@@ -222,7 +224,7 @@ export function ProjectForm({ mode, project, isSubmitting, onSubmit }: ProjectFo
                 <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>Choose image</Button>
                 {preview ? <Button type="button" variant="ghost" className="text-[var(--app-danger-soft-fg)]" onClick={removeThumbnail}><X className="h-4 w-4" />Remove</Button> : null}
               </div>
-              <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+              <Input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 /* eslint-disable react-hooks/set-state-in-effect */
 
+import { Select } from '@/components/ui/select'
 import {
   useEffect,
   useRef,
@@ -202,7 +203,7 @@ export function PageForm({
             </div>
             <div className="space-y-2">
               <Label htmlFor="page-status">Status</Label>
-              <select
+              <Select
                 id="page-status"
                 className={SELECT_CLASS}
                 value={form.status}
@@ -216,7 +217,7 @@ export function PageForm({
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
                 <option value="ARCHIVED">Archived</option>
-              </select>
+              </Select>
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="page-slug">Slug</Label>
@@ -345,7 +346,7 @@ export function PageForm({
                   Remove image
                 </Button>
               ) : null}
-              <input
+              <Input
                 ref={fileInputRef}
                 type="file"
                 className="hidden"

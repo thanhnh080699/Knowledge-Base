@@ -1,5 +1,6 @@
 'use client'
 
+import { Select } from '@/components/ui/select'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -149,12 +150,12 @@ export function CategoryForm({ mode, initialCategory, isSubmitting, categories =
                   {preview ? <img src={absoluteCdnUrl(preview)} alt="Preview" className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />}
                 </div>
                 {preview ? <Button type="button" variant="ghost" size="sm" className="h-8 gap-2 text-[var(--app-danger-soft-fg)]" onClick={removeImage}><X className="h-4 w-4" />Remove</Button> : null}
-                <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                <Input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
               </div>
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="category-parent">Parent Category</Label>
-              <select
+              <Select
                 id="category-parent"
                 value={form.parentId}
                 onChange={(event) => setForm((current) => ({ ...current, parentId: event.target.value }))}
@@ -168,7 +169,7 @@ export function CategoryForm({ mode, initialCategory, isSubmitting, categories =
                       {c.name}
                     </option>
                   ))}
-              </select>
+              </Select>
             </div>
           </div>
         </div>

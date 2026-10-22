@@ -1,5 +1,7 @@
 'use client'
 
+import { Checkbox } from '@/components/ui/checkbox'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -21,7 +23,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { toast } from 'sonner'
-import type { SettingValue, UpdateSettingInput } from '@/types/settings'
+import type { SettingsGroup, SettingValue, UpdateSettingInput } from '@/types/settings'
 
 const GSC_GROUP = 'google_search_console'
 
@@ -198,26 +200,26 @@ function DataTable({ title, columns, rows, highlight }: {
     <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] overflow-hidden shadow-sm">
       <div className="px-6 py-4 border-b border-[var(--app-border)]"><h3 className="font-semibold">{title}</h3></div>
       <div className="overflow-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50/50 border-b">
-            <tr>{columns.map((c, i) => (
-              <th key={c} className={`${i === 0 ? 'text-left px-6' : 'text-right px-4'} py-3 font-medium text-[var(--app-muted)]`}>{c}</th>
-            ))}</tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--app-border)]">
+        <Table className="w-full text-sm">
+          <TableHeader className="bg-slate-50/50 border-b">
+            <TableRow>{columns.map((c, i) => (
+              <TableHead key={c} className={`${i === 0 ? 'text-left px-6' : 'text-right px-4'} py-3 font-medium text-[var(--app-muted)]`}>{c}</TableHead>
+            ))}</TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-[var(--app-border)]">
             {rows.length > 0 ? rows.map((row, ri) => (
-              <tr key={ri} className="hover:bg-slate-50/50 transition-colors">
+              <TableRow key={ri} className="hover:bg-slate-50/50 transition-colors">
                 {row.map((cell, ci) => (
-                  <td key={ci} className={`${ci === 0 ? 'px-6 max-w-[200px] truncate' : 'px-4 text-right'} py-3 ${
+                  <TableCell key={ci} className={`${ci === 0 ? 'px-6 max-w-[200px] truncate' : 'px-4 text-right'} py-3 ${
                     ci === 0 && highlight === 0 ? 'font-medium text-blue-600' : ci === 1 ? 'font-semibold' : 'text-[var(--app-muted)]'
-                  }`}>{cell}</td>
+                  }`}>{cell}</TableCell>
                 ))}
-              </tr>
+              </TableRow>
             )) : (
-              <tr><td colSpan={columns.length} className="px-6 py-8 text-center text-[var(--app-muted)]">No data available</td></tr>
+              <TableRow><TableCell colSpan={columns.length} className="px-6 py-8 text-center text-[var(--app-muted)]">No data available</TableCell></TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   )
@@ -238,7 +240,7 @@ function NotEnabled({ onGoToConfig }: { onGoToConfig: () => void }) {
   )
 }
 
-function ConfigTab({ settingsData, isLoading }: { settingsData: any; isLoading: boolean }) {
+function ConfigTab({ settingsData, isLoading }: { settingsData: SettingsGroup | undefined; isLoading: boolean }) {
   const updateSettings = useUpdateSettingsGroup(GSC_GROUP)
   const { data: status, isLoading: statusLoading } = useSearchConsoleStatus()
   const getAuthUrl = useSearchConsoleAuthUrl()
@@ -254,7 +256,7 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: any; isLoading: 
 
   async function handleSave() {
     const settings = settingsData?.settings || []
-    const payload: UpdateSettingInput[] = settings.map((s: any) => ({
+    const payload: UpdateSettingInput[] = settings.map((s) => ({
       key: s.settingKey, value: values[s.settingKey] ?? null,
       type: s.type, label: s.label, description: s.description, sortOrder: s.sortOrder,
     }))
@@ -297,7 +299,7 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: any; isLoading: 
               <Label htmlFor="gsc_enabled" className="font-semibold text-blue-900">Enable Google Search Console</Label>
               <p className="text-xs text-blue-700">Activate the integration to view search data in the CMS.</p>
             </div>
-            <input id="gsc_enabled" type="checkbox" checked={values.google_search_console_enabled === true}
+            <Checkbox id="gsc_enabled"  checked={values.google_search_console_enabled === true}
               onChange={(e) => updateValue('google_search_console_enabled', e.target.checked)}
               className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600" />
           </div>

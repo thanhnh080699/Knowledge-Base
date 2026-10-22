@@ -4,20 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import type { ContactRequest, ContactFilters } from '@/types/contact';
 
-interface PaginatedResponse<T> {
-  data: T[];
-  meta: {
-    total: number;
-    perPage: number;
-    currentPage: number;
-    lastPage: number;
-    firstPage: number;
-    firstPageUrl: string | null;
-    lastPageUrl: string | null;
-    nextPageUrl: string | null;
-    previousPageUrl: string | null;
-  };
-}
 
 export function useContacts(filters: ContactFilters = {}) {
   return useQuery({

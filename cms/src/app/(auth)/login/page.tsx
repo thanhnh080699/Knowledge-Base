@@ -1,5 +1,6 @@
 'use client';
 
+import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth';
@@ -44,10 +45,10 @@ export default function LoginPage() {
 
     try {
       const response = await api.post('/auth/login', { email, password });
-      
+
       const { user, token } = response.data.data;
       const accessToken = token?.token || token?.value || token;
-      setAuth(user, accessToken); 
+      setAuth(user, accessToken);
 
       if (!user) {
          const userResponse = await api.get('/auth/me', {
@@ -76,7 +77,7 @@ export default function LoginPage() {
         />
         <div className="absolute inset-0 bg-slate-950/45" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
-        
+
         <div className="absolute inset-0 flex flex-col justify-center px-16 text-white">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -112,14 +113,14 @@ export default function LoginPage() {
               Please enter your credentials to access the system
             </p>
           </div>
-          
+
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="rounded-md border border-[var(--app-danger-soft-border)] bg-[var(--app-danger-soft-bg)] p-4 text-sm text-[var(--app-danger-soft-fg)]">
                 {error}
               </div>
             )}
-            
+
             <div className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-[var(--app-muted-strong)]">Email address</Label>
@@ -140,7 +141,7 @@ export default function LoginPage() {
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-[var(--app-muted-strong)]">Password</Label>
@@ -168,10 +169,10 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center">
-              <input
+              <Checkbox
                 id="remember-me"
                 name="remember-me"
-                type="checkbox"
+
                 className="h-4 w-4 rounded border border-[var(--app-border-strong)] bg-[var(--app-input-bg)] text-[var(--foreground)] focus:ring-[var(--app-ring)]"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-[var(--app-muted-strong)]">

@@ -1,5 +1,6 @@
 'use client'
 
+import { Textarea } from '@/components/ui/textarea'
 import { useMemo, useState, type FormEvent } from 'react'
 import { Modal } from '@/components/ui/modal'
 import { Button } from '@/components/ui/button'
@@ -139,7 +140,7 @@ export function RoleFormModal({
 
         <div className="space-y-2">
           <Label htmlFor="role-description">Mô tả</Label>
-          <textarea
+          <Textarea
             id="role-description"
             value={form.description}
             onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}

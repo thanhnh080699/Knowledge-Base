@@ -1,5 +1,8 @@
 'use client';
 
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select } from '@/components/ui/select'
+import { useClientList, useListState } from '@/hooks/use-list-state'
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +16,7 @@ import { Filter, RotateCcw, Search, MessageSquare, Mail, Phone, Trash2, CheckCir
 import type { ContactRequest } from '@/types/contact';
 
 const FILTER_SELECT_CLASS =
-  'h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]';
+  'w-auto h-10 rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 text-sm text-[var(--app-muted-strong)] outline-none focus:border-[var(--app-border-strong)]';
 
 function statusVariant(status: string) {
   if (status === 'REPLIED') return 'success';
@@ -26,7 +29,9 @@ export default function ContactsPage() {
   const [status, setStatus] = useState<string>('');
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [viewContact, setViewContact] = useState<ContactRequest | null>(null);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  const list = useListState({ query, status })
+  const { selectedIds, setSelectedIds } = list
 
   const filters = useMemo(
     () => ({
@@ -36,11 +41,15 @@ export default function ContactsPage() {
     [query, status]
   );
 
-  const { data: contactsResponse, isLoading, refetch } = useContacts(filters);
+  const { data: contactsResponse, isLoading, isFetching, error, refetch } = useContacts(filters);
   const updateStatus = useUpdateContactStatus();
   const deleteContact = useDeleteContact();
 
-  const contacts = contactsResponse?.data ?? [];
+  const allItems = useMemo(() => (contactsResponse?.data ?? []).filter(item =>
+    (!status || item.status === status) && (!query.trim() || JSON.stringify([item.name, item.email, item.subject, item.message]).toLowerCase().includes(query.trim().toLowerCase()))
+  ), [contactsResponse?.data, query, status]);
+  const contacts = useClientList(allItems, list);
+  const total = allItems.length;
 
   const isAllSelected = contacts.length > 0 && selectedIds.length === contacts.length;
   const isSomeSelected = selectedIds.length > 0 && selectedIds.length < contacts.length;
@@ -127,12 +136,12 @@ export default function ContactsPage() {
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value)}>
+              <Select className={FILTER_SELECT_CLASS} value={status} onChange={(event) => setStatus(event.target.value)}>
                 <option value="">All statuses</option>
                 <option value="PENDING">Pending</option>
                 <option value="REPLIED">Replied</option>
                 <option value="ARCHIVED">Archived</option>
-              </select>
+              </Select>
               <Button variant="outline" size="sm" className="h-10 gap-2" onClick={resetFilters}>
                 <Filter className="h-4 w-4" />
                 Reset
@@ -140,13 +149,11 @@ export default function ContactsPage() {
             </div>
           </div>
 
-          <div className="relative w-full overflow-auto">
-            <Table className="w-full caption-bottom text-sm">
+          <Table pagination={{ list, total, loading: isFetching }} error={error} className="w-full caption-bottom text-sm">
               <TableHeader className="border-b border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="w-[50px] px-4">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={isAllSelected}
                       ref={(el) => {
                         if (el) el.indeterminate = isSomeSelected;
@@ -155,7 +162,7 @@ export default function ContactsPage() {
                       className="h-4 w-4 rounded border-slate-300"
                     />
                   </TableHead>
-                  <TableHead className="w-[110px] px-4">ID</TableHead>
+                  <TableHead className="w-[110px] px-4" aria-sort="descending">ID ↓</TableHead>
                   <TableHead>Contact Info</TableHead>
                   <TableHead>Message</TableHead>
                   <TableHead>Status</TableHead>
@@ -186,8 +193,7 @@ export default function ContactsPage() {
                   contacts.map((contact: ContactRequest) => (
                     <TableRow key={contact.id} className="border-b border-[var(--app-border)] transition-colors hover:bg-[var(--app-surface-hover)]">
                       <TableCell className="px-4">
-                        <input
-                          type="checkbox"
+                        <Checkbox
                           checked={selectedIds.includes(contact.id)}
                           onChange={() => toggleSelect(contact.id)}
                           className="h-4 w-4 rounded border-slate-300"
@@ -253,11 +259,6 @@ export default function ContactsPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-6 py-3">
-            <span className="text-sm text-[var(--app-muted)]">Total {contacts.length} requests</span>
-          </div>
         </div>
       </div>
 

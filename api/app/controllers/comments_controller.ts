@@ -129,6 +129,8 @@ export default class CommentsController {
       })
     }
 
+    if (request.input('sort') === 'id') query.clearOrder().orderBy('id', 'desc')
+
     const comments = await query.paginate(page, limit)
     return response.ok(comments)
   }
