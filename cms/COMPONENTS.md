@@ -6,6 +6,7 @@ Reuse the existing components before adding new ones. Keep entity-specific field
 - `components/shared/list-pagination.tsx`: the same range, page size and first/previous/next/last controls for tables, media grids and menu chooser lists. Use the API total, not the visible row count.
 - `hooks/use-list-state.ts`: page, page size, filter reset and page-scoped bulk selection. `useClientList` sorts complete non-paginated API arrays by numeric ID descending before slicing. `useScopedSelection` also supports media paths.
 - `components/ui/select.tsx`, `input.tsx`, `textarea.tsx`, `checkbox.tsx`, `label.tsx`: form controls. Retain `w-auto` for compact filter selects. Native selects retain keyboard behavior; the shared CSS handles arrow spacing and light/dark colors.
+- `components/layout/sidebar.tsx`: one navigation implementation for the desktop sidebar and the mobile navigation modal. Keep mobile navigation separate from the saved desktop collapse preference.
 - `components/ui/modal.tsx`, `button.tsx`, `tag.tsx`, `card.tsx`: dialogs, actions, status indicators and containers.
 - `components/content/taxonomy-page.tsx`: Categories and Tags share one listing. Category list defaults to ID descending; hierarchy and drag ordering belong to the existing reorder modal and do not change public navigation ordering.
 

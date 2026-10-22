@@ -3,14 +3,12 @@
 import { useEffect, useState } from 'react';
 import { Moon, Sun, Search, Bell, Menu } from 'lucide-react';
 import { useThemeStore } from '@/stores/theme';
-import { useSidebarStore } from '@/stores/sidebar';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { UserMenu } from './user-menu';
 
-export function Topbar() {
+export function Topbar({ onOpenNavigation }: { onOpenNavigation?: () => void }) {
   const { theme, setTheme } = useThemeStore();
-  const { isOpen, toggle } = useSidebarStore();
 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -34,11 +32,9 @@ export function Topbar() {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-topbar-bg)] px-4 shadow-sm backdrop-blur-md">
       <div className="flex flex-1 items-center gap-4">
-        {!isOpen && (
-          <Button variant="ghost" size="icon" onClick={toggle} className="lg:hidden">
+          <Button variant="ghost" size="icon" onClick={onOpenNavigation} className="md:hidden" aria-label="Mở menu điều hướng">
             <Menu className="h-5 w-5" />
           </Button>
-        )}
         <div className="relative w-full max-w-md hidden md:block">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input

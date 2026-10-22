@@ -80,9 +80,10 @@ const navigation: NavGroup[] = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ className, mobile = false, onNavigate }: { className?: string; mobile?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
-  const { isOpen, toggle } = useSidebarStore();
+  const { isOpen: desktopOpen, toggle } = useSidebarStore();
+  const isOpen = mobile || desktopOpen;
   const [openMenus, setOpenMenus] = useState<string[]>(["Users & ACL"]);
 
   const toggleMenu = (name: string) => {
@@ -99,9 +100,10 @@ export function Sidebar() {
       className={cn(
         "flex flex-col border-r border-[var(--app-sidebar-border)] bg-[var(--app-sidebar-bg)] text-[var(--app-sidebar-text)] transition-all duration-300",
         isOpen ? "w-64" : "w-16",
+        className,
       )}
     >
-      <div className="flex h-16 items-center border-b border-[var(--app-sidebar-border)] px-4">
+      <div className={cn("flex h-16 items-center border-b border-[var(--app-sidebar-border)] px-4", mobile && "hidden")}>
         {isOpen && (
           <div className="flex items-center gap-2 flex-1">
             {adminLogo ? (
@@ -159,6 +161,7 @@ export function Sidebar() {
                   <div key={item.name} className="space-y-1">
                     {item.href ? (
                       <Link
+                        onClick={onNavigate}
                         href={item.href}
                         className={cn(
                           "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors group",
@@ -222,6 +225,7 @@ export function Sidebar() {
                           const isChildActive = pathname === child.href;
                           return (
                             <Link
+                        onClick={onNavigate}
                               key={child.name}
                               href={child.href}
                               className={cn(
