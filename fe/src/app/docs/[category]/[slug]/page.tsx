@@ -7,6 +7,7 @@ import { PostContent } from "@/components/shared/post-content"
 import { DocReader } from "@/components/shared/doc-reader"
 import { CdnImage } from "@/components/shared/cdn-image"
 import { HomeReveal } from "@/components/shared/home-motion"
+import { PostViewTracker } from "@/components/shared/post-view-tracker"
 import { ReadingProgress } from "@/components/shared/reading-progress"
 import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import { fallbackCategories, fallbackPosts } from "@/lib/fallback-data"
@@ -121,6 +122,7 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
   return (
     <>
       <ReadingProgress />
+      {apiPost?.status === "PUBLISHED" && <PostViewTracker postId={apiPost.id} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

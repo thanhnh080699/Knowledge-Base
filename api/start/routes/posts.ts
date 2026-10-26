@@ -8,6 +8,8 @@ export default function postsRoutes() {
   router.get('posts', [PostsController, 'index']).as('posts.public.index')
   router.get('posts/:id', [PostsController, 'show']).as('posts.public.show')
 
+  router.post('posts/:id/view', [PostsController, 'recordView']).as('posts.public.view')
+
   // Automation API token routes
   router.group(() => {
     router.get('posts', [PostsController, 'index']).as('automation.posts.index').use(middleware.apiToken({ permission: 'posts.read' }))
