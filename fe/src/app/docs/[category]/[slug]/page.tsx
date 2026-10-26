@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title,
     description,
     keywords: keywords.length ? keywords : undefined,
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl, types: { "application/rss+xml": "/rss.xml" } },
     openGraph: {
       title,
       description,
