@@ -1,0 +1,5 @@
+# /etc/cron.d/thanhnh-public-feeds
+# Server timezone must be Asia/Ho_Chi_Minh (UTC+07); run daily at 03:15.
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15 3 * * * root /usr/bin/flock -n /run/lock/thanhnh-public-feeds.lock /usr/bin/python3 /home/thanhnh.id.vn/scripts/refresh-public-feeds.py --snapshot-dir /var/lib/thanhnh-public-feeds >> /var/log/thanhnh-public-feeds.log 2>&1

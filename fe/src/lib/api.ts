@@ -186,7 +186,7 @@ export async function getProject(slug: string) {
   }
 }
 
-const STATIC_TOOLS: Tool[] = [
+export const STATIC_TOOLS: Tool[] = [
   {
     id: 101,
     slug: "crypto-bcrypt",
