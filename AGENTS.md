@@ -1,5 +1,13 @@
 # Production deployment
 
+## Homepage storytelling release (2026-10-29, current)
+
+- User authorized the new homepage, code commit/push and production deployment. Hero, narrative sections, GSAP scroll transitions and the right-aligned cat mascot are live at `https://thanhnh.id.vn/`.
+- Tools uses a natural-height section with the introduction above a wide JSON input/output demonstration. Do not restore the previous pinned two-column Tools section with large vertical whitespace.
+- Released frontend only on verified `web-srv` through `192.168.11.126`, preserving production runtime, newer tools, original Top Repos articles, RSS and sitemap. Only `thanhnh.id.vn-fe` restarted; no database changes.
+- Rollback: `/home/deploy-backups/thanhnh-home-story-20261029/fe-before.tar.gz` and `previous-next` restore the pre-homepage release. `previous-next-merged` and `post-view-tracker-before.tsx` preserve the state before the final tracker integration.
+- Production build, static-delivery tests, desktop/mobile/tablet checks, canonical, 7 Top Repos articles, RSS, sitemap and API health passed. All four application PM2 processes are online. Local TypeScript passed for API/CMS/FE and all 20 reading/feed tests passed. API integration tests were blocked by an existing SQLite-incompatible users migration; do not claim they passed.
+
 ## Top Repos articles replace GitHub discovery (2026-10-28, current)
 
 - Search follow-up: `/repos?q=...` filters the original articles by title, excerpt and tags, with case/accent-insensitive matching, submit and clear controls, result count and an empty state. Existing article details remain unchanged. Backup: `/home/deploy-backups/thanhnh-top-repos-search-20261028/fe-before.tar.gz`; previous build: `previous-next`. Scoped lint/build and production browser checks passed, including mobile layouts, query reload and canonical.

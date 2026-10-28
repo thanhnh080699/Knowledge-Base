@@ -30,7 +30,7 @@ const settings = { site_name: 'Thanh & Blog', site_url: 'https://thanhnh.id.vn/'
 
 test('RSS preserves Vietnamese, full HTML, stable IDs and dates in valid XML', () => {
   const xml = utility.buildRss([post(1), post(2, { status: 'DRAFT' }), post(3, { publishedAt: '2099-01-01' })], settings)
-  const parsed = spawnSync('python3', ['-c', `import sys,xml.etree.ElementTree as E
+  const parsed = spawnSync('python3', ['-X', 'utf8', '-c', `import sys,xml.etree.ElementTree as E
 r=E.fromstring(sys.stdin.read());i=r.findall('./channel/item');assert len(i)==1
 assert i[0].findtext('title')=='Tiếng Việt & <XML>'
 assert i[0].findtext('{http://purl.org/rss/1.0/modules/content/}encoded')=='<p>A & B ]]> <img src="https://cdn.example/image.webp"></p>'
