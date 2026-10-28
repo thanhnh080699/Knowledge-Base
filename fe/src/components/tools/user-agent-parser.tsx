@@ -1,18 +1,18 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useSyncExternalStore, useMemo } from "react"
 import { CopyButton } from "@/components/shared/copy-button"
 import { Button } from "@/components/ui/button"
 import { Laptop, Smartphone, Bot, RotateCcw } from "lucide-react"
 
-export function UserAgentParser() {
-  const [uaString, setUaString] = useState("")
+const subscribeUserAgent = () => () => {}
+const readUserAgent = () => navigator.userAgent
+const serverUserAgent = () => ""
 
-  useEffect(() => {
-    if (typeof navigator !== "undefined") {
-      setUaString(navigator.userAgent)
-    }
-  }, [])
+export function UserAgentParser() {
+  const browserUserAgent = useSyncExternalStore(subscribeUserAgent, readUserAgent, serverUserAgent)
+  const [selectedUserAgent, setUaString] = useState<string | null>(null)
+  const uaString = selectedUserAgent ?? browserUserAgent
 
   const parsed = useMemo(() => {
     const ua = uaString.trim()
@@ -74,7 +74,7 @@ export function UserAgentParser() {
 
     // 4. Device
     let device = "Desktop"
-    let isBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(ua)
+    const isBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(ua)
     if (isBot) {
       device = "Search Bot / Crawler"
     } else if (/iPhone|iPod/.test(ua)) {

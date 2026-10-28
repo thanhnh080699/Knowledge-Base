@@ -35,27 +35,36 @@ test.group('Projects', (group) => {
     await admin.related('roles').sync([adminRole.id])
   })
 
-  test('create list show update and delete project content as admin', async ({ client, assert }) => {
+  test('create list show update and delete project content as admin', async ({
+    client,
+    assert,
+  }) => {
     const slug = `project-content-${Date.now()}`
 
-    const createResponse = await client.post('/api/admin/projects').loginAs(admin).json({
-      title: 'Project Content Functional',
-      slug,
-      description: 'Short case study summary',
-      content: '<h2>Problem</h2><p>Delivered CMS, API and CDN workflow.</p>',
-      techStack: ['Next.js', 'AdonisJS', 'Gin'],
-      thumbnailUrl: 'Projects/demo.png',
-      demoUrl: 'https://example.com',
-      repoUrl: 'https://github.com/example/project',
-      featured: true,
-      status: 'PUBLISHED',
-    })
+    const createResponse = await client
+      .post('/api/admin/projects')
+      .loginAs(admin)
+      .json({
+        title: 'Project Content Functional',
+        slug,
+        description: 'Short case study summary',
+        content: '<h2>Problem</h2><p>Delivered CMS, API and CDN workflow.</p>',
+        techStack: ['Next.js', 'AdonisJS', 'Gin'],
+        thumbnailUrl: 'Projects/demo.png',
+        demoUrl: 'https://example.com',
+        repoUrl: 'https://github.com/example/project',
+        featured: true,
+        status: 'PUBLISHED',
+      })
 
     createResponse.assertStatus(201)
     const createdBody = createResponse.body() as unknown as {
       data: { content: string; status: string }
     }
-    assert.equal(createdBody.data.content, '<h2>Problem</h2><p>Delivered CMS, API and CDN workflow.</p>')
+    assert.equal(
+      createdBody.data.content,
+      '<h2>Problem</h2><p>Delivered CMS, API and CDN workflow.</p>'
+    )
     assert.equal(createdBody.data.status, 'PUBLISHED')
 
     const listResponse = await client.get('/api/projects').qs({ q: slug })
@@ -95,11 +104,14 @@ test.group('Projects', (group) => {
       password: 'password123',
     })
 
-    const response = await client.post('/api/admin/projects').loginAs(user).json({
-      title: 'Forbidden Project',
-      slug: `forbidden-project-${Date.now()}`,
-      description: 'Should not be created',
-    })
+    const response = await client
+      .post('/api/admin/projects')
+      .loginAs(user)
+      .json({
+        title: 'Forbidden Project',
+        slug: `forbidden-project-${Date.now()}`,
+        description: 'Should not be created',
+      })
 
     response.assertStatus(403)
   })

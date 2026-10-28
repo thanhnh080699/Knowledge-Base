@@ -1,13 +1,14 @@
 import type { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
-import { BookOpen, Server, ShieldCheck, Terminal } from "lucide-react"
+import { BookOpen } from "lucide-react"
 import { Sidebar } from "@/components/shared/sidebar"
 import { SearchBox } from "@/components/shared/search-box"
 import { Pagination } from "@/components/shared/pagination"
 import { HomeReveal } from "@/components/shared/home-motion"
-import { fallbackCategories, fallbackPosts } from "@/lib/fallback-data"
+import { fallbackCategories } from "@/lib/fallback-data"
 import { getRootCategories, getPosts, getCategory } from "@/lib/api"
+import { getCategoryPosts } from "@/lib/api"
+import { listingSort, orderPosts } from "@/lib/listing"
 
 export const revalidate = 60
 
@@ -23,16 +24,29 @@ export const metadata: Metadata = {
 export default async function DocsPage({
   searchParams
 }: {
-  searchParams: Promise<{ page?: string; category?: string; tag?: string; q?: string }>
+  searchParams: Promise<{ page?: string; category?: string; tag?: string; q?: string; sort?: string; reading?: string }>
 }) {
   const params = await searchParams
-  const page = Number(params.page ?? 1)
+  const page = /^\d+$/.test(params.page ?? "1") ? Math.max(1, Number(params.page ?? 1)) : 1
+  const sort = listingSort(params.sort, params.category)
   const [postsResponse, categoriesResponse, currentCategory] = await Promise.all([
-    getPosts({ page, limit: 12, category: params.category, tag: params.tag, search: params.q }),
+    getPosts({ page, limit: 12, category: params.category, tag: params.tag, search: params.q, sort }),
     getRootCategories(),
     params.category ? getCategory(params.category) : null
   ])
-  const posts = postsResponse.data.length ? postsResponse.data : fallbackPosts
+  if (params.category) {
+    let all = await getCategoryPosts(params.category)
+    if (params.tag) all = all.filter(p => p.tags?.some(t => t.slug === params.tag))
+    if (params.q) {
+      const needle = params.q.toLocaleLowerCase("vi")
+      all = all.filter(p => [p.title, p.excerpt, p.content].join(" ").toLocaleLowerCase("vi").includes(needle))
+    }
+    const lastPage = Math.max(1, Math.ceil(all.length / 12))
+    const currentPage = Math.min(page, lastPage)
+    postsResponse.data = orderPosts(all, sort).slice((currentPage - 1) * 12, currentPage * 12)
+    postsResponse.meta = { ...postsResponse.meta, total: all.length, currentPage, lastPage }
+  }
+  const posts = postsResponse.data
   const categories = categoriesResponse.length ? categoriesResponse : fallbackCategories
 
   return (
@@ -124,7 +138,7 @@ export default async function DocsPage({
                 currentPage={postsResponse.meta.currentPage}
                 lastPage={postsResponse.meta.lastPage}
                 basePath="/docs"
-                query={{ category: params.category, tag: params.tag, q: params.q }}
+                query={{ category: params.category, tag: params.tag, q: params.q, sort, reading: params.reading }}
               />
             </div>
           </section>

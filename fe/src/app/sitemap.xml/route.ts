@@ -78,6 +78,7 @@ async function buildSitemapEntries() {
   const now = new Date()
 
   const staticRoutes: SitemapEntry[] = [
+    { url: absoluteUrl(siteUrl, "/repos"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
     {
       url: absoluteUrl(siteUrl, "/"),
       lastModified: now,

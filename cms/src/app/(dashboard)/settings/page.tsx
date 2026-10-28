@@ -105,7 +105,7 @@ export default function SettingsPage() {
     <div className="mx-auto w-full max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="space-y-6">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-          <Link href="/" className="text-blue-600 hover:text-blue-700">
+          <Link href="/" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">
             Dashboard
           </Link>
           <span className="text-[var(--app-muted)]">/</span>
@@ -136,11 +136,11 @@ function SettingLink({ item }: { item: SettingItem }) {
 
   return (
     <Link href={item.href} className="group flex min-h-14 gap-4 rounded-md p-0.5 transition-colors hover:bg-[var(--app-surface-hover)]">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--app-surface-muted)] text-[var(--app-muted)] ring-1 ring-inset ring-[var(--app-border)] group-hover:text-blue-600">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--app-surface-muted)] text-[var(--app-muted)] ring-1 ring-inset ring-[var(--app-border)] group-hover:text-[var(--app-link)]">
         <Icon className="h-4 w-4" />
       </span>
       <span className="min-w-0">
-        <span className="block text-sm font-semibold text-blue-600 group-hover:text-blue-700">{item.title}</span>
+        <span className="block text-sm font-semibold text-[var(--app-link)] group-hover:text-[var(--app-link-hover)]">{item.title}</span>
         <span className="mt-0.5 block text-sm leading-5 text-[var(--app-muted)]">{item.description}</span>
       </span>
     </Link>

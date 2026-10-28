@@ -52,17 +52,21 @@ export default function ApiTokensSettingsPage() {
   async function copyCreatedToken() {
     if (!createdToken) return
 
-    await navigator.clipboard.writeText(createdToken)
-    toast.success('Đã copy token thành công')
+    try {
+      await navigator.clipboard.writeText(createdToken)
+      toast.success('Đã copy token thành công')
+    } catch {
+      toast.error('Không thể copy tự động. Hãy chọn và sao chép token thủ công.')
+    }
   }
 
   return (
     <div className="mx-auto w-full max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="space-y-6">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-          <Link href="/" className="text-blue-600 hover:text-blue-700">Dashboard</Link>
+          <Link href="/" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">Dashboard</Link>
           <span className="text-[var(--app-muted)]">/</span>
-          <Link href="/settings" className="text-blue-600 hover:text-blue-700">Settings</Link>
+          <Link href="/settings" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">Settings</Link>
           <span className="text-[var(--app-muted)]">/</span>
           <span className="text-[var(--app-muted-strong)]">API Tokens</span>
         </div>
@@ -79,10 +83,10 @@ export default function ApiTokensSettingsPage() {
         </div>
 
         {createdToken && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100">
+          <div role="status" className="rounded-xl border border-[var(--app-warning-soft-border)] bg-[var(--app-warning-soft-bg)] px-5 py-4 text-[var(--app-warning-soft-fg)]">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
               <div className="shrink-0 font-semibold">Token chỉ hiển thị một lần</div>
-              <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap rounded-md border border-amber-200 bg-white px-3 py-2 font-mono text-xs text-slate-900 dark:border-amber-900/60 dark:bg-slate-950 dark:text-slate-100">
+              <code aria-label="Token vừa tạo" className="block min-w-0 flex-1 select-all whitespace-normal break-all rounded-md border border-[var(--app-input-border)] bg-[var(--app-input-bg)] px-3 py-2 font-mono text-sm text-[var(--foreground)]">
                 {createdToken}
               </code>
               <Button type="button" variant="outline" onClick={copyCreatedToken} className="shrink-0">
@@ -122,7 +126,7 @@ export default function ApiTokensSettingsPage() {
                   <TableCell>
                     <div className="flex max-w-xl flex-wrap gap-1.5">
                       {token.permissions.map((permission) => (
-                        <Tag key={permission} variant="secondary">{permission}</Tag>
+                        <Tag key={permission} variant="outline" className="max-w-full break-all bg-[var(--app-surface-muted)]">{permission}</Tag>
                       ))}
                     </div>
                   </TableCell>

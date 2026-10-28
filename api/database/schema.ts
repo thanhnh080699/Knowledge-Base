@@ -8,7 +8,18 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AuthAccessTokenSchema extends BaseModel {
-  static $columns = ['abilities', 'createdAt', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'tokenableId', 'type', 'updatedAt'] as const
+  static $columns = [
+    'abilities',
+    'createdAt',
+    'expiresAt',
+    'hash',
+    'id',
+    'lastUsedAt',
+    'name',
+    'tokenableId',
+    'type',
+    'updatedAt',
+  ] as const
   $columns = AuthAccessTokenSchema.$columns
   @column()
   declare abilities: string
@@ -33,7 +44,20 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class CategorySchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'icon', 'id', 'image', 'metaDescription', 'metaTitle', 'name', 'parentId', 'slug', 'sortOrder', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'description',
+    'icon',
+    'id',
+    'image',
+    'metaDescription',
+    'metaTitle',
+    'name',
+    'parentId',
+    'slug',
+    'sortOrder',
+    'updatedAt',
+  ] as const
   $columns = CategorySchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -62,7 +86,22 @@ export class CategorySchema extends BaseModel {
 }
 
 export class CommentSchema extends BaseModel {
-  static $columns = ['approvedAt', 'authorEmail', 'authorName', 'authorWebsite', 'content', 'createdAt', 'deletedAt', 'id', 'ipAddress', 'parentId', 'postId', 'status', 'updatedAt', 'userAgent'] as const
+  static $columns = [
+    'approvedAt',
+    'authorEmail',
+    'authorName',
+    'authorWebsite',
+    'content',
+    'createdAt',
+    'deletedAt',
+    'id',
+    'ipAddress',
+    'parentId',
+    'postId',
+    'status',
+    'updatedAt',
+    'userAgent',
+  ] as const
   $columns = CommentSchema.$columns
   @column.dateTime()
   declare approvedAt: DateTime | null
@@ -95,7 +134,17 @@ export class CommentSchema extends BaseModel {
 }
 
 export class ContactRequestSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'id', 'message', 'name', 'phone', 'status', 'subject', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'email',
+    'id',
+    'message',
+    'name',
+    'phone',
+    'status',
+    'subject',
+    'updatedAt',
+  ] as const
   $columns = ContactRequestSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -118,7 +167,21 @@ export class ContactRequestSchema extends BaseModel {
 }
 
 export class MenuItemSchema extends BaseModel {
-  static $columns = ['createdAt', 'cssClass', 'id', 'menuId', 'parentId', 'referenceId', 'rel', 'sortOrder', 'target', 'title', 'type', 'updatedAt', 'url'] as const
+  static $columns = [
+    'createdAt',
+    'cssClass',
+    'id',
+    'menuId',
+    'parentId',
+    'referenceId',
+    'rel',
+    'sortOrder',
+    'target',
+    'title',
+    'type',
+    'updatedAt',
+    'url',
+  ] as const
   $columns = MenuItemSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -149,7 +212,17 @@ export class MenuItemSchema extends BaseModel {
 }
 
 export class MenuSchema extends BaseModel {
-  static $columns = ['createdAt', 'deletedAt', 'description', 'id', 'isDefault', 'location', 'name', 'slug', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'deletedAt',
+    'description',
+    'id',
+    'isDefault',
+    'location',
+    'name',
+    'slug',
+    'updatedAt',
+  ] as const
   $columns = MenuSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -187,7 +260,25 @@ export class NewsletterSchema extends BaseModel {
 }
 
 export class PageSchema extends BaseModel {
-  static $columns = ['canonicalUrl', 'content', 'coverImage', 'createdAt', 'deletedAt', 'excerpt', 'focusKeyword', 'id', 'isHomepage', 'metaDescription', 'metaTitle', 'publishedAt', 'slug', 'status', 'template', 'title', 'updatedAt'] as const
+  static $columns = [
+    'canonicalUrl',
+    'content',
+    'coverImage',
+    'createdAt',
+    'deletedAt',
+    'excerpt',
+    'focusKeyword',
+    'id',
+    'isHomepage',
+    'metaDescription',
+    'metaTitle',
+    'publishedAt',
+    'slug',
+    'status',
+    'template',
+    'title',
+    'updatedAt',
+  ] as const
   $columns = PageSchema.$columns
   @column()
   declare canonicalUrl: string | null
@@ -237,7 +328,16 @@ export class PermissionRoleSchema extends BaseModel {
 }
 
 export class PermissionSchema extends BaseModel {
-  static $columns = ['createdAt', 'deletedAt', 'description', 'id', 'module', 'name', 'slug', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'deletedAt',
+    'description',
+    'id',
+    'module',
+    'name',
+    'slug',
+    'updatedAt',
+  ] as const
   $columns = PermissionSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -267,7 +367,26 @@ export class PostTagSchema extends BaseModel {
 }
 
 export class PostSchema extends BaseModel {
-  static $columns = ['canonicalUrl', 'categoryId', 'content', 'coverImage', 'createdAt', 'deletedAt', 'excerpt', 'focusKeyword', 'id', 'metaDescription', 'metaTitle', 'publishedAt', 'seriesId', 'slug', 'status', 'title', 'updatedAt', 'views'] as const
+  static $columns = [
+    'canonicalUrl',
+    'categoryId',
+    'content',
+    'coverImage',
+    'createdAt',
+    'deletedAt',
+    'excerpt',
+    'focusKeyword',
+    'id',
+    'metaDescription',
+    'metaTitle',
+    'publishedAt',
+    'seriesId',
+    'slug',
+    'status',
+    'title',
+    'updatedAt',
+    'views',
+  ] as const
   $columns = PostSchema.$columns
   @column()
   declare canonicalUrl: string | null
@@ -308,7 +427,21 @@ export class PostSchema extends BaseModel {
 }
 
 export class ProjectSchema extends BaseModel {
-  static $columns = ['content', 'createdAt', 'demoUrl', 'description', 'featured', 'id', 'repoUrl', 'slug', 'status', 'techStack', 'thumbnailUrl', 'title', 'updatedAt'] as const
+  static $columns = [
+    'content',
+    'createdAt',
+    'demoUrl',
+    'description',
+    'featured',
+    'id',
+    'repoUrl',
+    'slug',
+    'status',
+    'techStack',
+    'thumbnailUrl',
+    'title',
+    'updatedAt',
+  ] as const
   $columns = ProjectSchema.$columns
   @column()
   declare content: string | null
@@ -339,7 +472,16 @@ export class ProjectSchema extends BaseModel {
 }
 
 export class QuestionAnswerSchema extends BaseModel {
-  static $columns = ['answer', 'createdAt', 'id', 'isPublished', 'postId', 'question', 'sortOrder', 'updatedAt'] as const
+  static $columns = [
+    'answer',
+    'createdAt',
+    'id',
+    'isPublished',
+    'postId',
+    'question',
+    'sortOrder',
+    'updatedAt',
+  ] as const
   $columns = QuestionAnswerSchema.$columns
   @column()
   declare answer: string
@@ -373,7 +515,15 @@ export class RoleUserSchema extends BaseModel {
 }
 
 export class RoleSchema extends BaseModel {
-  static $columns = ['createdAt', 'deletedAt', 'description', 'id', 'name', 'slug', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'deletedAt',
+    'description',
+    'id',
+    'name',
+    'slug',
+    'updatedAt',
+  ] as const
   $columns = RoleSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -409,7 +559,18 @@ export class SeriesSchema extends BaseModel {
 }
 
 export class SettingSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'id', 'label', 'settingGroup', 'settingKey', 'settingValue', 'sortOrder', 'type', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'description',
+    'id',
+    'label',
+    'settingGroup',
+    'settingKey',
+    'settingValue',
+    'sortOrder',
+    'type',
+    'updatedAt',
+  ] as const
   $columns = SettingSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -434,7 +595,16 @@ export class SettingSchema extends BaseModel {
 }
 
 export class TagSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'id', 'metaDescription', 'metaTitle', 'name', 'slug', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'description',
+    'id',
+    'metaDescription',
+    'metaTitle',
+    'name',
+    'slug',
+    'updatedAt',
+  ] as const
   $columns = TagSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -455,7 +625,21 @@ export class TagSchema extends BaseModel {
 }
 
 export class ToolSchema extends BaseModel {
-  static $columns = ['category', 'createdAt', 'deletedAt', 'description', 'featured', 'icon', 'id', 'name', 'slug', 'sortOrder', 'status', 'updatedAt', 'urlPath'] as const
+  static $columns = [
+    'category',
+    'createdAt',
+    'deletedAt',
+    'description',
+    'featured',
+    'icon',
+    'id',
+    'name',
+    'slug',
+    'sortOrder',
+    'status',
+    'updatedAt',
+    'urlPath',
+  ] as const
   $columns = ToolSchema.$columns
   @column()
   declare category: string
@@ -486,7 +670,17 @@ export class ToolSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['activeEmail', 'createdAt', 'deletedAt', 'email', 'fullName', 'id', 'password', 'status', 'updatedAt'] as const
+  static $columns = [
+    'activeEmail',
+    'createdAt',
+    'deletedAt',
+    'email',
+    'fullName',
+    'id',
+    'password',
+    'status',
+    'updatedAt',
+  ] as const
   $columns = UserSchema.$columns
   @column()
   declare activeEmail: string | null

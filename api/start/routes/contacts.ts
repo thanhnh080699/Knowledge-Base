@@ -9,14 +9,19 @@ export default function contactsRoutes() {
   router.post('newsletter', [ContactsController, 'subscribeNewsletter'])
 
   // Admin
-  router.group(() => {
-    router.get('contact-requests', [ContactsController, 'indexRequests'])
-    router.put('contact-requests/:id', [ContactsController, 'updateRequest'])
-    router.delete('contact-requests/:id', [ContactsController, 'destroyRequest'])
-      .use(middleware.acl({ permission: 'contacts.manage' }))
+  router
+    .group(() => {
+      router.get('contact-requests', [ContactsController, 'indexRequests'])
+      router.put('contact-requests/:id', [ContactsController, 'updateRequest'])
+      router
+        .delete('contact-requests/:id', [ContactsController, 'destroyRequest'])
+        .use(middleware.acl({ permission: 'contacts.manage' }))
 
-    router.get('newsletters', [ContactsController, 'indexNewsletters'])
-    router.delete('newsletters/:id', [ContactsController, 'destroyNewsletter'])
-      .use(middleware.acl({ permission: 'newsletters.manage' }))
-  }).prefix('admin').use(middleware.auth())
+      router.get('newsletters', [ContactsController, 'indexNewsletters'])
+      router
+        .delete('newsletters/:id', [ContactsController, 'destroyNewsletter'])
+        .use(middleware.acl({ permission: 'newsletters.manage' }))
+    })
+    .prefix('admin')
+    .use(middleware.auth())
 }

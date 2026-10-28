@@ -39,4 +39,5 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   // CORS
   CORS_ALLOWED_ORIGINS: Env.schema.string.optional(),
+  POST_VIEWS_TRUSTED_PROXY_IPS: Env.schema.string.optional(),
 })

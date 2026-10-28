@@ -90,6 +90,8 @@ code {
 
 .doc-content {
   color: var(--color-body);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .doc-content figure {
@@ -97,10 +99,64 @@ code {
 }
 
 .doc-content img {
-  height: auto;
-  max-width: 100%;
+  /* Imported HTML contains inline width:640px;max-width:none. */
+  height: auto !important;
+  max-width: 100% !important;
+  object-fit: contain;
   border-radius: 1rem;
   border: 1px solid var(--color-border);
+}
+
+.doc-content figure,
+.doc-content figure > a,
+.doc-content .wp-block-image {
+  min-width: 0;
+  max-width: 100% !important;
+}
+
+.doc-content figure > a {
+  overflow-x: visible !important;
+}
+
+.doc-content pre,
+.doc-content table {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+}
+
+.doc-content table {
+  display: block;
+}
+
+.doc-content figcaption,
+.doc-content .diagram-hint {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.doc-article .reading-section > h2 {
+  margin-bottom: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-ink);
+}
+
+.reading-link {
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.reading-nav-card {
+  min-width: 0;
+  border: 1px solid var(--color-hairline);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  overflow-wrap: anywhere;
+  background: var(--color-surface-soft);
 }
 
 .font-display {
@@ -1271,4 +1327,52 @@ code {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* NGINX article reading scale. Keep other editorial routes unchanged. */
+.nginx-reading .doc-article h1 {
+  font-family: var(--font-body);
+  font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+.nginx-reading .doc-content {
+  font-size: var(--doc-font-size, 18px);
+  line-height: 1.75;
+  color: var(--color-body-strong);
+}
+.nginx-reading .doc-content :is(h2, h3, h4) {
+  font-family: var(--font-body);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+}
+.nginx-reading .doc-content h2 { font-size: 1.5em; }
+.nginx-reading .doc-content h3 { font-size: 1.18em; }
+.nginx-reading .doc-content p { margin-block: 1em; }
+.nginx-reading .doc-content strong { font-weight: 600; }
+.nginx-reading .doc-content a { text-decoration: underline; text-underline-offset: 0.18em; }
+.nginx-reading .doc-content pre { font-size: 0.84em; line-height: 1.7; }
+.nginx-reading .doc-content pre code { font-size: inherit; }
+.nginx-reading .doc-content :not(pre) > code::before,
+.nginx-reading .doc-content :not(pre) > code::after { content: none; }
+.nginx-reading .doc-content :not(pre) > code {
+  background: var(--color-surface-strong);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.25em;
+  font-weight: 500;
+}
+.nginx-reading .doc-content figure img { width: 100%; }
+.nginx-reading .doc-content figcaption { font-size: 0.82em; }
+.nginx-reading .doc-content .article-summary {
+  padding: 1rem 1.25rem;
+  border-left: 3px solid #0f766e;
+  background: #f0fdfa;
+  border-radius: 0 0.75rem 0.75rem 0;
+}
+@media (max-width: 639px) {
+  .nginx-reading .doc-content { font-size: calc(var(--doc-font-size, 18px) - 1px); }
 }

@@ -1,4 +1,4 @@
-import { ApplicationService } from '@adonisjs/core/types'
+import { type ApplicationService } from '@adonisjs/core/types'
 import SitemapService from '#services/sitemap_service'
 
 export default class SitemapProvider {

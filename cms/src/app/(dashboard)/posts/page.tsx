@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { Select } from '@/components/ui/select'
 import { useListState } from '@/hooks/use-list-state'
 import Link from 'next/link'
@@ -8,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
+import { PostViews } from '@/components/content/post-views'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tag } from '@/components/ui/tag'
 import { useCategories } from '@/hooks/queries/use-taxonomies'
@@ -38,6 +41,7 @@ function statusVariant(status: PostStatus) {
 }
 
 export default function PostsPage() {
+  const [viewPost, setViewPost] = useState<{ id: number; title: string } | null>(null)
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<PostStatus | ''>('')
   const [categoryId, setCategoryId] = useState<number | ''>('')
@@ -103,6 +107,7 @@ export default function PostsPage() {
 
   return (
     <div className="mx-auto w-full max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+      {viewPost && <PostViews key={viewPost.id} postId={viewPost.id} title={viewPost.title} onClose={() => setViewPost(null)} />}
       <div className="space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -223,7 +228,7 @@ export default function PostsPage() {
                         <div className="flex min-w-[280px] items-center gap-3">
                           <div className="h-10 w-14 shrink-0 overflow-hidden rounded border border-[var(--app-border)] bg-[var(--app-surface-muted)]">
                             {post.coverImage ? (
-                              <img src={absoluteCdnUrl(post.coverImage)} alt={post.title} className="h-full w-full object-cover" />
+                              <NextImage unoptimized width={56} height={40} src={absoluteCdnUrl(post.coverImage)} alt={post.title} className="h-full w-full object-cover" />
                             ) : null}
                           </div>
                           <div className="min-w-0">
@@ -234,7 +239,7 @@ export default function PostsPage() {
                       </TableCell>
                       <TableCell className="text-sm text-[var(--app-muted)]">{post.category?.name ?? 'Uncategorized'}</TableCell>
                       <TableCell><Tag variant={statusVariant(post.status)}>{post.status}</Tag></TableCell>
-                      <TableCell className="text-sm text-[var(--app-muted)]"><span className="inline-flex items-center gap-1"><Eye className="h-3.5 w-3.5" />{post.views}</span></TableCell>
+                      <TableCell className="text-sm text-[var(--app-muted)]"><button type="button" title="Xem thông tin người xem" onClick={() => setViewPost(post)} className="inline-flex items-center gap-1 underline-offset-4 hover:underline"><Eye className="h-3.5 w-3.5" />{post.views}</button></TableCell>
                       <TableCell className="text-sm text-[var(--app-muted)]">{formatDateTime(trashed ? post.deletedAt : post.publishedAt)}</TableCell>
                       <TableCell className="pr-6 text-right">
                         <div className="flex items-center justify-end gap-2">

@@ -62,6 +62,7 @@ function prepareHtmlHeadings(content: string) {
 
 export function normalizeHtmlContent(content: string) {
   return prepareHtmlHeadings(content).html
+    .replace(/Trên điện thoại: cuộn ngang sơ đồ hoặc chạm để mở ảnh gốc\./g, "Chạm vào sơ đồ để mở ảnh gốc và phóng to.")
     .replace(/<img[^>]+src="([^">]+)"[^>]*>/gi, (match, src) => {
       if (src.startsWith("http")) return match
       return match.replace(src, absoluteCdnUrl(src))
@@ -72,23 +73,17 @@ function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, "")
 }
 
-export function stripFirstImage(content: string): string {
-  // Look for the first image tag (HTML or Markdown)
-  // If it's at the very beginning of the content (within first 100 chars), remove it
-  
-  const htmlImgRegex = /<img[^>]+>/i
-  const mdImgRegex = /!\[.*?\]\(.*?\)/
-  
-  const htmlMatch = content.match(htmlImgRegex)
-  if (htmlMatch && htmlMatch.index !== undefined && htmlMatch.index < 100) {
-    return content.replace(htmlMatch[0], "")
+export function stripFirstImage(content: string, coverImage?: string | null): string {
+  if (!coverImage) return content
+  const image = content.match(/<img\b[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*>|!\[[^\]]*\]\(([^\s)]+)(?:\s+[^)]*)?\)/i)
+  if (!image || image.index === undefined || image.index >= 100) return content
+  const identity = (src: string) => {
+    const normalized = absoluteCdnUrl(decodeHTML(src))
+    return new URL(normalized, "https://thanhnh.id.vn").href
   }
-  
-  const mdMatch = content.match(mdImgRegex)
-  if (mdMatch && mdMatch.index !== undefined && mdMatch.index < 100) {
-    return content.replace(mdMatch[0], "")
+  if (identity(image[1] ?? image[2]) === identity(coverImage)) {
+    return content.slice(0, image.index) + content.slice(image.index + image[0].length)
   }
-  
   return content
 }
 

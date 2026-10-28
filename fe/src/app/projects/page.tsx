@@ -2,17 +2,14 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import {
   ArrowRight,
-  BadgeCheck,
   BriefcaseBusiness,
   CheckCircle2,
   Code2,
   Database,
-  FileCode2,
   Layers3,
   MonitorCheck,
   ServerCog,
   ShieldCheck,
-  Sparkles,
   TimerReset
 } from "lucide-react"
 import { ProjectsFilter } from "@/components/shared/projects-filter"
@@ -74,7 +71,6 @@ export default async function ProjectsPage() {
   const response = await getProjects({ limit: 24 })
   const projects = response.data.length ? response.data : fallbackProjects
   const featured = projects.filter((project) => project.featured).slice(0, 3)
-  const totalTech = new Set(projects.flatMap((project) => project.techStack ?? [])).size
 
   return (
     <main className="bg-[var(--color-surface)]">

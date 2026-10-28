@@ -36,13 +36,16 @@ export async function getPosts(
     category?: string
     tag?: string
     search?: string
+    sort?: string
   } = {},
+  options: { signal?: AbortSignal } = {},
 ) {
   const page = params.page ?? 1
   const limit = params.limit ?? 10
 
   try {
     const { data } = await api.get<PaginatedResponse<Post>>("/posts", {
+      signal: options.signal,
       params: {
         page,
         limit,
@@ -50,6 +53,7 @@ export async function getPosts(
         category: params.category,
         tag: params.tag,
         q: params.search,
+        sort: params.sort,
       },
     })
     return data
@@ -65,6 +69,19 @@ export async function getPost(slug: string) {
   } catch {
     return null
   }
+}
+
+// Category endpoints include descendants; exhaust pagination before ranking locally.
+export async function getCategoryPosts(category: string): Promise<Post[]> {
+  const options = { signal: AbortSignal.timeout(8000) }
+  const first = await getPosts({ category, limit: 100 }, options)
+  const posts = [...first.data]
+  for (let page = 2; page <= first.meta.lastPage; page++) {
+    const result = await getPosts({ category, limit: 100, page }, options)
+    if (!result.data.length) break
+    posts.push(...result.data)
+  }
+  return [...new Map(posts.filter(p => p.status === "PUBLISHED").map(p => [p.id, p])).values()]
 }
 
 export async function getCategories() {

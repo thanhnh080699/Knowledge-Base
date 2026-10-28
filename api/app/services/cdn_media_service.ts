@@ -38,7 +38,11 @@ export default class CdnMediaService {
   }) {
     const form = new FormData()
     const buffer = await readFile(payload.tmpPath)
-    form.append('file', new Blob([buffer], { type: payload.type || 'application/octet-stream' }), payload.clientName)
+    form.append(
+      'file',
+      new Blob([buffer], { type: payload.type || 'application/octet-stream' }),
+      payload.clientName
+    )
     form.append('folder', payload.folder || '')
     form.append('align', 'none')
     if (payload.width) form.append('width', payload.width)

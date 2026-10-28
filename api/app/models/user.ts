@@ -15,7 +15,10 @@ export default class User extends UserSchema {
     pivotTable: 'role_users',
     onQuery: (query: any) => {
       query.whereNull('role_users.deleted_at').whereExists((sub: any) => {
-        sub.from('roles').whereColumn('roles.id', 'role_users.role_id').whereNull('roles.deleted_at')
+        sub
+          .from('roles')
+          .whereColumn('roles.id', 'role_users.role_id')
+          .whereNull('roles.deleted_at')
       })
     },
   })

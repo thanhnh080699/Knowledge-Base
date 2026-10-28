@@ -166,8 +166,8 @@ export function Footer({
             {siteName}
           </p>
           <p className="mt-3 max-w-xs text-sm leading-6 text-[var(--color-body)]">
-            Nền tảng chia sẻ tài liệu kỹ thuật mở, ghi chú thực chiến về vận
-            hành hệ thống, DevOps và phát triển phần mềm dành cho cộng đồng.
+            Tài liệu IT tiếng Việt, công cụ tiện ích và bài giới thiệu dự án
+            mã nguồn mở cho học tập và công việc.
           </p>
 
           {/* Social links */}

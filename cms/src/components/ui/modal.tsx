@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from './button';
+import { useHydrated } from '@/hooks/use-hydrated';
 
 interface ModalProps {
   isOpen: boolean;
@@ -15,12 +16,7 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, description, children, className }: ModalProps) {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+  const mounted = useHydrated();
 
   // Prevent page scroll while keeping the modal panel itself scrollable.
   React.useEffect(() => {

@@ -10,19 +10,41 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
+interface TinyMceEditor {
+  initialized: boolean;
+  getContent(): string;
+  setContent(value: string): void;
+  on(events: string, callback: () => void): void;
+}
+
+interface TinyMceOptions {
+  target: HTMLTextAreaElement;
+  setup: (editor: TinyMceEditor) => void;
+  init_instance_callback: (editor: TinyMceEditor) => void;
+  [option: string]: unknown;
+}
+
 declare global {
   interface Window {
-    tinymce: any;
+    tinymce?: {
+      init(options: TinyMceOptions): Promise<TinyMceEditor[]>;
+      remove(editor: TinyMceEditor): void;
+    };
   }
 }
 
 export function RichTextEditor({ value, onChange, height = 500, placeholder }: RichTextEditorProps) {
   const theme = useThemeStore((state) => state.theme);
   const [isDark, setIsDark] = useState(false);
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<TinyMceEditor | null>(null);
   const containerRef = useRef<HTMLTextAreaElement>(null);
   const isInitializing = useRef(false);
   const valueRef = useRef(value);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     valueRef.current = value;
@@ -91,13 +113,13 @@ export function RichTextEditor({ value, onChange, height = 500, placeholder }: R
         branding: false,
         promotion: false,
         license_key: 'gpl', // Assuming GPL for local version if no key
-        setup: (editor: any) => {
+        setup: (editor: TinyMceEditor) => {
           editorRef.current = editor;
           editor.on('change keyup', () => {
-            onChange(editor.getContent());
+            onChangeRef.current(editor.getContent());
           });
         },
-        init_instance_callback: (editor: any) => {
+        init_instance_callback: (editor: TinyMceEditor) => {
           isInitializing.current = false;
           if (valueRef.current) {
             editor.setContent(valueRef.current);

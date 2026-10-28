@@ -83,6 +83,11 @@ export default class PostsController {
     }
 
     if (request.input('sort') === 'id') query.clearOrder().orderBy('id', 'desc')
+    else if (request.input('sort') === 'oldest') {
+      query.clearOrder().orderBy('publishedAt', 'asc').orderBy('createdAt', 'asc').orderBy('id', 'asc')
+    } else if (request.input('sort') === 'title') {
+      query.clearOrder().orderBy('title', 'asc').orderBy('id', 'asc')
+    } else query.orderBy('id', 'desc')
 
     const posts = await query.paginate(page, limit)
     return response.ok(posts)

@@ -26,6 +26,9 @@ export const updateProfileValidator = vine.compile(
 export const changePasswordValidator = vine.compile(
   vine.object({
     currentPassword: vine.string().minLength(4),
-    newPassword: vine.string().minLength(4).confirmed({ confirmationField: 'newPassword_confirmation' }),
+    newPassword: vine
+      .string()
+      .minLength(4)
+      .confirmed({ confirmationField: 'newPassword_confirmation' }),
   })
 )

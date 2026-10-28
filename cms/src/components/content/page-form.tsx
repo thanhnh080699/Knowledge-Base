@@ -1,5 +1,7 @@
 "use client";
 
+import NextImage from 'next/image';
+
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { Select } from '@/components/ui/select'
@@ -325,7 +327,7 @@ export function PageForm({
                 onClick={() => fileInputRef.current?.click()}
               >
                 {preview ? (
-                  <img
+                  <NextImage unoptimized width={640} height={360}
                     src={absoluteCdnUrl(preview)}
                     alt="Cover preview"
                     className="h-full w-full object-cover"

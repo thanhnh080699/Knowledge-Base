@@ -151,4 +151,3 @@ export default class CategoriesController {
     return response.ok({ message: 'Categories reordered successfully' })
   }
 }
-

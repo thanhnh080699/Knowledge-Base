@@ -41,7 +41,6 @@ export function DockerRunToCompose() {
       const ports: string[] = []
       const volumes: string[] = []
       const environment: string[] = []
-      const extraHosts: string[] = []
       let image = ""
       const commandArgs: string[] = []
 

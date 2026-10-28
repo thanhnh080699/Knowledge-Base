@@ -64,7 +64,10 @@ export function RandomPortGenerator() {
           </label>
           <select
             value={rangeType}
-            onChange={(e) => setRangeType(e.target.value as any)}
+            onChange={(e) => {
+              const value = e.target.value
+              if (value === "ephemeral" || value === "registered" || value === "all" || value === "custom") setRangeType(value)
+            }}
             className="w-full rounded-xl border border-[var(--color-hairline)] bg-white px-3.5 py-2 text-sm text-[var(--color-ink)]"
           >
             <option value="ephemeral">Dynamic / Ephemeral (49152 - 65535)</option>

@@ -15,10 +15,11 @@ export interface ListPaginationProps {
 }
 
 export function ListPagination({ list, total, loading, label = 'kết quả' }: ListPaginationProps) {
+  const { page, setPage } = list
   const { currentPage, lastPage, from, to } = paginationRange(list.page, list.pageSize, total)
   useEffect(() => {
-    if (!loading && list.page > lastPage) list.setPage(lastPage)
-  }, [loading, list.page, lastPage, list.setPage])
+    if (!loading && page > lastPage) setPage(lastPage)
+  }, [loading, page, lastPage, setPage])
   return (
     <nav aria-label="Phân trang" className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--app-border)] bg-[var(--app-surface-muted)] px-4 py-3 text-sm text-[var(--app-muted)]">
       <span role="status" aria-live="polite">{loading ? 'Đang tải…' : `${from}–${to} / ${total} ${label}`}</span>

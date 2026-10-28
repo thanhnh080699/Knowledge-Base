@@ -8,7 +8,10 @@ export default class extends BaseSchema {
       table.string('email', 255).notNullable().unique()
       table.string('password', 180).notNullable()
       table.enum('status', ['active', 'inactive']).defaultTo('active').notNullable()
-      table.specificType('active_email', 'varchar(255) AS (IF(status = "active", email, NULL)) VIRTUAL')
+      table.specificType(
+        'active_email',
+        'varchar(255) AS (IF(status = "active", email, NULL)) VIRTUAL'
+      )
       table.unique(['active_email'])
 
       table.timestamp('created_at')

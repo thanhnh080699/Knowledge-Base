@@ -1,5 +1,35 @@
 # Production deployment
 
+## Top Repos articles replace GitHub discovery (2026-10-28, current)
+
+- Search follow-up: `/repos?q=...` filters the original articles by title, excerpt and tags, with case/accent-insensitive matching, submit and clear controls, result count and an empty state. Existing article details remain unchanged. Backup: `/home/deploy-backups/thanhnh-top-repos-search-20261028/fe-before.tar.gz`; previous build: `previous-next`. Scoped lint/build and production browser checks passed, including mobile layouts, query reload and canonical.
+
+- User requested the original Top Repos articles instead of the GitHub catalog and README detail pages, and explicitly chose all **7** existing published articles (IDs 222–228, including MacViewer).
+- `/repos` now uses the existing article cards and links directly to `/docs/top-repos/:slug`. Article content, original detail renderer and canonical URLs are unchanged. Use the category API for future articles; do not reintroduce the GitHub discovery UI without a new request.
+- Removed GitHub filtering, catalog/snapshot services, README renderer and `/repos/:owner/:name` routes. Removed their URLs from the sitemap; original article URLs remain.
+- Frontend-only release on verified `web-srv`; rollback archive: `/home/deploy-backups/thanhnh-top-repos-articles-20261028/fe-before.tar.gz`, previous build: `previous-next` in that directory. Production browser checks confirmed all 7 articles, original reader/canonical, desktop/mobile, old README route 404 and sitemap cleanup.
+- Earlier discovery/detail release records below are historical and superseded by this release.
+
+## Repository discovery release (2026-10-28)
+
+- Follow-up detail release: repository titles and “Xem chi tiết” open `/repos/:owner/:name`, using the documentation reader layout with original README, TOC and reading controls. Filters/view/page survive return navigation. README Markdown skips raw HTML and resolves source-relative links/images; do not send untrusted README through `PostContent`'s raw HTML branch.
+- Detail release rollback: `/home/deploy-backups/thanhnh-repo-details-20261028/fe-before.tar.gz` and `previous-next`. Only FE restarted; production detail/reader/mobile/404/canonical/sitemap checks passed. Notes: `artifacts/repo-details-release/release-notes.md`.
+
+- Deployed `https://thanhnh.id.vn/repos` as the main-menu “Khám phá Repo” directory on verified `web-srv` via `192.168.11.126`. Frontend only; no database changes.
+- GitHub data: up to 40 repositories per topic (`devops`, `developer-tools`, `self-hosted`), above 1,000 stars, excluding forks and archived repositories; initial deduplicated snapshot has 114 repos. Fetches are cached for 3,600 seconds with a timestamped bundled fallback. “Top Repos” sorts by total stars, not historical growth.
+- Preserved the concurrent mobile navigation fix. Header and mobile menu use the `lg` breakpoint; production global Tailwind sources include `mobile-navigation.tsx`. Repository utilities are scoped in `fe/src/app/repos/repos.css`.
+- Latest rollback archive: `/home/deploy-backups/thanhnh-repos-20261028/fe-predeploy-current.tar.gz`; previous build: `previous-next` in the same directory. Earlier `fe-before.tar.gz` predates the mobile menu fix; prefer the latest archive.
+- Production browser checks passed for search, combined filters, URL reload, sorting, pagination, responsive layout, canonical and sitemap. RSS, public routes and API health returned HTTP 200; all four application PM2 processes remained online. Release details: `artifacts/repos-release/release-notes.md`.
+
+## Post views release and Windows authentication (2026-10-27)
+
+- Deployed post viewer details (IP, approximate location, browser/OS/device, referrer domain and timestamp) to verified `web-srv` via `192.168.11.126`. Both production IPs belong to this same host.
+- Windows SSH password is stored in Windows Credential Manager as generic target `thanhnh.id.vn.production.ssh`, account `ubuntu`. Retrieve into process memory only; never print it or put it in arguments/files. The local helper `scratch/production_access.py` supports Credential Manager backed SSH with known-host verification.
+- Feature backup: `/home/deploy-backups/thanhnh-post-views-20261027/` contains the original application archive, restricted SQL dump and previous API/CMS/FE builds. Keep these for rollback.
+- Verified nginx ingress for the API is `192.168.12.100`. `POST_VIEWS_TRUSTED_PROXY_IPS` configures exact trusted peers; viewer tracking uses the rightmost `X-Forwarded-For` address only from trusted ingress, falling back to `X-Real-IP`. Do not trust all proxies or client-supplied prefixes.
+- API migration `1793000000000_create_post_views_table` adds the history table. Existing view totals are preserved; detailed history starts at release. Per-post IP/user-agent deduplication uses fixed 30-minute buckets, not unique people.
+- Detailed history is available only at authenticated `GET /api/admin/posts/:id/views` with `posts.manage`. Public recording retains `/api/posts/:id/view` compatibility; `/api/posts/:id/views` is also accepted.
+
 - SSH user: `ubuntu`.
 - Server IPs: `192.168.12.102` or `192.168.11.126`; use whichever is reachable and verify hostname and application path before deploying. Do not deploy separately to both without confirming they are distinct targets.
 - Application root: `/home/thanhnh.id.vn`.
@@ -63,3 +93,8 @@
 
 - The stored content token successfully accessed `GET /api/automation/posts` (HTTP 200).
 - `GET /api/automation/media` returned HTTP 403, `Insufficient token permissions`; `media.read` is not granted. Do not assume this proves upload access: check the required `media.create` scope when uploading. If a required scope is missing, report the specific blocked capability rather than silently expanding the token's permissions.
+
+## Windows content automation credential (2026-10-28)
+
+- User explicitly authorized storing the supplied production content API token on this Windows machine. It is saved in Windows Credential Manager, generic target `thanhnh.id.vn.production.content-api`, account `content-automation`. Use this on Windows instead of asking for the token again or requiring macOS Keychain.
+- `scratch/content_api_access.py` reads the credential into memory only and provides `request(path, method, data, headers)` restricted to `https://api.thanhnh.id.vn/api/` with redirects rejected. Run `python scratch/content_api_access.py verify` for a read-only check. Never print/read the secret to tool output, put it in arguments/files, or forward it to CDN/source URLs. Do not commit the token.

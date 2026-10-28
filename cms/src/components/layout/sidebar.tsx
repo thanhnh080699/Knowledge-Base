@@ -1,5 +1,7 @@
 "use client";
 
+import NextImage from 'next/image';
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
@@ -121,7 +123,7 @@ export function Sidebar({ className, mobile = false, onNavigate }: { className?:
         {isOpen && (
           <div className="flex items-center gap-2 flex-1">
             {adminLogo ? (
-              <img
+              <NextImage unoptimized width={128} height={32}
                 src={absoluteCdnUrl(adminLogo)}
                 alt="Logo"
                 className="h-8 w-auto object-contain"

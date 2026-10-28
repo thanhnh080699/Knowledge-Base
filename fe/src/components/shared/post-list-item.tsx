@@ -3,6 +3,8 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { CdnImage } from "@/components/shared/cdn-image"
 import { estimateReadingTime, getPostThumbnail } from "@/lib/content"
+import { displayPostTitle } from "@/lib/reading"
+import { ReadingStatus } from "./reading-status"
 import type { Post } from "@/types/post"
 
 function formatDate(value: string | null | undefined) {
@@ -16,11 +18,12 @@ export function PostListItem({ post }: { post: Post }) {
   const coverUrl = getPostThumbnail(post)
 
   return (
-    <article className="group flex flex-col gap-3 rounded-xl border border-[var(--color-hairline)] bg-white p-3.5 transition-all hover:border-[var(--color-hairline-strong)] hover:shadow-xs sm:flex-row sm:items-center sm:justify-between">
+    <article className="relative group flex flex-col gap-3 rounded-xl border border-[var(--color-hairline)] bg-white px-3.5 pb-3.5 pt-9 transition-all hover:border-[var(--color-hairline-strong)] hover:shadow-xs xl:flex-row xl:items-center xl:justify-between">
+      <ReadingStatus id={post.id} />
       <div className="flex min-w-0 flex-1 items-center gap-3">
         {/* Compact Thumbnail or Icon */}
         {coverUrl ? (
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-lg border border-[var(--color-hairline-soft)] bg-[var(--color-surface-soft)]">
+          <Link href={href} aria-label={`Đọc ${displayPostTitle(post)}`} className="relative block size-10 shrink-0 overflow-hidden rounded-lg border border-[var(--color-hairline-soft)] bg-[var(--color-surface-soft)]">
             <CdnImage
               src={coverUrl}
               alt={post.title}
@@ -28,18 +31,18 @@ export function PostListItem({ post }: { post: Post }) {
               sizes="40px"
               className="object-cover"
             />
-          </div>
+          </Link>
         ) : (
           <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-soft)] text-[var(--color-muted)]">
             <FileText size={18} />
           </div>
         )}
 
-        <div className="flex flex-1 flex-col gap-0.5 overflow-hidden sm:flex-row sm:items-center sm:gap-3">
+        <div className="flex flex-1 flex-col gap-0.5 overflow-hidden xl:flex-row xl:items-center xl:gap-3">
           <Badge className="w-fit shrink-0 font-normal text-[11px]">{post.category?.name ?? "Tài liệu"}</Badge>
-          <h3 className="truncate text-sm font-medium text-[var(--color-ink)] group-hover:text-[var(--color-primary-active)]">
+          <h3 className="whitespace-normal break-words text-sm font-medium text-[var(--color-ink)] group-hover:text-[var(--color-primary-active)]">
             <Link href={href} className="focus:outline-none">
-              {post.title}
+              {displayPostTitle(post)}
             </Link>
           </h3>
         </div>

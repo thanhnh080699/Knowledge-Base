@@ -112,7 +112,10 @@ test.group('Posts', (group) => {
   })
 
   test('restore and force delete post as admin', async ({ client, assert }) => {
-    const post = await Post.query().where('slug', 'test-post-functional').whereNotNull('deleted_at').firstOrFail()
+    const post = await Post.query()
+      .where('slug', 'test-post-functional')
+      .whereNotNull('deleted_at')
+      .firstOrFail()
 
     const restoreResponse = await client.post(`/api/admin/posts/${post.id}/restore`).loginAs(admin)
     restoreResponse.assertStatus(200)
@@ -121,7 +124,9 @@ test.group('Posts', (group) => {
     const deleteResponse = await client.delete(`/api/admin/posts/${post.id}`).loginAs(admin)
     deleteResponse.assertStatus(204)
 
-    const forceDeleteResponse = await client.delete(`/api/admin/posts/${post.id}/force`).loginAs(admin)
+    const forceDeleteResponse = await client
+      .delete(`/api/admin/posts/${post.id}/force`)
+      .loginAs(admin)
     forceDeleteResponse.assertStatus(204)
   })
 })

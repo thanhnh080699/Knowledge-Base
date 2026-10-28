@@ -12,7 +12,9 @@ import env from '#start/env'
 
 // Migrations and test fixtures must never run against a shared application DB.
 if (env.get('DB_CONNECTION') !== 'sqlite' && !env.get('DB_DATABASE').endsWith('_test')) {
-  throw new Error('Refusing tests on an application database. Use DB_CONNECTION=sqlite or a dedicated *_test database.')
+  throw new Error(
+    'Refusing tests on an application database. Use DB_CONNECTION=sqlite or a dedicated *_test database.'
+  )
 }
 
 /**
@@ -47,9 +49,7 @@ export const plugins: Config['plugins'] = [
  * The teardown functions are executed after all the tests
  */
 export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
-  setup: [
-    () => testUtils.db().migrate(),
-  ],
+  setup: [() => testUtils.db().migrate()],
   teardown: [],
 }
 

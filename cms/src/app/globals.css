@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -20,6 +22,11 @@
   --app-border-strong: #cbd5e1;
   --app-muted: #64748b;
   --app-muted-strong: #475569;
+  --app-link: #1d4ed8;
+  --app-link-hover: #1e40af;
+  --app-info-soft-bg: #eff6ff;
+  --app-info-soft-fg: #1d4ed8;
+  --app-info-soft-border: #bfdbfe;
   --app-topbar-bg: rgba(255, 255, 255, 0.92);
   --app-sidebar-bg: #ffffff;
   --app-sidebar-border: #e2e8f0;
@@ -71,6 +78,11 @@
   --app-border-strong: #334155;
   --app-muted: #94a3b8;
   --app-muted-strong: #cbd5e1;
+  --app-link: #93c5fd;
+  --app-link-hover: #bfdbfe;
+  --app-info-soft-bg: rgba(59, 130, 246, 0.14);
+  --app-info-soft-fg: #93c5fd;
+  --app-info-soft-border: rgba(96, 165, 250, 0.3);
   --app-topbar-bg: rgba(15, 23, 42, 0.88);
   --app-sidebar-bg: #020617;
   --app-sidebar-border: #1e293b;

@@ -21,7 +21,12 @@ export default class GoogleAnalyticsService {
       .where('setting_key', 'google_analytics_service_account')
       .first()
 
-    if (!serviceAccount || !serviceAccount.settingValue || typeof serviceAccount.settingValue !== 'object' || Object.keys(serviceAccount.settingValue).length === 0) {
+    if (
+      !serviceAccount ||
+      !serviceAccount.settingValue ||
+      typeof serviceAccount.settingValue !== 'object' ||
+      Object.keys(serviceAccount.settingValue).length === 0
+    ) {
       throw new Error('Google Analytics Service Account JSON is missing or invalid')
     }
 
@@ -119,41 +124,47 @@ export default class GoogleAnalyticsService {
   private formatOverview(response: any) {
     const row = response.rows?.[0]
     if (!row) return {}
-    
+
     return {
       users: row.metricValues[0].value,
       sessions: row.metricValues[1].value,
       pageViews: row.metricValues[2].value,
-      bounceRate: (parseFloat(row.metricValues[3].value) * 100).toFixed(2) + '%',
+      bounceRate: (Number.parseFloat(row.metricValues[3].value) * 100).toFixed(2) + '%',
       avgSessionDuration: this.formatDuration(row.metricValues[4].value),
     }
   }
 
   private formatChart(response: any) {
-    return response.rows?.map((row: any) => ({
-      date: this.formatDate(row.dimensionValues[0].value),
-      users: parseInt(row.metricValues[0].value),
-      views: parseInt(row.metricValues[1].value),
-    })) || []
+    return (
+      response.rows?.map((row: any) => ({
+        date: this.formatDate(row.dimensionValues[0].value),
+        users: Number.parseInt(row.metricValues[0].value),
+        views: Number.parseInt(row.metricValues[1].value),
+      })) || []
+    )
   }
 
   private formatPages(response: any) {
-    return response.rows?.map((row: any) => ({
-      path: row.dimensionValues[0].value,
-      title: row.dimensionValues[1].value,
-      views: row.metricValues[0].value,
-    })) || []
+    return (
+      response.rows?.map((row: any) => ({
+        path: row.dimensionValues[0].value,
+        title: row.dimensionValues[1].value,
+        views: row.metricValues[0].value,
+      })) || []
+    )
   }
 
   private formatSources(response: any) {
-    return response.rows?.map((row: any) => ({
-      source: row.dimensionValues[0].value,
-      users: row.metricValues[0].value,
-    })) || []
+    return (
+      response.rows?.map((row: any) => ({
+        source: row.dimensionValues[0].value,
+        users: row.metricValues[0].value,
+      })) || []
+    )
   }
 
   private formatDuration(seconds: string) {
-    const s = parseFloat(seconds)
+    const s = Number.parseFloat(seconds)
     const mins = Math.floor(s / 60)
     const secs = Math.round(s % 60)
     return `${mins}m ${secs}s`

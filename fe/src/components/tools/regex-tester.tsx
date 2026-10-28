@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { Sparkles, RotateCcw } from "lucide-react"
 
 export function RegexTester() {
   const [pattern, setPattern] = useState("([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})")
@@ -12,7 +11,7 @@ export function RegexTester() {
   )
 
   const activeFlags = Object.entries(flags)
-    .filter(([_, active]) => active)
+    .filter(([, active]) => active)
     .map(([flag]) => flag)
     .join("")
 

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { isAxiosError } from 'axios';
 import { Modal } from '../ui/modal';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -17,8 +18,8 @@ interface ProfileModalProps {
 
 export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const { user, setUser } = useAuthStore();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState(user?.fullName || '');
+  const [email, setEmail] = useState(user?.email || '');
   
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -26,13 +27,16 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [source, setSource] = useState({ user, isOpen });
 
-  useEffect(() => {
+  // Reset edits when the profile changes or the dialog is reopened, before rendering.
+  if (source.user !== user || source.isOpen !== isOpen) {
+    setSource({ user, isOpen });
     if (user) {
       setFullName(user.fullName || '');
       setEmail(user.email || '');
     }
-  }, [user, isOpen]);
+  }
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,8 +45,8 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       const response = await api.put('/auth/profile', { fullName, email });
       setUser(response.data.data);
       toast.success('Cập nhật thông tin thành công');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật thông tin');
+    } catch (error: unknown) {
+      toast.error((isAxiosError<{ message?: string }>(error) && error.response?.data?.message) || 'Có lỗi xảy ra khi cập nhật thông tin');
     } finally {
       setIsUpdatingProfile(false);
     }
@@ -66,8 +70,8 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       setCurrentPassword('');
       setNewPassword('');
       setNewPasswordConfirmation('');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu');
+    } catch (error: unknown) {
+      toast.error((isAxiosError<{ message?: string }>(error) && error.response?.data?.message) || 'Có lỗi xảy ra khi đổi mật khẩu');
     } finally {
       setIsChangingPassword(false);
     }

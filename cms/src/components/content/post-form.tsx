@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select } from '@/components/ui/select'
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
@@ -308,7 +310,7 @@ export function PostForm({ mode, post, categories, tags, isSubmitting, onSubmit 
             <aside className="space-y-2">
               <Label>Cover image</Label>
               <div className="group relative flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-[var(--app-border)] bg-[var(--app-surface-muted)]" onClick={() => fileInputRef.current?.click()}>
-                {preview ? <img src={absoluteCdnUrl(preview)} alt="Cover preview" className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />}
+                {preview ? <NextImage unoptimized width={640} height={360} src={absoluteCdnUrl(preview)} alt="Cover preview" className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />}
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button type="button" variant="outline" size="sm" className="h-8 gap-2" onClick={() => setMediaPicker('cover')}>

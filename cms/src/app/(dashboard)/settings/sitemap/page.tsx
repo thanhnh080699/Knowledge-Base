@@ -8,8 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useUpdateSettingsGroup } from '@/hooks/mutations/use-setting-mutations'
 import { useSettingsGroup } from '@/hooks/queries/use-settings'
-import type { Setting, SettingValue, UpdateSettingInput } from '@/types/settings'
-import { RotateCcw, Save, Loader2, Share2, FileCode, Clock, LayoutList } from 'lucide-react'
+import type { SettingValue, UpdateSettingInput } from '@/types/settings'
+import { RotateCcw, Save, Loader2, Share2, Clock, LayoutList } from 'lucide-react'
 
 const SITEMAP_GROUP = 'sitemap'
 
@@ -64,11 +64,11 @@ export default function SitemapSettingsPage() {
     <div className="mx-auto w-full max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="space-y-8">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-          <Link href="/" className="text-blue-600 hover:text-blue-700">
+          <Link href="/" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">
             Dashboard
           </Link>
           <span className="text-[var(--app-muted)]">/</span>
-          <Link href="/settings" className="text-blue-600 hover:text-blue-700">
+          <Link href="/settings" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">
             Settings
           </Link>
           <span className="text-[var(--app-muted)]">/</span>

@@ -21,7 +21,9 @@ export default class extends BaseSchema {
         })
         permission = await db.from('permissions').where('slug', slug).firstOrFail()
         if (admin) {
-          await db.table('permission_roles').insert({ role_id: admin.id, permission_id: permission.id })
+          await db
+            .table('permission_roles')
+            .insert({ role_id: admin.id, permission_id: permission.id })
         }
       }
     })

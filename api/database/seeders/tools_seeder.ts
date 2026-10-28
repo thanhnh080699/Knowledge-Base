@@ -388,7 +388,8 @@ export default class extends BaseSeeder {
       {
         slug: 'text-diff',
         name: 'Text Diff Checker',
-        description: 'Compare two blocks of plain text line-by-line to inspect additions and deletions',
+        description:
+          'Compare two blocks of plain text line-by-line to inspect additions and deletions',
         category: 'Text',
         urlPath: '/tools/text-diff',
         featured: false,
@@ -418,7 +419,8 @@ export default class extends BaseSeeder {
       {
         slug: 'base64-file-converter',
         name: 'Base64 File Converter',
-        description: 'Convert files to Base64 Data URLs and decode Base64 back into downloadable files',
+        description:
+          'Convert files to Base64 Data URLs and decode Base64 back into downloadable files',
         category: 'Encoder',
         urlPath: '/tools/base64-file-converter',
         featured: true,

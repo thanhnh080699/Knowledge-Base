@@ -4,7 +4,7 @@ import ApiAccessToken from '#models/api_access_token'
 import Permission from '#models/permission'
 import {
   createApiAccessTokenValidator,
-  EXPIRATION_OPTIONS,
+  type EXPIRATION_OPTIONS,
   updateApiAccessTokenValidator,
 } from '#validators/api_access_token'
 
@@ -24,9 +24,7 @@ function resolveExpiration(option: ExpirationOption) {
 }
 
 async function ensurePermissionsExist(permissions: string[]) {
-  const existing = await Permission.query()
-    .whereIn('slug', permissions)
-    .whereNull('deleted_at')
+  const existing = await Permission.query().whereIn('slug', permissions).whereNull('deleted_at')
   const existingSlugs = new Set(existing.map((permission) => permission.slug))
   const missing = permissions.filter((permission) => !existingSlugs.has(permission))
 

@@ -1,14 +1,30 @@
 "use client"
 
 import { Folder, Search, ChevronRight, X, LayoutGrid, List } from "lucide-react"
-import { useMemo, useState, useEffect } from "react"
+import { useMemo, useState, useEffect, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { PostCard } from "@/components/shared/post-card"
 import { PostListItem } from "@/components/shared/post-list-item"
-import type { Post } from "@/types/post"
 import type { Category } from "@/types/category"
+import type { Post } from "@/types/post"
+import { SortBar } from "./sort-bar"
+import { listingSort, listingStorageKey, LAST_LISTING_KEY, safeListingUrl } from "@/lib/listing"
+
+const VIEW_MODE_KEY = "docs_view_mode"
+function subscribeViewMode(onChange: () => void) {
+  window.addEventListener("storage", onChange)
+  return () => window.removeEventListener("storage", onChange)
+}
+function readViewMode(): "grid" | "list" {
+  try {
+    return localStorage.getItem(VIEW_MODE_KEY) === "list" ? "list" : "grid"
+  } catch {
+    return "grid"
+  }
+}
+const defaultViewMode = () => "grid" as const
 
 export function SearchBox({
   posts,
@@ -22,26 +38,44 @@ export function SearchBox({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const [query, setQuery] = useState(initialQuery)
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-
-  // Load preferred view mode from localStorage on mount
+  const currentSort = listingSort(searchParams.get("sort") ?? undefined, searchParams.get("category") ?? pathname.split("/").at(-1))
   useEffect(() => {
-    const savedMode = localStorage.getItem("docs_view_mode")
-    if (savedMode === "grid" || savedMode === "list") {
-      setViewMode(savedMode)
-    }
-  }, [])
+    try {
+      const key = listingStorageKey(pathname, searchParams.toString())
+      if (!searchParams.has("page") && !searchParams.has("sort")) {
+        const saved = safeListingUrl(localStorage.getItem(key))
+        if (saved && listingStorageKey(pathname, saved.split("?")[1] ?? "") === key && saved !== pathname + (searchParams.size ? `?${searchParams}` : "")) {
+          router.replace(saved, { scroll: false })
+          return
+        }
+      }
+      const params = new URLSearchParams(searchParams.toString())
+      params.set("page", params.get("page") ?? "1")
+      params.set("sort", currentSort)
+      const url = `${pathname}?${params}`
+      localStorage.setItem(key, url)
+      localStorage.setItem(LAST_LISTING_KEY, url)
+      sessionStorage.setItem(LAST_LISTING_KEY, url)
+    } catch { /* Browsing still works without local storage. */ }
+  }, [pathname, searchParams, router, currentSort])
+  const [queryState, setQueryState] = useState({ source: initialQuery, value: initialQuery })
+  if (queryState.source !== initialQuery) {
+    setQueryState({ source: initialQuery, value: initialQuery })
+  }
+  const query = queryState.value
+  const setQuery = (value: string) => setQueryState({ source: initialQuery, value })
+  const savedViewMode = useSyncExternalStore(subscribeViewMode, readViewMode, defaultViewMode)
+  const [selectedViewMode, setSelectedViewMode] = useState<"grid" | "list" | null>(null)
+  const viewMode = selectedViewMode ?? savedViewMode
 
   const handleSetViewMode = (mode: "grid" | "list") => {
-    setViewMode(mode)
-    localStorage.setItem("docs_view_mode", mode)
+    setSelectedViewMode(mode)
+    try {
+      localStorage.setItem(VIEW_MODE_KEY, mode)
+    } catch {
+      // Keep the current choice usable even when persistent storage is unavailable.
+    }
   }
-
-  // Sync state when initialQuery changes (e.g. from page navigation)
-  useEffect(() => {
-    setQuery(initialQuery)
-  }, [initialQuery])
 
   // Debounce search update to URL
   useEffect(() => {
@@ -68,9 +102,9 @@ export function SearchBox({
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase()
-    if (!needle) return posts
     return posts.filter((post) => {
-      const haystack = [post.title, post.excerpt, post.category?.name, ...(post.tags ?? []).map((tag) => tag.name)]
+      if (!needle) return true
+      const haystack = [post.title, post.excerpt, post.content, post.category?.name, ...(post.tags ?? []).map((tag) => tag.name)]
         .filter(Boolean)
         .join(" ")
         .toLowerCase()
@@ -137,6 +171,14 @@ export function SearchBox({
           </div>
         </div>
       </div>
+
+      <SortBar value={currentSort} showRoadmap={searchParams.has("category") || pathname.startsWith("/docs/categories/")} onChange={sort => {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set("sort", sort)
+        params.set("page", "1")
+        params.delete("reading")
+        router.push(`${pathname}?${params}`, { scroll: false })
+      }} />
 
       {/* Subcategories (if available) */}
       {!query.trim() && subcategories.length > 0 && (

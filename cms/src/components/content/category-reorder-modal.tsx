@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -64,20 +64,22 @@ interface CategoryReorderModalProps {
   isSubmitting: boolean
 }
 
-export function CategoryReorderModal({ isOpen, onClose, items, onSave, isSubmitting }: CategoryReorderModalProps) {
-  const [flatItems, setFlatItems] = useState<{ id: number; name: string; level: number; parentId: number | null }[]>([])
+type FlatCategory = { id: number; name: string; level: number; parentId: number | null }
 
-  useEffect(() => {
-    if (isOpen) {
-      const flatten = (cats: Category[], level = 0): any[] => {
-        return cats.flatMap(cat => [
-          { id: cat.id, name: cat.name, level, parentId: cat.parentId },
-          ...flatten(cat.children || [], level + 1)
-        ])
-      }
-      setFlatItems(flatten(items))
-    }
-  }, [isOpen, items])
+function flattenCategories(categories: Category[], level = 0): FlatCategory[] {
+  return categories.flatMap(category => [
+    { id: category.id, name: category.name, level, parentId: category.parentId ?? null },
+    ...flattenCategories(category.children ?? [], level + 1),
+  ])
+}
+
+export function CategoryReorderModal({ isOpen, onClose, items, onSave, isSubmitting }: CategoryReorderModalProps) {
+  const [flatItems, setFlatItems] = useState<FlatCategory[]>(() => flattenCategories(items))
+  const [source, setSource] = useState({ items, isOpen })
+  if (source.items !== items || source.isOpen !== isOpen) {
+    setSource({ items, isOpen })
+    if (isOpen) setFlatItems(flattenCategories(items))
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -97,7 +99,7 @@ export function CategoryReorderModal({ isOpen, onClose, items, onSave, isSubmitt
       setFlatItems((current) => {
         const oldIndex = current.findIndex((i) => i.id === active.id)
         const newIndex = current.findIndex((i) => i.id === over.id)
-        let newItems = arrayMove(current, oldIndex, newIndex)
+        const newItems = arrayMove(current, oldIndex, newIndex)
         
         // Calculate level change based on horizontal delta
         // Each level is 24px

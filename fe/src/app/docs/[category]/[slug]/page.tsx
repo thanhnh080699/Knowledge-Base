@@ -7,10 +7,14 @@ import { PostContent } from "@/components/shared/post-content"
 import { DocReader } from "@/components/shared/doc-reader"
 import { CdnImage } from "@/components/shared/cdn-image"
 import { HomeReveal } from "@/components/shared/home-motion"
+import { PostViewTracker } from "@/components/shared/post-view-tracker"
 import { ReadingProgress } from "@/components/shared/reading-progress"
 import { absoluteCdnUrl } from "@/lib/cdn-loader"
 import { fallbackCategories, fallbackPosts } from "@/lib/fallback-data"
-import { getRootCategories, getPost } from "@/lib/api"
+import { getRootCategories, getPost, getCategoryPosts } from "@/lib/api"
+import { displayPostTitle } from "@/lib/reading"
+import { PostSuggestions } from "@/components/shared/post-suggestions"
+import { ReturnToListing } from "@/components/shared/reading-status"
 import { buildTocFromContent, stripFirstImage } from "@/lib/content"
 
 export const revalidate = 60
@@ -68,7 +72,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title,
     description,
     keywords: keywords.length ? keywords : undefined,
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl, types: { "application/rss+xml": "/rss.xml" } },
     openGraph: {
       title,
       description,
@@ -100,6 +104,10 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
 
   if (!post) notFound()
 
+  const candidates = post.category?.slug ? await getCategoryPosts(post.category.slug) : []
+  const isTechnicalReading = ["nginx-3", "docker"].includes(post.category?.slug ?? "")
+  const displayTitle = isTechnicalReading ? post.title : displayPostTitle(post)
+
   const toc = buildTocFromContent(post.content)
 
   const jsonLd = {
@@ -121,17 +129,19 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
   return (
     <>
       <ReadingProgress />
+      {apiPost?.status === "PUBLISHED" && <PostViewTracker postId={apiPost.id} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="kb-wide-container grid gap-8 py-8 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_300px]">
-        <HomeReveal>
+      <main className={`${isTechnicalReading ? "nginx-reading " : ""}kb-wide-container grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 py-5 md:gap-8 md:py-8 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_240px]`}>
+        <HomeReveal className="hidden min-w-0 lg:block">
           <Sidebar categories={categories} activeCategory={post.category?.slug ?? category} />
         </HomeReveal>
         
-        <DocReader toc={toc}>
-          <HomeReveal className="min-w-0 rounded-2xl border border-[var(--color-hairline)] bg-white p-6 md:p-10" delay={0.08}>
+        <DocReader toc={toc} defaultFontSize={isTechnicalReading ? 18 : 16}>
+          <HomeReveal className="doc-article min-w-0 rounded-2xl border border-[var(--color-hairline)] bg-white p-4 sm:p-6 md:p-8" delay={0.08}>
+            <ReturnToListing />
             <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]" aria-label="Breadcrumb">
               <Link href="/docs" className="hover:text-[var(--color-ink)]">Tài liệu</Link>
               <span>/</span>
@@ -139,14 +149,14 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
                 {post.category?.name ?? category}
               </Link>
               <span>/</span>
-              <span className="max-w-[200px] truncate font-medium text-[var(--color-ink)]">{post.title}</span>
+              <span className="min-w-0 break-words font-medium text-[var(--color-ink)]">{displayTitle}</span>
             </nav>
 
             <Badge tone="blue">{post.category?.name ?? "Tài liệu"}</Badge>
             
             <header className="mt-4 space-y-4">
-              <h1 className="kb-display-xl">
-                {post.title}
+              <h1 className="kb-display-xl break-words">
+                {displayTitle}
               </h1>
 
               {post.coverImage && (
@@ -156,7 +166,7 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
                     alt={post.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                    className="object-cover"
+                    className="object-contain"
                     priority
                   />
                 </div>
@@ -169,7 +179,8 @@ export default async function DocDetailPage({ params }: { params: Promise<Params
               )}
             </header>
 
-            <PostContent content={post.coverImage ? stripFirstImage(post.content) : post.content} />
+            <PostContent content={post.coverImage ? stripFirstImage(post.content, post.coverImage) : post.content} />
+            <PostSuggestions post={post} candidates={candidates} />
           </HomeReveal>
         </DocReader>
       </main>

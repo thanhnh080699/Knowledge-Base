@@ -49,16 +49,16 @@ export default function GoogleSearchConsolePage() {
     <div className="mx-auto w-full max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="space-y-8">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-          <Link href="/" className="text-blue-600 hover:text-blue-700">Dashboard</Link>
+          <Link href="/" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">Dashboard</Link>
           <span className="text-[var(--app-muted)]">/</span>
-          <Link href="/settings" className="text-blue-600 hover:text-blue-700">Settings</Link>
+          <Link href="/settings" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">Settings</Link>
           <span className="text-[var(--app-muted)]">/</span>
           <span className="text-[var(--app-muted-strong)]">Google Search Console</span>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-blue-600">Google Search Console</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-[var(--app-link)]">Google Search Console</h2>
             <p className="text-[var(--app-muted)] text-sm">
               Monitor your website&apos;s search performance, top queries, and indexing directly in the CMS.
             </p>
@@ -67,7 +67,7 @@ export default function GoogleSearchConsolePage() {
             {(['dashboard', 'config'] as const).map((tab) => (
               <button key={tab} onClick={() => setActiveTab(tab)}
                 className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
-                  activeTab === tab ? 'bg-white shadow-sm text-blue-600' : 'text-[var(--app-muted)] hover:text-[var(--foreground)]'
+                  activeTab === tab ? 'bg-[var(--app-surface)] shadow-sm text-[var(--app-link)]' : 'text-[var(--app-muted)] hover:text-[var(--foreground)]'
                 }`}>
                 {tab === 'dashboard' ? <BarChart3 className="h-4 w-4" /> : <Settings2 className="h-4 w-4" />}
                 {tab === 'dashboard' ? 'Dashboard' : 'Configuration'}
@@ -93,7 +93,7 @@ function DashboardTab() {
   if (!status?.connected) {
     return (
       <div className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-12 text-center">
-        <LogIn className="mx-auto h-10 w-10 text-blue-400 mb-4" />
+        <LogIn className="mx-auto h-10 w-10 text-[var(--app-link)] mb-4" />
         <h3 className="text-lg font-semibold">Not Connected</h3>
         <p className="text-[var(--app-muted)] mt-2">Please go to Configuration tab and connect your Google account first.</p>
       </div>
@@ -103,7 +103,7 @@ function DashboardTab() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--app-link)]" />
         <p className="text-[var(--app-muted)]">Fetching search performance data from Google...</p>
       </div>
     )
@@ -111,13 +111,13 @@ function DashboardTab() {
 
   if (error) {
     return (
-      <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center">
-        <AlertCircle className="mx-auto h-12 w-12 text-red-400 mb-4" />
-        <h3 className="text-lg font-semibold text-red-900">Failed to fetch data</h3>
-        <p className="text-red-700 mt-2 mb-6 max-w-md mx-auto">
+      <div className="rounded-xl border border-[var(--app-danger-soft-border)] bg-[var(--app-danger-soft-bg)] p-8 text-center">
+        <AlertCircle className="mx-auto h-12 w-12 text-[var(--app-danger-soft-fg)] mb-4" />
+        <h3 className="text-lg font-semibold text-[var(--app-danger-soft-fg)]">Failed to fetch data</h3>
+        <p className="text-[var(--app-danger-soft-fg)] mt-2 mb-6 max-w-md mx-auto">
           {error instanceof Error ? error.message : 'Check your configuration and try again.'}
         </p>
-        <Button variant="outline" className="border-red-200 text-red-700 hover:bg-red-100" onClick={() => refetch()}>
+        <Button variant="outline" className="border-[var(--app-danger-soft-border)] text-[var(--app-danger-soft-fg)] hover:bg-[var(--app-danger-hover-bg)]" onClick={() => refetch()}>
           <RefreshCcw className="h-4 w-4 mr-2" /> Try Again
         </Button>
       </div>
@@ -125,10 +125,10 @@ function DashboardTab() {
   }
 
   const stats = [
-    { label: 'Total Clicks', value: data?.overview.clicks?.toLocaleString() || '0', icon: MousePointerClick, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { label: 'Total Impressions', value: data?.overview.impressions?.toLocaleString() || '0', icon: Eye, color: 'text-purple-500', bg: 'bg-purple-50' },
-    { label: 'Avg. CTR', value: data?.overview.ctr || '0.00%', icon: Percent, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-    { label: 'Avg. Position', value: data?.overview.position || '0.0', icon: Hash, color: 'text-amber-500', bg: 'bg-amber-50' },
+    { label: 'Total Clicks', value: data?.overview.clicks?.toLocaleString() || '0', icon: MousePointerClick, color: 'text-[var(--app-link)]', bg: 'bg-[var(--app-info-soft-bg)]' },
+    { label: 'Total Impressions', value: data?.overview.impressions?.toLocaleString() || '0', icon: Eye, color: 'text-[var(--app-accent-soft-fg)]', bg: 'bg-[var(--app-accent-soft-bg)]' },
+    { label: 'Avg. CTR', value: data?.overview.ctr || '0.00%', icon: Percent, color: 'text-[var(--app-success-soft-fg)]', bg: 'bg-[var(--app-success-soft-bg)]' },
+    { label: 'Avg. Position', value: data?.overview.position || '0.0', icon: Hash, color: 'text-[var(--app-warning-soft-fg)]', bg: 'bg-[var(--app-warning-soft-bg)]' },
   ]
 
   return (
@@ -154,21 +154,21 @@ function DashboardTab() {
             <AreaChart data={data?.chart}>
               <defs>
                 <linearGradient id="colorClicks" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1} />
-                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--app-link)" stopOpacity={0.1} />
+                  <stop offset="95%" stopColor="var(--app-link)" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorImpressions" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.1} />
-                  <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--app-accent-soft-fg)" stopOpacity={0.1} />
+                  <stop offset="95%" stopColor="var(--app-accent-soft-fg)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--app-border)" />
               <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--app-muted)' }} dy={10} />
               <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--app-muted)' }} />
               <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--app-muted)' }} />
-              <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid var(--app-border)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-              <Area yAxisId="left" type="monotone" dataKey="clicks" stroke="#2563eb" strokeWidth={2} fillOpacity={1} fill="url(#colorClicks)" name="Clicks" />
-              <Area yAxisId="right" type="monotone" dataKey="impressions" stroke="#7c3aed" strokeWidth={2} fillOpacity={1} fill="url(#colorImpressions)" name="Impressions" />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--app-surface)', color: 'var(--foreground)', borderRadius: '12px', border: '1px solid var(--app-border)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+              <Area yAxisId="left" type="monotone" dataKey="clicks" stroke="var(--app-link)" strokeWidth={2} fillOpacity={1} fill="url(#colorClicks)" name="Clicks" />
+              <Area yAxisId="right" type="monotone" dataKey="impressions" stroke="var(--app-accent-soft-fg)" strokeWidth={2} fillOpacity={1} fill="url(#colorImpressions)" name="Impressions" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -201,17 +201,17 @@ function DataTable({ title, columns, rows, highlight }: {
       <div className="px-6 py-4 border-b border-[var(--app-border)]"><h3 className="font-semibold">{title}</h3></div>
       <div className="overflow-auto">
         <Table className="w-full text-sm">
-          <TableHeader className="bg-slate-50/50 border-b">
+          <TableHeader className="bg-[var(--app-surface-strong)] border-b">
             <TableRow>{columns.map((c, i) => (
-              <TableHead key={c} className={`${i === 0 ? 'text-left px-6' : 'text-right px-4'} py-3 font-medium text-[var(--app-muted)]`}>{c}</TableHead>
+              <TableHead key={c} className={`${i === 0 ? 'text-left px-6' : 'text-right px-4'} py-3 font-medium text-[var(--app-muted-strong)]`}>{c}</TableHead>
             ))}</TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-[var(--app-border)]">
             {rows.length > 0 ? rows.map((row, ri) => (
-              <TableRow key={ri} className="hover:bg-slate-50/50 transition-colors">
+              <TableRow key={ri} className="hover:bg-[var(--app-surface-hover)] transition-colors">
                 {row.map((cell, ci) => (
                   <TableCell key={ci} className={`${ci === 0 ? 'px-6 max-w-[200px] truncate' : 'px-4 text-right'} py-3 ${
-                    ci === 0 && highlight === 0 ? 'font-medium text-blue-600' : ci === 1 ? 'font-semibold' : 'text-[var(--app-muted)]'
+                    ci === 0 && highlight === 0 ? 'font-medium text-[var(--app-link)]' : ci === 1 ? 'font-semibold' : 'text-[var(--app-muted)]'
                   }`}>{cell}</TableCell>
                 ))}
               </TableRow>
@@ -228,8 +228,8 @@ function DataTable({ title, columns, rows, highlight }: {
 function NotEnabled({ onGoToConfig }: { onGoToConfig: () => void }) {
   return (
     <div className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-12 text-center">
-      <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-        <Search className="h-8 w-8 text-blue-500" />
+      <div className="mx-auto w-16 h-16 rounded-full bg-[var(--app-info-soft-bg)] flex items-center justify-center mb-4">
+        <Search className="h-8 w-8 text-[var(--app-link)]" />
       </div>
       <h3 className="text-lg font-semibold">Search Console Not Enabled</h3>
       <p className="text-[var(--app-muted)] mt-2 mb-6 max-w-md mx-auto">
@@ -282,7 +282,7 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: SettingsGroup | 
   }
 
   if (isLoading) return (
-    <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-blue-500" /></div>
+    <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-[var(--app-link)]" /></div>
   )
 
   return (
@@ -294,14 +294,14 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: SettingsGroup | 
           <p className="mt-2 text-sm text-[var(--app-muted)]">Enable the integration and provide your site URL.</p>
         </div>
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-sm space-y-6">
-          <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50/50 border border-blue-100">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--app-info-soft-bg)] border border-[var(--app-info-soft-border)]">
             <div>
-              <Label htmlFor="gsc_enabled" className="font-semibold text-blue-900">Enable Google Search Console</Label>
-              <p className="text-xs text-blue-700">Activate the integration to view search data in the CMS.</p>
+              <Label htmlFor="gsc_enabled" className="font-semibold text-[var(--app-info-soft-fg)]">Enable Google Search Console</Label>
+              <p className="text-xs text-[var(--app-info-soft-fg)]">Activate the integration to view search data in the CMS.</p>
             </div>
             <Checkbox id="gsc_enabled"  checked={values.google_search_console_enabled === true}
               onChange={(e) => updateValue('google_search_console_enabled', e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600" />
+              className="h-4 w-4 rounded border-[var(--app-input-border)] text-[var(--app-link)] focus:ring-[var(--app-ring)]" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="gsc_site_url" className="font-semibold">Site URL</Label>
@@ -309,7 +309,7 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: SettingsGroup | 
               onChange={(e) => updateValue('google_search_console_site_url', e.target.value)}
               placeholder="https://thanhnh.id.vn or sc-domain:thanhnh.id.vn" />
             <p className="text-xs text-[var(--app-muted)]">
-              Use <code className="text-xs bg-slate-100 px-1 rounded">sc-domain:example.com</code> for domain properties or the full URL for URL-prefix properties.
+              Use <code className="text-xs bg-[var(--app-surface-strong)] px-1 rounded">sc-domain:example.com</code> for domain properties or the full URL for URL-prefix properties.
             </p>
           </div>
         </div>
@@ -318,7 +318,7 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: SettingsGroup | 
       {/* OAuth2 Credentials */}
       <section className="grid gap-4 lg:grid-cols-[280px_1fr] lg:gap-12">
         <div>
-          <h3 className="text-xl font-semibold tracking-tight text-emerald-600">OAuth2 Credentials</h3>
+          <h3 className="text-xl font-semibold tracking-tight text-[var(--app-success-soft-fg)]">OAuth2 Credentials</h3>
           <p className="mt-2 text-sm text-[var(--app-muted)]">Create an OAuth2 Client ID in Google Cloud Console.</p>
         </div>
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-sm space-y-6">
@@ -340,7 +340,7 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: SettingsGroup | 
       {/* Google Account Connection */}
       <section className="grid gap-4 lg:grid-cols-[280px_1fr] lg:gap-12">
         <div>
-          <h3 className="text-xl font-semibold tracking-tight text-indigo-600">Google Account</h3>
+          <h3 className="text-xl font-semibold tracking-tight text-[var(--app-accent-soft-fg)]">Google Account</h3>
           <p className="mt-2 text-sm text-[var(--app-muted)]">Connect your Google account to access Search Console data.</p>
         </div>
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-sm">
@@ -348,25 +348,25 @@ function ConfigTab({ settingsData, isLoading }: { settingsData: SettingsGroup | 
             <div className="flex items-center gap-3"><Loader2 className="h-5 w-5 animate-spin" /><span>Checking connection...</span></div>
           ) : status?.connected ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-emerald-50 border border-emerald-200">
-                <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-[var(--app-success-soft-bg)] border border-[var(--app-success-soft-border)]">
+                <CheckCircle2 className="h-6 w-6 text-[var(--app-success-soft-fg)]" />
                 <div>
-                  <p className="font-semibold text-emerald-900">Connected</p>
-                  <p className="text-xs text-emerald-700">Your Google account is connected and ready to fetch data.</p>
+                  <p className="font-semibold text-[var(--app-success-soft-fg)]">Connected</p>
+                  <p className="text-xs text-[var(--app-success-soft-fg)]">Your Google account is connected and ready to fetch data.</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50"
+              <Button variant="outline" size="sm" className="text-[var(--app-danger-soft-fg)] border-[var(--app-danger-soft-border)] hover:bg-[var(--app-danger-hover-bg)]"
                 onClick={handleDisconnect} isLoading={disconnect.isPending}>
                 <LogOut className="h-4 w-4 mr-2" /> Disconnect
               </Button>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200">
-                <AlertCircle className="h-6 w-6 text-amber-500" />
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-[var(--app-warning-soft-bg)] border border-[var(--app-warning-soft-border)]">
+                <AlertCircle className="h-6 w-6 text-[var(--app-warning-soft-fg)]" />
                 <div>
-                  <p className="font-semibold text-amber-900">Not Connected</p>
-                  <p className="text-xs text-amber-700">Save your Client ID and Secret first, then click Connect.</p>
+                  <p className="font-semibold text-[var(--app-warning-soft-fg)]">Not Connected</p>
+                  <p className="text-xs text-[var(--app-warning-soft-fg)]">Save your Client ID and Secret first, then click Connect.</p>
                 </div>
               </div>
               <Button onClick={handleConnect} isLoading={getAuthUrl.isPending}>

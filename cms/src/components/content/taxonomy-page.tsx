@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { buildCategoryTree, filterCategoryTree, flattenCategoryTree } from '@/lib/category-tree'
 import { paginateItems } from '@/lib/list-state'
 import { useClientList, useListState } from '@/hooks/use-list-state'
@@ -336,7 +338,7 @@ export function TaxonomyPage({ kind, usePageForm = false, pageBasePath }: Taxono
                         <TableCell>
                           {item.image ? (
                             <div className="relative h-10 w-10 overflow-hidden rounded border border-[var(--app-border)]">
-                              <img
+                              <NextImage unoptimized width={40} height={40}
                                 src={absoluteCdnUrl(item.image)}
                                 alt={item.name}
                                 className="h-full w-full object-cover"

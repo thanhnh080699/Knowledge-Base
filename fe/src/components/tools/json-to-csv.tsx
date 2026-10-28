@@ -124,7 +124,10 @@ export function JsonToCsv() {
             <span className="font-semibold text-[var(--color-muted)]">Delimiter:</span>
             <select
               value={delimiter}
-              onChange={(e) => setDelimiter(e.target.value as any)}
+              onChange={(e) => {
+                const value = e.target.value
+                if (value === "," || value === ";" || value === "\t") setDelimiter(value)
+              }}
               className="rounded-lg border border-[var(--color-hairline)] bg-white px-2.5 py-1 text-xs text-[var(--color-ink)]"
             >
               <option value=",">Comma (,)</option>

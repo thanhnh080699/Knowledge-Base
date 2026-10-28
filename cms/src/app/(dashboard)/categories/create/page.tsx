@@ -8,7 +8,7 @@ import type { CreateCategoryPayload, UpdateCategoryPayload } from '@/types/taxon
 
 export default function CreateCategoryPage() {
   const router = useRouter()
-  const { data: categories, isLoading } = useCategories()
+  const { data: categories } = useCategories()
   const createCategory = useCreateCategory()
 
   async function handleSubmit(payload: CreateCategoryPayload | UpdateCategoryPayload) {

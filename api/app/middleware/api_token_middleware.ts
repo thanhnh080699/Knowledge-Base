@@ -10,9 +10,7 @@ export default class ApiTokenMiddleware {
       ? authorization.slice('Bearer '.length)
       : undefined
     const plainToken =
-      ctx.request.header('x-api-token') ??
-      ctx.request.header('x-access-token') ??
-      bearerToken
+      ctx.request.header('x-api-token') ?? ctx.request.header('x-access-token') ?? bearerToken
 
     if (!plainToken) {
       return ctx.response.unauthorized({ message: 'API token is required' })

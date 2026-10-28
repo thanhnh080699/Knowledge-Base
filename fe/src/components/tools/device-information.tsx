@@ -3,15 +3,24 @@
 import { useState, useEffect } from "react"
 import { CopyButton } from "@/components/shared/copy-button"
 import { Button } from "@/components/ui/button"
-import { RefreshCw, Monitor, Globe, Wifi, Clock } from "lucide-react"
+import { RefreshCw, Monitor, Globe, Wifi } from "lucide-react"
+
+type InfoItem = { label: string; value: string }
+type DeviceInfo = Record<"screen" | "viewport" | "system" | "networkAndTime", InfoItem[]>
+type ExtendedNavigator = Navigator & {
+  userAgentData?: { platform?: string }
+  connection?: { effectiveType?: string; downlink?: number; rtt?: number }
+  mozConnection?: ExtendedNavigator["connection"]
+  webkitConnection?: ExtendedNavigator["connection"]
+}
 
 export function DeviceInformation() {
-  const [info, setInfo] = useState<any>(null)
+  const [info, setInfo] = useState<DeviceInfo | null>(null)
 
   const measure = () => {
     if (typeof window === "undefined") return
 
-    const nav = window.navigator as any
+    const nav = window.navigator as ExtendedNavigator
     const scr = window.screen
 
     const conn = nav.connection || nav.mozConnection || nav.webkitConnection
@@ -50,9 +59,13 @@ export function DeviceInformation() {
   }
 
   useEffect(() => {
-    measure()
+    // Browser measurements are sampled after layout and whenever the viewport changes.
+    const frame = window.requestAnimationFrame(measure)
     window.addEventListener("resize", measure)
-    return () => window.removeEventListener("resize", measure)
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.removeEventListener("resize", measure)
+    }
   }, [])
 
   return (
@@ -79,7 +92,7 @@ export function DeviceInformation() {
               <span>Screen &amp; Display</span>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {info.screen.map((item: any) => (
+              {info.screen.map((item) => (
                 <div key={item.label} className="relative rounded-xl border border-[var(--color-hairline)] bg-white p-3.5 shadow-xs">
                   <span className="text-[11px] font-medium text-[var(--color-muted)] block mb-1">{item.label}</span>
                   <span className="font-mono text-sm font-semibold text-[var(--color-ink)] block pr-7">{item.value}</span>
@@ -96,7 +109,7 @@ export function DeviceInformation() {
               <span>Browser Viewport</span>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {info.viewport.map((item: any) => (
+              {info.viewport.map((item) => (
                 <div key={item.label} className="relative rounded-xl border border-[var(--color-hairline)] bg-white p-3.5 shadow-xs">
                   <span className="text-[11px] font-medium text-[var(--color-muted)] block mb-1">{item.label}</span>
                   <span className="font-mono text-sm font-semibold text-[var(--color-ink)] block pr-7">{item.value}</span>
@@ -113,7 +126,7 @@ export function DeviceInformation() {
               <span>System &amp; Environment</span>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {info.system.map((item: any) => (
+              {info.system.map((item) => (
                 <div key={item.label} className="relative rounded-xl border border-[var(--color-hairline)] bg-white p-3.5 shadow-xs">
                   <span className="text-[11px] font-medium text-[var(--color-muted)] block mb-1">{item.label}</span>
                   <span className="font-mono text-sm font-semibold text-[var(--color-ink)] block pr-7">{item.value}</span>
@@ -130,7 +143,7 @@ export function DeviceInformation() {
               <span>Network &amp; Timezone</span>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {info.networkAndTime.map((item: any) => (
+              {info.networkAndTime.map((item) => (
                 <div key={item.label} className="relative rounded-xl border border-[var(--color-hairline)] bg-white p-3.5 shadow-xs">
                   <span className="text-[11px] font-medium text-[var(--color-muted)] block mb-1">{item.label}</span>
                   <span className="font-mono text-sm font-semibold text-[var(--color-ink)] block pr-7">{item.value}</span>

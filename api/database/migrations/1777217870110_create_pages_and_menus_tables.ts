@@ -36,11 +36,26 @@ export default class extends BaseSchema {
 
     this.schema.createTable('menu_items', (table) => {
       table.increments('id').primary()
-      table.integer('menu_id').unsigned().notNullable().references('id').inTable('menus').onDelete('CASCADE')
-      table.integer('parent_id').unsigned().nullable().references('id').inTable('menu_items').onDelete('CASCADE')
+      table
+        .integer('menu_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('menus')
+        .onDelete('CASCADE')
+      table
+        .integer('parent_id')
+        .unsigned()
+        .nullable()
+        .references('id')
+        .inTable('menu_items')
+        .onDelete('CASCADE')
       table.string('title').notNullable()
       table.string('url').nullable()
-      table.enum('type', ['CUSTOM', 'PAGE', 'POST', 'CATEGORY', 'TAG']).notNullable().defaultTo('CUSTOM')
+      table
+        .enum('type', ['CUSTOM', 'PAGE', 'POST', 'CATEGORY', 'TAG'])
+        .notNullable()
+        .defaultTo('CUSTOM')
       table.integer('reference_id').unsigned().nullable()
       table.enum('target', ['_self', '_blank']).notNullable().defaultTo('_self')
       table.string('css_class').nullable()

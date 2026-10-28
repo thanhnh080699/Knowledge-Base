@@ -147,11 +147,11 @@ export default function LlmSettingsPage() {
     <div className="mx-auto w-full max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="space-y-6">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-          <Link href="/" className="text-blue-600 hover:text-blue-700">
+          <Link href="/" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">
             Dashboard
           </Link>
           <span className="text-[var(--app-muted)]">/</span>
-          <Link href="/settings" className="text-blue-600 hover:text-blue-700">
+          <Link href="/settings" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">
             Settings
           </Link>
           <span className="text-[var(--app-muted)]">/</span>
@@ -563,7 +563,7 @@ function ProviderModal({
         </div>
 
         {testConnection.data?.connected && (
-          <div className="inline-flex h-10 items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 text-sm font-medium text-emerald-700">
+          <div className="inline-flex h-10 items-center gap-2 rounded-md border border-emerald-200 bg-[var(--app-success-soft-bg)] px-3 text-sm font-medium text-emerald-700">
             <CheckCircle2 className="h-4 w-4" />
             Connected
           </div>

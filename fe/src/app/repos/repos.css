@@ -1,0 +1,3 @@
+@reference "../globals.css";
+@import "tailwindcss/utilities" layer(utilities) source(none);
+@source "./page.tsx";

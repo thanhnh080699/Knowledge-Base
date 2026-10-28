@@ -98,13 +98,16 @@ test.group('Tools', (group) => {
       password: 'password123',
     })
 
-    const response = await client.post('/api/admin/tools').loginAs(user).json({
-      name: 'Forbidden Tool',
-      slug: `forbidden-tool-${Date.now()}`,
-      description: 'Should not be created',
-      category: 'Test',
-      urlPath: '/tools/forbidden',
-    })
+    const response = await client
+      .post('/api/admin/tools')
+      .loginAs(user)
+      .json({
+        name: 'Forbidden Tool',
+        slug: `forbidden-tool-${Date.now()}`,
+        description: 'Should not be created',
+        category: 'Test',
+        urlPath: '/tools/forbidden',
+      })
 
     response.assertStatus(403)
   })

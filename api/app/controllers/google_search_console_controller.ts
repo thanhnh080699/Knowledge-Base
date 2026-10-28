@@ -58,7 +58,9 @@ export default class GoogleSearchConsoleController {
     }
 
     if (!code) {
-      return response.redirect(`${redirectTarget}?error=${encodeURIComponent('No authorization code received')}`)
+      return response.redirect(
+        `${redirectTarget}?error=${encodeURIComponent('No authorization code received')}`
+      )
     }
 
     try {

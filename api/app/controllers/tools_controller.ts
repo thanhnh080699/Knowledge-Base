@@ -94,10 +94,13 @@ export default class ToolsController {
    */
   async update({ params, request, response }: HttpContext) {
     const tool = await Tool.query().whereNull('deleted_at').where('id', params.id).firstOrFail()
-    const { params: _, ...toolPayload } = await request.validateUsing(updateToolValidator, {
-      meta: { params },
-    })
-    void _
+    const { params: validatorParams, ...toolPayload } = await request.validateUsing(
+      updateToolValidator,
+      {
+        meta: { params },
+      }
+    )
+    void validatorParams
 
     tool.merge(toolPayload)
     await tool.save()

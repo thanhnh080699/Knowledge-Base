@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select } from '@/components/ui/select'
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
@@ -213,7 +215,7 @@ export function ProjectForm({ mode, project, isSubmitting, onSubmit }: ProjectFo
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-5 shadow-sm">
           <div className="grid gap-4 md:grid-cols-[280px_1fr]">
             <div className="group relative flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-[var(--app-border)] bg-[var(--app-surface-muted)]" onClick={() => fileInputRef.current?.click()}>
-              {preview ? <img src={absoluteCdnUrl(preview)} alt="Project thumbnail preview" className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />}
+              {preview ? <NextImage unoptimized width={640} height={360} src={absoluteCdnUrl(preview)} alt="Project thumbnail preview" className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />}
             </div>
             <div className="space-y-3">
               <Input value={form.thumbnailUrl} placeholder="Projects/content/image.png" onChange={(event) => {

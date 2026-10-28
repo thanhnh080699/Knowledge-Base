@@ -9,8 +9,12 @@ export default function projectsRoutes() {
   router.get('projects/:id', [ProjectsController, 'show']).as('projects.public.show')
 
   // Admin
-  router.group(() => {
-    router.resource('projects', ProjectsController)
-      .use('*', middleware.acl({ permission: 'projects.manage' }))
-  }).prefix('admin').use(middleware.auth())
+  router
+    .group(() => {
+      router
+        .resource('projects', ProjectsController)
+        .use('*', middleware.acl({ permission: 'projects.manage' }))
+    })
+    .prefix('admin')
+    .use(middleware.auth())
 }

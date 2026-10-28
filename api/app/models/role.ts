@@ -12,7 +12,10 @@ export default class Role extends RoleSchema {
     pivotTable: 'role_users',
     onQuery: (query: any) => {
       query.whereNull('role_users.deleted_at').whereExists((sub: any) => {
-        sub.from('users').whereColumn('users.id', 'role_users.user_id').whereNull('users.deleted_at')
+        sub
+          .from('users')
+          .whereColumn('users.id', 'role_users.user_id')
+          .whereNull('users.deleted_at')
       })
     },
   })
@@ -22,7 +25,10 @@ export default class Role extends RoleSchema {
     pivotTable: 'permission_roles',
     onQuery: (query: any) => {
       query.whereNull('permission_roles.deleted_at').whereExists((sub: any) => {
-        sub.from('permissions').whereColumn('permissions.id', 'permission_roles.permission_id').whereNull('permissions.deleted_at')
+        sub
+          .from('permissions')
+          .whereColumn('permissions.id', 'permission_roles.permission_id')
+          .whereNull('permissions.deleted_at')
       })
     },
   })

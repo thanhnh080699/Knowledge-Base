@@ -9,8 +9,12 @@ export default function tagsRoutes() {
   router.get('tags/:id', [TagsController, 'show']).as('tags.public.show')
 
   // Admin
-  router.group(() => {
-    router.resource('tags', TagsController)
-      .use('*', middleware.acl({ permission: 'tags.manage' }))
-  }).prefix('admin').use(middleware.auth())
+  router
+    .group(() => {
+      router
+        .resource('tags', TagsController)
+        .use('*', middleware.acl({ permission: 'tags.manage' }))
+    })
+    .prefix('admin')
+    .use(middleware.auth())
 }

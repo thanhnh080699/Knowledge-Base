@@ -1,8 +1,10 @@
-import { CalendarDays, ArrowRight, Clock, FileText } from "lucide-react"
+import { CalendarDays, ArrowRight, Clock } from "lucide-react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { CdnImage } from "@/components/shared/cdn-image"
 import { estimateReadingTime, getPostThumbnail } from "@/lib/content"
+import { displayPostTitle } from "@/lib/reading"
+import { ReadingStatus } from "./reading-status"
 import type { Post } from "@/types/post"
 
 function formatDate(value: string | null | undefined) {
@@ -16,11 +18,12 @@ export function PostCard({ post, eager = false }: { post: Post; eager?: boolean 
   const coverUrl = getPostThumbnail(post)
 
   return (
-    <article className="group kb-card flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-white p-4 md:p-5 transition-all hover:border-[var(--color-hairline-strong)] hover:shadow-xs">
+    <article className="relative group kb-card flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-white p-4 md:p-5 transition-all hover:border-[var(--color-hairline-strong)] hover:shadow-xs">
+      <ReadingStatus id={post.id} />
       <div>
         {/* Cover Thumbnail (if available) */}
         {coverUrl ? (
-          <div className="relative mb-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-[var(--color-hairline-soft)] bg-[var(--color-surface-soft)]">
+          <Link href={href} aria-label={`Đọc ${displayPostTitle(post)}`} className="relative block mb-4 aspect-[16/9] w-full overflow-hidden rounded-xl border border-[var(--color-hairline-soft)] bg-[var(--color-surface-soft)]">
             <CdnImage
               src={coverUrl}
               alt={post.title}
@@ -29,7 +32,7 @@ export function PostCard({ post, eager = false }: { post: Post; eager?: boolean 
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
-          </div>
+          </Link>
         ) : null}
 
         {/* Card Header Meta */}
@@ -51,7 +54,7 @@ export function PostCard({ post, eager = false }: { post: Post; eager?: boolean 
         {/* Post Title */}
         <h2 className="mt-3 text-base font-semibold leading-snug text-[var(--color-ink)] transition-colors group-hover:text-[var(--color-primary-active)] md:text-lg">
           <Link href={href} className="focus:outline-none">
-            {post.title}
+            {displayPostTitle(post)}
           </Link>
         </h2>
         

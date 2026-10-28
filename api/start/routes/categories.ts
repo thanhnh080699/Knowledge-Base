@@ -9,9 +9,15 @@ export default function categoriesRoutes() {
   router.get('categories/:id', [CategoriesController, 'show']).as('categories.public.show')
 
   // Admin
-  router.group(() => {
-    router.post('categories/reorder', [CategoriesController, 'reorder']).as('categories.admin.reorder')
-    router.resource('categories', CategoriesController)
-      .use('*', middleware.acl({ permission: 'categories.manage' }))
-  }).prefix('admin').use(middleware.auth())
+  router
+    .group(() => {
+      router
+        .post('categories/reorder', [CategoriesController, 'reorder'])
+        .as('categories.admin.reorder')
+      router
+        .resource('categories', CategoriesController)
+        .use('*', middleware.acl({ permission: 'categories.manage' }))
+    })
+    .prefix('admin')
+    .use(middleware.auth())
 }

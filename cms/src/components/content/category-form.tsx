@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { Select } from '@/components/ui/select'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
@@ -147,7 +149,7 @@ export function CategoryForm({ mode, initialCategory, isSubmitting, categories =
               <Label>Image</Label>
               <div className="flex items-center gap-4">
                 <div className="group relative flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-[var(--app-border)] bg-[var(--app-surface-muted)]" onClick={() => fileInputRef.current?.click()}>
-                  {preview ? <img src={absoluteCdnUrl(preview)} alt="Preview" className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />}
+                  {preview ? <NextImage unoptimized width={80} height={80} src={absoluteCdnUrl(preview)} alt="Preview" className="h-full w-full object-cover" /> : <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />}
                 </div>
                 {preview ? <Button type="button" variant="ghost" size="sm" className="h-8 gap-2 text-[var(--app-danger-soft-fg)]" onClick={removeImage}><X className="h-4 w-4" />Remove</Button> : null}
                 <Input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileChange} />

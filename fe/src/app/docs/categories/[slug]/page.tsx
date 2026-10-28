@@ -2,8 +2,9 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowRight, BookOpen, FolderOpen } from "lucide-react"
-import { getCategory, getPosts } from "@/lib/api"
-import { PostCard } from "@/components/shared/post-card"
+import { getCategory, getCategoryPosts } from "@/lib/api"
+import { sortLessons } from "@/lib/reading"
+import { CategoryPostList } from "@/components/shared/category-post-list"
 import { HomeReveal } from "@/components/shared/home-motion"
 import { Button } from "@/components/ui/button"
 
@@ -28,9 +29,8 @@ export default async function CategoryOverviewPage({ params }: { params: Promise
   if (!category) notFound()
 
   const children = category.children ?? []
-  // Fetch more posts to show "all" articles (limit 100)
-  const postsResponse = await getPosts({ category: slug, limit: 100 })
-  const allPosts = postsResponse.data
+  const categoryPosts = await getCategoryPosts(slug)
+  const allPosts = (slug === "lpi-web-development-essentials" || slug === "lpi-open-source-essentials" || slug === "lpi-security-essentials" || slug === "lpi-linux-essentials" || slug === "ccna" || slug === "nginx-3" || slug === "nginx" || slug === "mysql" || slug === "docker") ? sortLessons(categoryPosts) : categoryPosts
 
   return (
     <main className="kb-wide-container py-10">
@@ -75,11 +75,7 @@ export default async function CategoryOverviewPage({ params }: { params: Promise
                   <BookOpen className="text-[var(--color-ink)]" size={24} />
                   Tài liệu tổng quan
                 </h2>
-                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                  {allPosts.filter(p => p.category?.id === category.id).map((post) => (
-                    <PostCard key={post.id} post={post} />
-                  ))}
-                </div>
+                <CategoryPostList posts={allPosts.filter(p => p.category?.id === category.id)} />
               </section>
             )}
 
@@ -128,18 +124,7 @@ export default async function CategoryOverviewPage({ params }: { params: Promise
                           )}
 
                           {/* Posts in this sub-category */}
-                          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                            {childPosts.slice(0, 6).map(post => (
-                              <Link 
-                                key={post.id} 
-                                href={`/docs/${post.category?.slug ?? "general"}/${post.slug}`}
-                                className="group flex h-full flex-col rounded-2xl border border-[var(--color-hairline)] bg-white p-4 transition-all hover:border-[var(--color-hairline-strong)]"
-                              >
-                                <h4 className="line-clamp-1 text-sm font-medium text-[var(--color-ink)] transition-colors">{post.title}</h4>
-                                <p className="mt-1 line-clamp-2 text-xs text-[var(--color-muted)]">{post.excerpt}</p>
-                              </Link>
-                            ))}
-                          </div>
+                          <CategoryPostList posts={childPosts} />
                         </div>
                       </div>
                     )

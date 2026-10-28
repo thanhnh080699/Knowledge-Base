@@ -1,5 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, manyToMany, afterSave, afterDelete } from '@adonisjs/lucid/orm'
+import {
+  BaseModel,
+  column,
+  belongsTo,
+  manyToMany,
+  afterSave,
+  afterDelete,
+} from '@adonisjs/lucid/orm'
 import { clearSitemapCache } from '#helpers/sitemap'
 import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
 import Category from '#models/category'

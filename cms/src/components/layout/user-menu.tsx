@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, LogOut, Settings, ChevronDown, Shield } from 'lucide-react';
-import { Button } from '../ui/button';
+import { User, LogOut, Settings, ChevronDown } from 'lucide-react';
 import { ProfileModal } from '../users/profile-modal';
 import { toast } from 'sonner';
 

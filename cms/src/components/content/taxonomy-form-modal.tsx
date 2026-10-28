@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { Select } from '@/components/ui/select'
 import { useEffect, useState, type FormEvent, useRef } from 'react'
 import { Button } from '@/components/ui/button'
@@ -285,7 +287,7 @@ export function TaxonomyFormModal({
                     onClick={() => fileInputRef.current?.click()}
                   >
                     {preview ? (
-                      <img src={absoluteCdnUrl(preview)} alt="Preview" className="h-full w-full object-cover" />
+                      <NextImage unoptimized width={80} height={80} src={absoluteCdnUrl(preview)} alt="Preview" className="h-full w-full object-cover" />
                     ) : (
                       <ImageIcon className="h-8 w-8 text-[var(--app-muted)]" />
                     )}

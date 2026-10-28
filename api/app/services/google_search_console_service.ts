@@ -1,11 +1,8 @@
 import Setting from '#models/setting'
 import { google } from 'googleapis'
-import { OAuth2Client } from 'google-auth-library'
 import env from '#start/env'
 
-const SCOPES = [
-  'https://www.googleapis.com/auth/webmasters.readonly',
-]
+const SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
 
 const GSC_GROUP = 'google_search_console'
 
@@ -47,14 +44,12 @@ export default class GoogleSearchConsoleService {
     const clientSecret = await this.getSetting('google_search_console_client_secret')
 
     if (!clientId || !clientSecret) {
-      throw new Error('OAuth2 Client ID and Client Secret are required. Configure them in Settings.')
+      throw new Error(
+        'OAuth2 Client ID and Client Secret are required. Configure them in Settings.'
+      )
     }
 
-    return new OAuth2Client(
-      String(clientId),
-      String(clientSecret),
-      this.getRedirectUri()
-    )
+    return new google.auth.OAuth2(String(clientId), String(clientSecret), this.getRedirectUri())
   }
 
   /**

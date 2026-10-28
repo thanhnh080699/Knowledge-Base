@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { Select } from '@/components/ui/select'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
@@ -164,11 +166,11 @@ export default function AdminAppearanceSettingsPage() {
     <div className="mx-auto w-full max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="space-y-8">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-          <Link href="/" className="text-blue-600 hover:text-blue-700">
+          <Link href="/" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">
             Dashboard
           </Link>
           <span className="text-[var(--app-muted)]">/</span>
-          <Link href="/settings" className="text-blue-600 hover:text-blue-700">
+          <Link href="/settings" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">
             Settings
           </Link>
           <span className="text-[var(--app-muted)]">/</span>
@@ -326,7 +328,7 @@ function ImageField({
       <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start">
         <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-muted)] overflow-hidden shadow-inner group">
           {imageUrl ? (
-            <img
+            <NextImage unoptimized width={96} height={96}
               src={absoluteCdnUrl(imageUrl)}
               alt={setting.label}
               className="h-full w-full object-contain p-2 transition-transform group-hover:scale-105"
@@ -368,7 +370,7 @@ function ImageField({
                 }}
                 disabled={isUploading}
               />
-              <Button variant="outline" size="icon" className="h-10 w-10 shrink-0 border-dashed hover:border-blue-500 hover:text-blue-500 transition-colors" title="Upload from computer" disabled={isUploading}>
+              <Button variant="outline" size="icon" className="h-10 w-10 shrink-0 border-dashed hover:border-blue-500 hover:text-[var(--app-link)] transition-colors" title="Upload from computer" disabled={isUploading}>
                 {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
               </Button>
             </div>

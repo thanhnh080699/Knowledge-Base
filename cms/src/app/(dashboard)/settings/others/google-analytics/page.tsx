@@ -49,9 +49,9 @@ export default function GoogleAnalyticsPage() {
       <div className="space-y-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-          <Link href="/" className="text-blue-600 hover:text-blue-700">Dashboard</Link>
+          <Link href="/" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">Dashboard</Link>
           <span className="text-[var(--app-muted)]">/</span>
-          <Link href="/settings" className="text-blue-600 hover:text-blue-700">Settings</Link>
+          <Link href="/settings" className="text-[var(--app-link)] hover:text-[var(--app-link-hover)]">Settings</Link>
           <span className="text-[var(--app-muted)]">/</span>
           <span className="text-[var(--app-muted-strong)]">Google Analytics</span>
         </div>
@@ -59,7 +59,7 @@ export default function GoogleAnalyticsPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] text-blue-600">Google Analytics</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Google Analytics</h2>
             <p className="text-[var(--app-muted)] text-sm">Connect and track your website performance directly in the CMS.</p>
           </div>
           <div className="flex bg-[var(--app-surface-muted)] p-1 rounded-lg border border-[var(--app-border)]">
@@ -67,7 +67,7 @@ export default function GoogleAnalyticsPage() {
               onClick={() => setActiveTab('dashboard')}
               className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
                 activeTab === 'dashboard'
-                  ? 'bg-white shadow-sm text-blue-600'
+                  ? 'bg-[var(--app-surface)] shadow-sm text-[var(--app-link)]'
                   : 'text-[var(--app-muted)] hover:text-[var(--foreground)]'
               }`}
             >
@@ -78,7 +78,7 @@ export default function GoogleAnalyticsPage() {
               onClick={() => setActiveTab('config')}
               className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
                 activeTab === 'config'
-                  ? 'bg-white shadow-sm text-blue-600'
+                  ? 'bg-[var(--app-surface)] shadow-sm text-[var(--app-link)]'
                   : 'text-[var(--app-muted)] hover:text-[var(--foreground)]'
               }`}
             >
@@ -105,7 +105,7 @@ function AnalyticsDashboard() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--app-link)]" />
         <p className="text-[var(--app-muted)]">Fetching analytics data from Google...</p>
       </div>
     )
@@ -113,13 +113,13 @@ function AnalyticsDashboard() {
 
   if (error) {
     return (
-      <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center">
-        <AlertCircle className="mx-auto h-12 w-12 text-red-400 mb-4" />
-        <h3 className="text-lg font-semibold text-red-900">Failed to fetch data</h3>
-        <p className="text-red-700 mt-2 mb-6 max-w-md mx-auto">
+      <div className="rounded-xl border border-[var(--app-danger-soft-border)] bg-[var(--app-danger-soft-bg)] p-8 text-center">
+        <AlertCircle className="mx-auto h-12 w-12 text-[var(--app-danger-soft-fg)] mb-4" />
+        <h3 className="text-lg font-semibold text-[var(--app-danger-soft-fg)]">Failed to fetch data</h3>
+        <p className="text-[var(--app-danger-soft-fg)] mt-2 mb-6 max-w-md mx-auto">
           {error instanceof Error ? error.message : 'Please check your Service Account JSON and Property ID in the Configuration tab.'}
         </p>
-        <Button variant="outline" className="border-red-200 text-red-700 hover:bg-red-100" onClick={() => refetch()}>
+        <Button variant="outline" className="border-[var(--app-danger-soft-border)] text-[var(--app-danger-soft-fg)] hover:bg-[var(--app-danger-hover-bg)]" onClick={() => refetch()}>
           <RefreshCcw className="h-4 w-4 mr-2" />
           Try Again
         </Button>
@@ -128,10 +128,10 @@ function AnalyticsDashboard() {
   }
 
   const stats = [
-    { label: 'Active Users', value: realtime?.activeUsers || '0', icon: Activity, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-    { label: 'Total Users', value: data?.overview.users || '0', icon: Users, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { label: 'Page Views', value: data?.overview.pageViews || '0', icon: MousePointer2, color: 'text-purple-500', bg: 'bg-purple-50' },
-    { label: 'Avg. Duration', value: data?.overview.avgSessionDuration || '0s', icon: Timer, color: 'text-amber-500', bg: 'bg-amber-50' },
+    { label: 'Active Users', value: realtime?.activeUsers || '0', icon: Activity, color: 'text-[var(--app-success-soft-fg)]', bg: 'bg-[var(--app-success-soft-bg)]' },
+    { label: 'Total Users', value: data?.overview.users || '0', icon: Users, color: 'text-[var(--app-link)]', bg: 'bg-[var(--app-info-soft-bg)]' },
+    { label: 'Page Views', value: data?.overview.pageViews || '0', icon: MousePointer2, color: 'text-[var(--app-accent-soft-fg)]', bg: 'bg-[var(--app-accent-soft-bg)]' },
+    { label: 'Avg. Duration', value: data?.overview.avgSessionDuration || '0s', icon: Timer, color: 'text-[var(--app-warning-soft-fg)]', bg: 'bg-[var(--app-warning-soft-bg)]' },
   ]
 
   return (
@@ -161,8 +161,8 @@ function AnalyticsDashboard() {
             <AreaChart data={data?.chart}>
               <defs>
                 <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="var(--app-link)" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="var(--app-link)" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--app-border)" />
@@ -179,12 +179,12 @@ function AnalyticsDashboard() {
                 tick={{ fontSize: 12, fill: 'var(--app-muted)' }}
               />
               <Tooltip
-                contentStyle={{ borderRadius: '12px', border: '1px solid var(--app-border)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                contentStyle={{ backgroundColor: 'var(--app-surface)', color: 'var(--foreground)', borderRadius: '12px', border: '1px solid var(--app-border)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
               />
               <Area
                 type="monotone"
                 dataKey="users"
-                stroke="#2563eb"
+                stroke="var(--app-link)"
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorUsers)"
@@ -203,17 +203,17 @@ function AnalyticsDashboard() {
           </div>
           <div className="overflow-auto">
             <Table className="w-full text-sm">
-              <TableHeader className="bg-slate-50/50 border-b">
+              <TableHeader className="bg-[var(--app-surface-strong)] border-b">
                 <TableRow>
-                  <TableHead className="text-left px-6 py-3 font-medium text-[var(--app-muted)]">Page Path</TableHead>
-                  <TableHead className="text-right px-6 py-3 font-medium text-[var(--app-muted)]">Views</TableHead>
+                  <TableHead className="text-left px-6 py-3 font-medium text-[var(--app-muted-strong)]">Page Path</TableHead>
+                  <TableHead className="text-right px-6 py-3 font-medium text-[var(--app-muted-strong)]">Views</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-[var(--app-border)]">
                 {data?.pages.map((page) => (
-                  <TableRow key={page.path} className="hover:bg-slate-50/50 transition-colors">
+                  <TableRow key={page.path} className="hover:bg-[var(--app-surface-hover)] transition-colors">
                     <TableCell className="px-6 py-3 max-w-[300px] truncate">
-                      <span className="font-medium text-blue-600">{page.path}</span>
+                      <span className="font-medium text-[var(--app-link)]">{page.path}</span>
                       <span className="block text-xs text-[var(--app-muted)] truncate">{page.title}</span>
                     </TableCell>
                     <TableCell className="px-6 py-3 text-right font-semibold">{page.views}</TableCell>
@@ -231,15 +231,15 @@ function AnalyticsDashboard() {
           </div>
           <div className="overflow-auto">
             <Table className="w-full text-sm">
-              <TableHeader className="bg-slate-50/50 border-b">
+              <TableHeader className="bg-[var(--app-surface-strong)] border-b">
                 <TableRow>
-                  <TableHead className="text-left px-6 py-3 font-medium text-[var(--app-muted)]">Source / Medium</TableHead>
-                  <TableHead className="text-right px-6 py-3 font-medium text-[var(--app-muted)]">Users</TableHead>
+                  <TableHead className="text-left px-6 py-3 font-medium text-[var(--app-muted-strong)]">Source / Medium</TableHead>
+                  <TableHead className="text-right px-6 py-3 font-medium text-[var(--app-muted-strong)]">Users</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-[var(--app-border)]">
                 {data?.sources.map((source) => (
-                  <TableRow key={source.source} className="hover:bg-slate-50/50 transition-colors">
+                  <TableRow key={source.source} className="hover:bg-[var(--app-surface-hover)] transition-colors">
                     <TableCell className="px-6 py-3 font-medium">{source.source}</TableCell>
                     <TableCell className="px-6 py-3 text-right font-semibold">{source.users}</TableCell>
                   </TableRow>
@@ -256,8 +256,8 @@ function AnalyticsDashboard() {
 function AnalyticsNotEnabled({ onGoToConfig }: { onGoToConfig: () => void }) {
   return (
     <div className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-12 text-center">
-      <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-        <Globe className="h-8 w-8 text-blue-500" />
+      <div className="mx-auto w-16 h-16 rounded-full bg-[var(--app-info-soft-bg)] flex items-center justify-center mb-4">
+        <Globe className="h-8 w-8 text-[var(--app-link)]" />
       </div>
       <h3 className="text-lg font-semibold">Analytics Not Enabled</h3>
       <p className="text-[var(--app-muted)] mt-2 mb-6 max-w-md mx-auto">
@@ -296,12 +296,12 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: SettingsGr
       await updateSettings.mutateAsync({ settings: payload })
       setDraftValues({})
       toast.success('Settings saved successfully')
-    } catch (error) {
+    } catch {
       toast.error('Failed to save settings')
     }
   }
 
-  if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-blue-500" /></div>
+  if (isLoading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-[var(--app-link)]" /></div>
 
   return (
     <div className="space-y-6">
@@ -311,10 +311,10 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: SettingsGr
           <p className="mt-2 text-sm text-[var(--app-muted)]">Enable tracking and provide your Measurement ID.</p>
         </div>
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-sm space-y-6">
-          <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50/50 border border-blue-100">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--app-info-soft-bg)] border border-[var(--app-info-soft-border)]">
             <div>
-              <Label htmlFor="google_analytics_enabled" className="font-semibold text-blue-900">Enable Google Analytics</Label>
-              <p className="text-xs text-blue-700">Activate gtag.js on the public website.</p>
+              <Label htmlFor="google_analytics_enabled" className="font-semibold text-[var(--app-info-soft-fg)]">Enable Google Analytics</Label>
+              <p className="text-xs text-[var(--app-info-soft-fg)]">Activate gtag.js on the public website.</p>
             </div>
             <div className="flex items-center h-6">
               <Checkbox
@@ -322,7 +322,7 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: SettingsGr
 
                 checked={values.google_analytics_enabled === true}
                 onChange={(e) => updateValue('google_analytics_enabled', e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600"
+                className="h-4 w-4 rounded border-[var(--app-input-border)] text-[var(--app-link)] focus:ring-[var(--app-ring)]"
               />
             </div>
           </div>
@@ -342,7 +342,7 @@ function AnalyticsConfig({ settingsData, isLoading }: { settingsData: SettingsGr
 
       <section className="grid gap-4 lg:grid-cols-[280px_1fr] lg:gap-12">
         <div>
-          <h3 className="text-xl font-semibold tracking-tight text-emerald-600">Reporting API</h3>
+          <h3 className="text-xl font-semibold tracking-tight text-[var(--app-success-soft-fg)]">Reporting API</h3>
           <p className="mt-2 text-sm text-[var(--app-muted)]">Provide credentials to fetch data directly into this CMS.</p>
         </div>
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-sm space-y-6">

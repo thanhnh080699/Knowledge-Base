@@ -10,7 +10,7 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
 
   return (
     <article className="group overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-white transition-colors hover:border-[var(--color-hairline-strong)] hover:shadow-[var(--shadow-soft)]">
-      <div className="relative aspect-[16/9] border-b border-[var(--color-hairline)] bg-[var(--color-surface-soft)]">
+      <Link href={`/projects/${project.slug}`} aria-label={`Xem dự án ${project.title}`} className="relative block aspect-[16/9] border-b border-[var(--color-hairline)] bg-[var(--color-surface-soft)]">
         <CdnImage
           useCdnLoader={!!project.thumbnailUrl}
           src={imageSrc}
@@ -20,7 +20,7 @@ export function ProjectCard({ project, priority = false }: { project: Project; p
           priority={priority}
           className="object-cover"
         />
-      </div>
+      </Link>
       <div className="p-5">
         <div className="flex flex-wrap gap-2">
           {project.featured ? <Badge tone="amber">Featured</Badge> : null}

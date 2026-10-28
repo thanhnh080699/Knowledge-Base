@@ -1,5 +1,7 @@
 'use client'
 
+import NextImage from 'next/image'
+
 import { Select } from '@/components/ui/select'
 import { useListState } from '@/hooks/use-list-state'
 import { useMemo, useState } from 'react'
@@ -165,7 +167,7 @@ export default function ProjectsPage() {
                       <TableCell>
                         <div className="flex min-w-[320px] items-center gap-3">
                           <div className="h-12 w-16 shrink-0 overflow-hidden rounded border border-[var(--app-border)] bg-[var(--app-surface-muted)]">
-                            {project.thumbnailUrl ? <img src={absoluteCdnUrl(project.thumbnailUrl)} alt={project.title} className="h-full w-full object-cover" /> : null}
+                            {project.thumbnailUrl ? <NextImage unoptimized width={64} height={48} src={absoluteCdnUrl(project.thumbnailUrl)} alt={project.title} className="h-full w-full object-cover" /> : null}
                           </div>
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">

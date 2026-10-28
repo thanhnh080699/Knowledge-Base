@@ -2,11 +2,12 @@ import {
   BookOpen,
   BriefcaseBusiness,
   Code2,
+  GitFork,
   Link2,
   Mail,
-  Menu,
   Wrench,
 } from "lucide-react"
+import { MobileNavigation } from "./mobile-navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { absoluteCdnUrl } from "@/lib/cdn-loader"
@@ -86,14 +87,31 @@ const iconByClass = {
   "code-2": Code2,
   "briefcase-business": BriefcaseBusiness,
   mail: Mail,
+  "git-fork": GitFork,
 }
 
 function orderedTopLevelItems(menu?: SiteMenu | null) {
-  const items = menu?.items?.length ? menu.items : fallbackNav
-  return [...items]
-    .filter((item) => item.parentId === null)
+  const source = menu?.items?.length ? menu.items : fallbackNav
+  const primary = [
+    { title: "Tài liệu IT", url: "/docs", cssClass: "book-open" },
+    { title: "Tools", url: "/tools", cssClass: "wrench" },
+    { title: "Top Repos", url: "/repos", cssClass: "git-fork" },
+  ]
+  const primaryItems = primary.map((item, index) => ({
+    ...fallbackNav[0],
+    ...source.find(candidate => candidate.url === item.url),
+    ...item,
+    id: -100 - index,
+    parentId: null,
+    target: "_self",
+    sortOrder: index,
+  }))
+  const secondaryItems = source
+    .filter(item => item.parentId === null && !primary.some(primaryItem => primaryItem.url === item.url) && !/top[ -]?repos/i.test(item.title))
     .sort((a, b) => a.sortOrder - b.sortOrder)
+  return [...primaryItems, ...secondaryItems]
 }
+
 
 export function Header({
   siteName,
@@ -106,7 +124,6 @@ export function Header({
 }) {
   const displayName = siteName || "Knowledge Base"
   const nav = orderedTopLevelItems(menu)
-  const mobileHref = nav[0]?.url || "/docs"
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-hairline)] bg-[var(--color-surface)]/95 backdrop-blur">
@@ -134,7 +151,7 @@ export function Header({
           )}
           <span>{displayName}</span>
         </Link>
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="hidden items-center gap-1 lg:flex">
           {nav.map((item) => {
             const Icon =
               iconByClass[item.cssClass as keyof typeof iconByClass] ?? Link2
@@ -148,7 +165,7 @@ export function Header({
                   item.rel ??
                   (item.target === "_blank" ? "noopener noreferrer" : undefined)
                 }
-                className="inline-flex items-center gap-2 rounded-full border border-transparent px-3 py-2 text-[15px] font-medium text-[var(--color-body)] transition-colors hover:border-[var(--color-hairline-strong)] hover:bg-white hover:text-[var(--color-ink)]"
+                className={`inline-flex items-center gap-2 rounded-full border border-transparent px-3 py-2 text-[14px] transition-colors hover:border-[var(--color-hairline-strong)] hover:bg-white hover:text-[var(--color-ink)] ${item.id <= -100 && item.id >= -102 ? "font-semibold text-[var(--color-ink)]" : "font-normal text-[var(--color-muted)]"}`}
               >
                 <Icon size={16} aria-hidden />
                 {item.title}
@@ -156,13 +173,23 @@ export function Header({
             )
           })}
         </div>
-        <Link
-          href={mobileHref}
-          className="inline-flex items-center justify-center rounded-full border border-[var(--color-hairline-strong)] p-2 text-[var(--color-ink)] transition-colors hover:bg-white md:hidden"
-          aria-label="Mở tài liệu"
-        >
-          <Menu size={20} aria-hidden />
-        </Link>
+        <MobileNavigation>
+          {nav.map((item) => {
+            const Icon = iconByClass[item.cssClass as keyof typeof iconByClass] ?? Link2
+            return (
+              <Link
+                key={item.id}
+                href={item.url || "#"}
+                target={item.target === "_blank" ? "_blank" : undefined}
+                rel={item.rel ?? (item.target === "_blank" ? "noopener noreferrer" : undefined)}
+                className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium text-[var(--color-body)] hover:bg-white hover:text-[var(--color-ink)]"
+              >
+                <Icon size={18} aria-hidden />
+                {item.title}
+              </Link>
+            )
+          })}
+        </MobileNavigation>
       </nav>
     </header>
   )

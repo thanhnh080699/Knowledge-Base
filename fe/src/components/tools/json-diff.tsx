@@ -7,11 +7,11 @@ import { Sparkles, RotateCcw } from "lucide-react"
 type DiffItem = {
   path: string
   type: "added" | "removed" | "modified" | "unchanged"
-  oldValue?: any
-  newValue?: any
+  oldValue?: unknown
+  newValue?: unknown
 }
 
-function compareObjects(obj1: any, obj2: any, path = ""): DiffItem[] {
+function compareObjects(obj1: unknown, obj2: unknown, path = ""): DiffItem[] {
   const diffs: DiffItem[] = []
 
   if (obj1 === obj2) {
@@ -29,6 +29,8 @@ function compareObjects(obj1: any, obj2: any, path = ""): DiffItem[] {
   }
 
   const allKeys = Array.from(new Set([...Object.keys(obj1), ...Object.keys(obj2)]))
+  const left = obj1 as Record<string, unknown>
+  const right = obj2 as Record<string, unknown>
 
   for (const key of allKeys) {
     const currentPath = path ? `${path}.${key}` : key
@@ -39,17 +41,17 @@ function compareObjects(obj1: any, obj2: any, path = ""): DiffItem[] {
       diffs.push({
         path: currentPath,
         type: "removed",
-        oldValue: obj1[key],
+        oldValue: left[key],
       })
     } else if (!has1 && has2) {
       diffs.push({
         path: currentPath,
         type: "added",
-        newValue: obj2[key],
+        newValue: right[key],
       })
     } else {
-      const v1 = obj1[key]
-      const v2 = obj2[key]
+      const v1 = left[key]
+      const v2 = right[key]
 
       if (typeof v1 === "object" && v1 !== null && typeof v2 === "object" && v2 !== null) {
         diffs.push(...compareObjects(v1, v2, currentPath))
@@ -97,8 +99,8 @@ export function JsonDiff() {
   )
 
   const diffResult = useMemo(() => {
-    let parsed1: any
-    let parsed2: any
+    let parsed1: unknown
+    let parsed2: unknown
 
     try {
       parsed1 = JSON.parse(json1)

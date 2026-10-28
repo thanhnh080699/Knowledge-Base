@@ -9,8 +9,12 @@ export default function toolsRoutes() {
   router.get('tools/:id', [ToolsController, 'show']).as('tools.public.show')
 
   // Admin
-  router.group(() => {
-    router.resource('tools', ToolsController)
-      .use('*', middleware.acl({ permission: 'tools.manage' }))
-  }).prefix('admin').use(middleware.auth())
+  router
+    .group(() => {
+      router
+        .resource('tools', ToolsController)
+        .use('*', middleware.acl({ permission: 'tools.manage' }))
+    })
+    .prefix('admin')
+    .use(middleware.auth())
 }

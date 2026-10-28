@@ -6,9 +6,18 @@ const MediaController = () => import('#controllers/media_controller')
 export default function mediaRoutes() {
   router
     .group(() => {
-      router.get('media', [MediaController, 'index']).as('automation.media.index').use(middleware.apiToken({ permission: 'media.read' }))
-      router.get('media/detail', [MediaController, 'show']).as('automation.media.show').use(middleware.apiToken({ permission: 'media.read' }))
-      router.post('media/upload', [MediaController, 'upload']).as('automation.media.upload').use(middleware.apiToken({ permission: 'media.create' }))
+      router
+        .get('media', [MediaController, 'index'])
+        .as('automation.media.index')
+        .use(middleware.apiToken({ permission: 'media.read' }))
+      router
+        .get('media/detail', [MediaController, 'show'])
+        .as('automation.media.show')
+        .use(middleware.apiToken({ permission: 'media.read' }))
+      router
+        .post('media/upload', [MediaController, 'upload'])
+        .as('automation.media.upload')
+        .use(middleware.apiToken({ permission: 'media.create' }))
     })
     .prefix('automation')
 
@@ -20,9 +29,15 @@ export default function mediaRoutes() {
       router.put('media', [MediaController, 'update']).as('admin.media.update')
       router.delete('media', [MediaController, 'destroy']).as('admin.media.destroy')
       router.put('media/move', [MediaController, 'move']).as('admin.media.move')
-      router.post('media/folders', [MediaController, 'createFolder']).as('admin.media.folders.create')
-      router.put('media/folders', [MediaController, 'renameFolder']).as('admin.media.folders.rename')
-      router.delete('media/folders', [MediaController, 'deleteFolder']).as('admin.media.folders.delete')
+      router
+        .post('media/folders', [MediaController, 'createFolder'])
+        .as('admin.media.folders.create')
+      router
+        .put('media/folders', [MediaController, 'renameFolder'])
+        .as('admin.media.folders.rename')
+      router
+        .delete('media/folders', [MediaController, 'deleteFolder'])
+        .as('admin.media.folders.delete')
     })
     .prefix('admin')
     .use(middleware.auth())

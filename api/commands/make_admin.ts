@@ -4,7 +4,6 @@ import User from '#models/user'
 import Role from '#models/role'
 import Permission from '#models/permission'
 
-
 export default class MakeAdmin extends BaseCommand {
   static commandName = 'make:admin'
   static description = 'Create a new administrator user'
@@ -51,11 +50,12 @@ export default class MakeAdmin extends BaseCommand {
         await adminRole.related('permissions').sync(allPermissions.map((p) => p.id))
         this.logger.info('Synced all available permissions to Admin role')
       } else {
-        this.logger.warning('No permissions found in database. Run "node ace sync:permissions" to populate them.')
+        this.logger.warning(
+          'No permissions found in database. Run "node ace sync:permissions" to populate them.'
+        )
       }
 
       this.logger.success(`Administrator ${fullName} (${email}) created successfully!`)
-
     } catch (error) {
       this.logger.error('Failed to create administrator')
       this.logger.error(error instanceof Error ? error.message : 'Unknown error')

@@ -5,11 +5,12 @@ import type { TocItem } from "./table-of-contents"
 
 interface DocActionsProps {
   items: TocItem[]
+  defaultFontSize?: number
   fontSize: number
   setFontSize: (size: number) => void
 }
 
-export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
+export function DocActions({ items, fontSize, setFontSize, defaultFontSize = 16 }: DocActionsProps) {
   const handlePrint = () => {
     window.print()
   }
@@ -54,7 +55,7 @@ export function DocActions({ items, fontSize, setFontSize }: DocActionsProps) {
               A-
             </button>
             <button
-              onClick={() => setFontSize(16)}
+              onClick={() => setFontSize(defaultFontSize)}
               className="flex size-8 items-center justify-center border-x border-[var(--color-hairline)] text-base font-medium hover:bg-[var(--color-surface-strong)]"
               aria-label="Reset font size"
             >
