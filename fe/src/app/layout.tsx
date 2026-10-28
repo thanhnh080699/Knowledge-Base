@@ -15,6 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
       default: `${settings.site_name} — ${settings.site_description}`,
       template: `%s | ${settings.site_name}`,
     },
+    alternates: {
+      types: { "application/rss+xml": "/rss.xml" },
+    },
     description: settings.site_description,
     icons: settings.admin_favicon
       ? { icon: absoluteCdnUrl(settings.admin_favicon) }

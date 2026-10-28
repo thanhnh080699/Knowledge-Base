@@ -1,27 +1,31 @@
-'use client'
+"use client"
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from "react"
 
+/** Count an opened document once per mount, including React Strict Mode. */
 export function PostViewTracker({ postId }: { postId: number }) {
+  const recordedId = useRef<number | null>(null)
+
   useEffect(() => {
-    let sent = false
     const record = () => {
-      if (sent || document.visibilityState !== 'visible') return
-      sent = true
-      const base = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333/api').replace(/\/$/, '')
-      void fetch(`${base}/posts/${postId}/view`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      if (document.visibilityState !== "visible" || recordedId.current === postId) return
+      recordedId.current = postId
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333/api"
+      void fetch(`${baseUrl.replace(/\/$/, "")}/posts/${postId}/view`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ referrer: document.referrer }),
         keepalive: true,
-      }).catch(() => { /* Analytics must not interrupt reading. */ })
+        credentials: "omit",
+      }).catch(() => {
+        // Analytics must never prevent reading the document.
+      })
     }
-    const timer = window.setTimeout(record, 1000)
-    document.addEventListener('visibilitychange', record)
-    return () => {
-      window.clearTimeout(timer)
-      document.removeEventListener('visibilitychange', record)
-    }
+
+    record()
+    document.addEventListener("visibilitychange", record)
+    return () => document.removeEventListener("visibilitychange", record)
   }, [postId])
+
   return null
 }

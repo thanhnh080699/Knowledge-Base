@@ -148,6 +148,24 @@ export default class PostsController {
     return response.ok({ data: post })
   }
 
+  /** Record a browser visit without counting API reads or Next.js prefetches. */
+  async recordView({ params, response }: HttpContext) {
+    const post = await Post.query()
+      .where('id', params.id)
+      .where('status', 'PUBLISHED')
+      .whereNull('deleted_at')
+      .firstOrFail()
+
+    // Increment in SQL so simultaneous visits cannot overwrite one another.
+    await Post.query()
+      .where('id', post.id)
+      .where('status', 'PUBLISHED')
+      .whereNull('deleted_at')
+      .increment('views', 1)
+
+    return response.noContent()
+  }
+
   /**
    * @update
    * @description Update an existing post

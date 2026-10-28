@@ -50,6 +50,23 @@ test.group('Post view statistics', (group) => {
     await user.delete()
   })
 
+  test('API reads do not count; concurrent legacy visits share the deduplication bucket', async ({ client, assert }) => {
+    const fresh = await Post.create({ title: 'Concurrent views', slug: `views-concurrent-${Date.now()}`, content: 'Test', status: 'PUBLISHED', views: 0 })
+    try {
+      const read = await client.get(`/api/posts/${fresh.id}`)
+      read.assertStatus(200)
+      await fresh.refresh()
+      assert.equal(fresh.views, 0)
+      const responses = await Promise.all(Array.from({ length: 5 }, () => client.post(`/api/posts/${fresh.id}/view`).header('user-agent', agent)))
+      responses.forEach(response => response.assertStatus(204))
+      await fresh.refresh()
+      assert.equal(fresh.views, 1)
+    } finally {
+      await db.from('post_views').where('post_id', fresh.id).delete()
+      await fresh.delete()
+    }
+  })
+
   test('records browser IP and safe referrer; retries do not double-count', async ({
     client,
     assert,
