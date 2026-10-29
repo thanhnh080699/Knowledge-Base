@@ -1,5 +1,14 @@
 # Production deployment
 
+## Mobile homepage release (2026-10-29, current)
+
+- User authorized commit/push and production deployment of mobile loading optimizations and the responsive discovery scene. Source commit: `4cb9490` on `codex/home-scroll-mobile`.
+- Verified `web-srv` through `192.168.12.102`; both production IPs identify the same host. Updated frontend only. Only `thanhnh.id.vn-fe` restarted; API/CMS/CDN PIDs and restart counts were unchanged. No migration or database changes; production `.env` remained byte-identical.
+- Under 900 px, the workspace discovery scene uses three separate horizontal rows revealed vertically. Wide desktop keeps its original fan animation. Narrow viewports at most 560 px tall use normal scrolling without pinning. Top Repos retains its original featured/related layout; rejected deck/gallery experiments are not deployed.
+- Production has runtime, scoped Tailwind sources, reading/tool CSS and header changes beyond the Git baseline. Preserve those differences; this release deployed only scoped homepage/motion/mascot files and two new sprites, not the whole checkout.
+- Build ID: `G3T56v8E4wfKiyUOYab1D`. Rollback: `/home/deploy-backups/thanhnh-home-mobile-20261029-4cb9490/rollback.sh`; backup archive `fe-before.tar.gz`, original build `previous-next`. Root-only backup directory. Old static assets were retained for cached pages.
+- Candidate production build and 2 static-delivery tests passed; candidate/public browser checks passed for mobile, tablet, desktop, landscape and breakpoint resize. Public canonical, all 7 original Top Repos articles, RSS (226 items), sitemap (320 URLs), routes and API health passed. See `fe/docs/deployment-home-mobile-2026-10-29.md` for Lighthouse public results.
+
 ## Homepage storytelling release (2026-10-29, current)
 
 - User authorized the new homepage, code commit/push and production deployment. Hero, narrative sections, GSAP scroll transitions and the right-aligned cat mascot are live at `https://thanhnh.id.vn/`.

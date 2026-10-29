@@ -1,3 +1,5 @@
+> Đã deploy sau lượt kiểm tra local: xem [báo cáo production](./deployment-home-mobile-2026-10-29.md).
+
 # Top Repos scroll và tối ưu mobile, 2026-10-29
 
 Nhánh `codex/home-scroll-mobile`, bắt đầu từ `origin/master` ở `cca5cf6`.

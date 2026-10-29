@@ -1,3 +1,5 @@
+> Đã deploy sau lượt kiểm tra local: xem [báo cáo production](./deployment-home-mobile-2026-10-29.md).
+
 # Cảnh Khám phá trên màn nhỏ
 
 Ngày 2026-10-29. Chỉ sửa `story-motion.css` và `lib/story-motion.ts` cho cảnh
