@@ -49,7 +49,7 @@ export default async function HomePage() {
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebSite", name: "Knowledge Base", url: "https://thanhnh.id.vn", description }) }} />
     <main id="main-content" tabIndex={-1} className="home-story outline-none">
       <section className="story-hero" aria-labelledby="home-title">
-        <Image className="story-hero-image" src="/images/home-story-hero.webp" alt="" fill priority unoptimized sizes="100vw" />
+        <Image className="story-hero-image" src="/images/home-story-hero.webp" alt="" fill preload fetchPriority="high" sizes="100vw" />
         <div className="story-hero-shade" />
         <div className="story-container story-hero-content">
           <h1 id="home-title">Hiểu điều đang học.<br /><span>Làm được điều đang cần.</span></h1>
@@ -78,7 +78,7 @@ export default async function HomePage() {
             <Button href="/docs">Tìm bộ tài liệu của bạn <ArrowRight size={16} aria-hidden /></Button>
           </div>
           <figure className="story-doc-visual">
-            <div className="story-doc-image"><Image src="/images/home-story-docs.webp" alt="Minh họa sổ ghi chép, sơ đồ mạng và hệ thống máy chủ" fill unoptimized sizes="(min-width: 900px) 50vw, 100vw" /></div>
+            <div className="story-doc-image"><Image src="/images/home-story-docs.webp" alt="Minh họa sổ ghi chép, sơ đồ mạng và hệ thống máy chủ" fill sizes="(min-width: 1264px) 564px, (min-width: 900px) 46vw, calc(100vw - 40px)" /></div>
           </figure>
         </div>
         <div className="story-reading-path">

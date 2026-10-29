@@ -142,7 +142,8 @@ export function Header({
               width={32}
               height={32}
               className="size-9 rounded-full object-contain"
-              unoptimized
+              sizes="36px"
+              loading="eager"
             />
           ) : (
             <span className="flex size-9 items-center justify-center rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-primary)] !text-[var(--color-on-primary)]">

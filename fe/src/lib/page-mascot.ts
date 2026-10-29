@@ -47,7 +47,22 @@ export function mountPageMascot(button: HTMLButtonElement) {
   }
   const schedule = () => { if (!frame && enabled()) frame = window.requestAnimationFrame(aim) }
   const move = (event: PointerEvent) => { pointer = { x: event.clientX, y: event.clientY }; schedule() }
-  const boop = () => {
+  let disposed = false
+  let loadingReaction = false
+  let reactionReady = Boolean(reaction.style.backgroundImage)
+  const boop = async () => {
+    if (!enabled() || loadingReaction) return
+    if (!reactionReady) {
+      loadingReaction = true
+      const image = new Image()
+      image.src = window.matchMedia("(max-width: 899px)").matches
+        ? "/mascots/cat-reactions-mobile.webp" : "/mascots/cat-reactions.webp"
+      try { await image.decode() } catch { loadingReaction = false; return }
+      loadingReaction = false
+      if (disposed || !enabled()) return
+      reaction.style.backgroundImage = `url("${image.src}")`
+      reactionReady = true
+    }
     reset()
     if (!enabled()) return
     cell(reaction, reactionCell === undefined ? 0 : Number(reactionCell))
@@ -79,6 +94,7 @@ export function mountPageMascot(button: HTMLButtonElement) {
   const motionObserver = typeof MutationObserver === "undefined" ? undefined : new MutationObserver(sync)
   if (root) motionObserver?.observe(root, { attributes: true, attributeFilter: ["data-story-motion"] })
   return () => {
+    disposed = true
     reset()
     window.cancelAnimationFrame(frame)
     observer?.disconnect()

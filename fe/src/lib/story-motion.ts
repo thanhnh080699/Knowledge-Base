@@ -9,7 +9,7 @@ export function mountStoryMotion(root: HTMLElement, gsap: typeof Gsap, ScrollTri
   const canvas = stage.querySelector<HTMLElement>(".workspace-canvas")
   const fitCanvas = () => {
     if (!canvas) return
-    const mobile = window.matchMedia("(max-width: 699px)").matches
+    const mobile = window.matchMedia("(max-width: 899px)").matches
     const style = window.getComputedStyle(scene)
     const width = scene.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
     const height = scene.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom)
@@ -22,12 +22,14 @@ export function mountStoryMotion(root: HTMLElement, gsap: typeof Gsap, ScrollTri
   gsap.registerPlugin(ScrollTrigger)
   const media = gsap.matchMedia()
   media.add({
-    desktop: "(min-width: 700px)",
-    mobile: "(max-width: 699px)",
+    desktop: "(min-width: 900px)",
+    mobile: "(max-width: 899px)",
+    short: "(max-width: 899px) and (max-height: 560px)",
     reduced: "(prefers-reduced-motion: reduce)",
   }, context => {
     const mobile = Boolean(context.conditions?.mobile)
     const reduced = Boolean(context.conditions?.reduced)
+    const short = Boolean(context.conditions?.short)
     root.dataset.storyMotion = reduced ? "paused" : "running"
     if (reduced) return
     const select = gsap.utils.selector(stage)
@@ -40,14 +42,14 @@ export function mountStoryMotion(root: HTMLElement, gsap: typeof Gsap, ScrollTri
     const ideas = select(".workspace-idea")
     gsap.set(editor, { autoAlpha: 0, y: 25 })
     gsap.set(utility, { autoAlpha: 0, x: mobile ? 60 : 170, rotation: 8 })
-    gsap.set(ideas, { autoAlpha: 0, scale: .62, y: 100, rotation: -8 })
+    gsap.set(ideas, { autoAlpha: 0, scale: mobile ? 1 : .62, y: mobile ? 26 : 100, rotation: mobile ? 0 : -8 })
     gsap.set(select(".workspace-word-build, .workspace-word-explore"), { autoAlpha: 0, yPercent: 25 })
     const timeline = gsap.timeline({
       defaults: { ease: "power2.inOut" },
       scrollTrigger: {
-        trigger: stage, pin: scene, start: "top 64px",
-        end: () => "+=" + Math.round(window.innerHeight * (mobile ? 1.05 : 1.35)),
-        scrub: .65, anticipatePin: 1, invalidateOnRefresh: true,
+        trigger: stage, pin: short ? false : scene, start: short ? "top 85%" : "top 64px",
+        end: short ? "top 64px" : () => "+=" + Math.round(window.innerHeight * (mobile ? 1.05 : 1.35)),
+        scrub: .65, anticipatePin: short ? 0 : 1, invalidateOnRefresh: true,
       },
     })
     timeline
@@ -64,10 +66,12 @@ export function mountStoryMotion(root: HTMLElement, gsap: typeof Gsap, ScrollTri
       .to(select(".workspace-word-build"), { autoAlpha: 0, yPercent: -25, duration: .4 }, 1.6)
       .to(select(".workspace-word-explore"), { autoAlpha: 1, yPercent: 0, duration: .5 }, 1.8)
       .to(ideas, { autoAlpha: 1, scale: 1, y: 0, rotation: 0, stagger: .12, duration: .65 }, 1.8)
-      .to(select(".workspace-idea-0"), { xPercent: mobile ? -57 : -99, rotation: mobile ? -8 : -10, duration: .75 }, 1.9)
-      .to(select(".workspace-idea-1"), { y: mobile ? -15 : -30, rotation: 0, duration: .75 }, 1.9)
-      .to(select(".workspace-idea-2"), { xPercent: mobile ? 57 : 99, rotation: mobile ? 8 : 10, duration: .75 }, 1.9)
-      .to({}, { duration: .2 })
+    // Narrow screens reveal rows in place. Only wide screens fan cards sideways.
+    if (!mobile) timeline
+      .to(select(".workspace-idea-0"), { xPercent: -99, rotation: -10, duration: .75 }, 1.9)
+      .to(select(".workspace-idea-1"), { y: -30, rotation: 0, duration: .75 }, 1.9)
+      .to(select(".workspace-idea-2"), { xPercent: 99, rotation: 10, duration: .75 }, 1.9)
+    timeline.to({}, { duration: .25 })
     const demo = root.querySelector<HTMLElement>("[data-tools-demo]")
     const toolsSelect = gsap.utils.selector(demo || root)
     const toolsTimeline = demo ? gsap.timeline({

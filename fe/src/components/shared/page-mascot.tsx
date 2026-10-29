@@ -14,8 +14,8 @@ export function PageMascot() {
       <div className="mascot-orbit" aria-hidden="true" />
       <button ref={ref} type="button" className="mascot-button" data-page-mascot aria-label="Chạm để chào mèo">
         <span data-mascot-sprite className="mascot-sprite" aria-hidden="true">
-          <span data-mascot-directions className="mascot-layer" style={{ backgroundImage: 'url("/mascots/cat-directions.webp")', backgroundPosition: "50% 50%" }} />
-          <span data-mascot-reactions className="mascot-layer" style={{ backgroundImage: 'url("/mascots/cat-reactions.webp")', backgroundPosition: "0% 0%", opacity: 0 }} />
+          <span data-mascot-directions className="mascot-layer" style={{ backgroundPosition: "50% 50%" }} />
+          <span data-mascot-reactions className="mascot-layer" style={{ backgroundPosition: "0% 0%", opacity: 0 }} />
         </span>
       </button>
     </div>

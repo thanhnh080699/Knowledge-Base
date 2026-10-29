@@ -2,7 +2,7 @@
 
 ## Current: Cat
 
-The homepage uses the original cat-directions.webp and cat-reactions.webp from https://koboyo.com/page-mascot/mascots/. Both original 3×3 sheets are used without cropping, with the existing local adapter for cursor tracking, click reactions, page pause and reduced-motion support. MIT license retained alongside these assets. Linh and Scout notes below are historical.
+The homepage uses the original cat-directions.webp and cat-reactions.webp from https://koboyo.com/page-mascot/mascots/. Desktop retains the original 3×3 sheets without cropping. Mobile uses 780×780 WebP derivatives (quality 78, alpha quality 85), preserving all nine cells. Only the direction atlas loads initially; the reaction atlas loads and decodes on the first interaction. The local adapter supports cursor tracking, click reactions, page pause and reduced motion. MIT license retained alongside these assets. Linh and Scout notes below are historical.
 
 Original sprite sheets: https://koboyo.com/page-mascot/mascots/scout-directions.webp and scout-reactions.webp.
 Project: https://github.com/nilbuild/page-mascot

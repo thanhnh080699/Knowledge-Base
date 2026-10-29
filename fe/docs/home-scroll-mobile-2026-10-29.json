@@ -1,0 +1,58 @@
+[
+  {
+    "run": "home-public-before",
+    "url": "https://thanhnh.id.vn/",
+    "lighthouseVersion": "13.6.0",
+    "fetchTime": "2026-10-29T02:34:23.231Z",
+    "performance": 75,
+    "metrics": {
+      "first-contentful-paint": 1894.968,
+      "largest-contentful-paint": 5435.967999999999,
+      "total-blocking-time": 22,
+      "cumulative-layout-shift": 0,
+      "total-byte-weight": 721522
+    }
+  },
+  {
+    "run": "home-story-baseline-final",
+    "url": "http://localhost:3162/",
+    "lighthouseVersion": "13.6.0",
+    "fetchTime": "2026-10-29T02:41:07.808Z",
+    "performance": 84,
+    "metrics": {
+      "first-contentful-paint": 1994.49275,
+      "largest-contentful-paint": 4288.3721,
+      "total-blocking-time": 37.5,
+      "cumulative-layout-shift": 0.001039778076326562,
+      "total-byte-weight": 3769664
+    }
+  },
+  {
+    "run": "home-story-final-1",
+    "url": "http://localhost:3161/",
+    "lighthouseVersion": "13.6.0",
+    "fetchTime": "2026-10-29T02:41:23.300Z",
+    "performance": 96,
+    "metrics": {
+      "first-contentful-paint": 1216.804,
+      "largest-contentful-paint": 2787.206,
+      "total-blocking-time": 6,
+      "cumulative-layout-shift": 0,
+      "total-byte-weight": 317477
+    }
+  },
+  {
+    "run": "home-story-final-2",
+    "url": "http://localhost:3161/",
+    "lighthouseVersion": "13.6.0",
+    "fetchTime": "2026-10-29T02:44:21.384Z",
+    "performance": 96,
+    "metrics": {
+      "first-contentful-paint": 1205.5974,
+      "largest-contentful-paint": 2782.3961000000004,
+      "total-blocking-time": 12,
+      "cumulative-layout-shift": 0,
+      "total-byte-weight": 318591
+    }
+  }
+]

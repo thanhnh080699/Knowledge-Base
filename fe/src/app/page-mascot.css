@@ -28,3 +28,9 @@
   .home-story .mascot-hint { display: none; }
   .home-story .mascot-start { grid-column: 1; justify-self: end; margin-right: 12px; align-self: start; font-size: 11px; }
 }
+
+/* Only the resting atlas participates in initial loading. Reactions load on touch. */
+.home-story [data-mascot-directions] { background-image: url("/mascots/cat-directions.webp"); }
+@media (max-width: 899px) {
+  .home-story [data-mascot-directions] { background-image: url("/mascots/cat-directions-mobile.webp"); }
+}
