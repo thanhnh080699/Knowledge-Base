@@ -1,5 +1,20 @@
 # Production deployment
 
+## CMS dashboard release (2026-10-30, current)
+
+- Deployed dashboard API and CMS from `651fe6b`, with session restoration fix `8856c71`, to verified `web-srv` through `192.168.11.126`. Only API and CMS restarted; no migrations, FE or CDN restart.
+- Backups: `/home/deploy-backups/thanhnh-dashboard-20261030/app-before.tar.gz`, `previous-api-build` and `previous-cms-next`. Keep restricted archives and previous builds for rollback.
+- API/CMS built from current production sources and environments; production-only runtime and existing routes were preserved. CMS uses a webpack build because Turbopack rejected staging's external `node_modules` symlink.
+- Authenticated CMS reload must restore the user through `/auth/me` before enabling account-scoped dashboard queries. The initial dashboard build was temporarily reverted while this was fixed; the final production browser check passed.
+- API build/TypeScript, CMS build/TypeScript, 5 API regression tests and 6 CMS tests passed on the server. Read-only service checks against production MySQL passed for all 5 ranges, restricted/editor permissions, viewer log and SEO/stale-draft pagination. Authenticated browser checks passed for reload, all four tabs, ranges, viewer/SEO modals and mobile overflow. Unauthenticated dashboard endpoints returned 401.
+- All four application PM2 processes online. Public routes, canonical URLs, docs redirects, original Top Repos articles, RSS, sitemap and API health passed. The separate API integration suite remains blocked locally by the existing SQLite-incompatible users migration; do not claim it passed.
+
+## Documentation grid and SEO release (2026-10-30)
+
+- `18ee7fa` adds 3 documentation cards per row from 1024px, 2 from 768px and 1 below 768px through scoped `.docs-post-grid` CSS.
+- `a3836ed` keeps the default listing at `/docs`, redirects redundant default page/sort parameters with HTTP 308, adds distinct pagination/filter canonicals, and preserves explicit return-to-list state without automatically restoring stored pages when opening the menu.
+- FE-only backups: `/home/deploy-backups/thanhnh-docs-grid-20261030/` and `/home/deploy-backups/thanhnh-docs-seo-20261030/`, each with an archive and `previous-next`.
+
 ## Homepage storytelling release (2026-10-29, current)
 
 - User authorized the new homepage, code commit/push and production deployment. Hero, narrative sections, GSAP scroll transitions and the right-aligned cat mascot are live at `https://thanhnh.id.vn/`.
