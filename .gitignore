@@ -19,3 +19,10 @@ api/commands/check_media.ts
 node_modules/
 dist/
 build/
+
+# Local release evidence, deployment helpers and generated caches
+/artifacts/
+/scratch/
+__pycache__/
+*.pyc
+*.tsbuildinfo

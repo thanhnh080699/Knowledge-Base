@@ -1,213 +1,190 @@
-'use client';
+'use client'
 
-import Link from 'next/link'
-import { useListState } from '@/hooks/use-list-state'
-import { usePosts } from '@/hooks/queries/use-posts'
-import { formatDateTime } from '@/lib/admin-format'
-import { Typography } from '@/components/ui/typography';
-import { Tag } from '@/components/ui/tag';
-import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react'
+import { AlertCircle, RefreshCw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { PostViews } from '@/components/content/post-views'
+import { DashboardHeader } from '@/components/dashboard/dashboard-header'
+import { KpiGrid } from '@/components/dashboard/kpi-grid'
+import { OverviewTab } from '@/components/dashboard/overview-tab'
+import { TrafficTab } from '@/components/dashboard/traffic-tab'
+import { ContentSeoTab } from '@/components/dashboard/content-seo-tab'
+import { SystemEngagementTab } from '@/components/dashboard/system-engagement-tab'
+import { ViewsDrilldownModal } from '@/components/dashboard/views-drilldown-modal'
+import { SeoDrilldownModal } from '@/components/dashboard/seo-drilldown-modal'
 import {
-  FileText,
-  Eye,
-  MessageSquare,
-  Mail,
-  TrendingUp,
-  Clock,
-  Plus,
-  ArrowUpRight,
-  Briefcase,
-  Users
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-
-const stats = [
-  {
-    title: 'Total Views',
-    value: '24,532',
-    change: '+12.5%',
-    icon: Eye,
-    color: 'text-blue-600',
-    bg: 'bg-[var(--app-accent-soft-bg)]'
-  },
-  {
-    title: 'Total Posts',
-    value: '142',
-    change: '+3.2%',
-    icon: FileText,
-    color: 'text-purple-600',
-    bg: 'bg-[var(--app-accent-soft-bg)]'
-  },
-  {
-    title: 'Contact Requests',
-    value: '12',
-    change: '+8.4%',
-    icon: MessageSquare,
-    color: 'text-green-600',
-    bg: 'bg-[var(--app-success-soft-bg)]'
-  },
-  {
-    title: 'Newsletter Subs',
-    value: '843',
-    change: '+5.1%',
-    icon: Mail,
-    color: 'text-orange-600',
-    bg: 'bg-[var(--app-warning-soft-bg)]'
-  }
-];
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
+  useDashboardOverview,
+  useExternalAnalyticsSummary,
+} from '@/hooks/queries/use-dashboard'
+import { useAuthStore } from '@/stores/auth'
+import type {
+  DashboardRange,
+  DashboardTab,
+  DashboardViewsFilter,
+  SeoIssueType,
+} from '@/types/dashboard'
 
 export default function DashboardPage() {
-  const list = useListState()
-  const { data, isLoading, isFetching, error } = usePosts({ page: list.page, limit: list.pageSize })
+  const { user } = useAuthStore()
+  const [range, setRange] = useState<DashboardRange>('30d')
+  const [activeTab, setActiveTab] = useState<DashboardTab>('overview')
+
+  // Drill-down modal states
+  const [selectedPostViews, setSelectedPostViews] = useState<{
+    id: number
+    title: string
+  } | null>(null)
+  const [viewsModalFilter, setViewsModalFilter] = useState<DashboardViewsFilter | null>(null)
+  const [seoModalIssue, setSeoModalIssue] = useState<SeoIssueType | null>(null)
+
+  const { data, isLoading, isFetching, error, refetch } = useDashboardOverview(range)
+  const canManageSettings = data?.permissions.canManageSettings === true
+  const external = useExternalAnalyticsSummary(canManageSettings)
+
+  const seoIssuesBadge = data?.content.seoHealth.postsWithIssues ?? 0
+  const pendingEngagementBadge =
+    (data?.engagement.comments.pending ?? 0) + (data?.engagement.contacts.pending ?? 0)
+
+  function openViewsDrilldown(filter: Partial<DashboardViewsFilter> = {}) {
+    if (!data?.permissions.canManagePosts) {
+      setActiveTab('traffic')
+      return
+    }
+    setViewsModalFilter({
+      range: data?.range ?? range,
+      ...filter,
+    })
+  }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <Typography variant="h2">Overview</Typography>
-          <Typography variant="muted">Welcome back! Here is a quick overview of your website.</Typography>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="hidden sm:flex">
-            <Clock className="mr-2 h-4 w-4" />
-            Last 30 Days
-          </Button>
-          <Button size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            New Content
-          </Button>
-        </div>
-      </div>
+    <div className="mx-auto w-full max-w-7xl space-y-6 pb-8">
+      <DashboardHeader
+        userName={user?.fullName}
+        range={range}
+        onRangeChange={setRange}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onRefresh={() => void refetch()}
+        isFetching={isFetching}
+        generatedAt={data?.generatedAt}
+        seoIssuesBadge={seoIssuesBadge}
+        pendingEngagementBadge={pendingEngagementBadge}
+      />
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-      >
-        {stats.map((stat) => (
-          <motion.div key={stat.title} variants={item}>
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className={`p-2 rounded-lg ${stat.bg}`}>
-                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                  </div>
-                  <Tag variant="success" className="border-none bg-[var(--app-success-soft-bg)] text-[var(--app-success-soft-fg)]">
-                    <TrendingUp className="mr-1 h-3 w-3" />
-                    {stat.change}
-                  </Tag>
-                </div>
-                <div className="mt-4">
-                  <Typography variant="muted" className="text-xs font-medium uppercase tracking-wider">
-                    {stat.title}
-                  </Typography>
-                  <div className="flex items-baseline gap-2">
-                    <Typography variant="h3" className="mt-1 font-bold">
-                      {stat.value}
-                    </Typography>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+      {isLoading && !data ? (
+        <DashboardSkeleton />
+      ) : error && !data ? (
+        <div className="rounded-xl border border-[var(--app-danger-soft-border)] bg-[var(--app-danger-soft-bg)] p-10 text-center">
+          <AlertCircle className="mx-auto h-10 w-10 text-[var(--app-danger-soft-fg)]" />
+          <h2 className="mt-3 text-lg font-semibold text-[var(--app-danger-soft-fg)]">
+            Không thể tải dữ liệu thống kê Dashboard
+          </h2>
+          <p className="mx-auto mt-1 max-w-md text-sm text-[var(--app-danger-soft-fg)]">
+            Vui lòng kiểm tra kết nối máy chủ API hoặc phiên đăng nhập và thử lại.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-5 gap-2 border-[var(--app-danger-soft-border)] text-[var(--app-danger-soft-fg)] hover:bg-[var(--app-danger-hover-bg)]"
+            onClick={() => void refetch()}
+          >
+            <RefreshCw className="h-4 w-4" />
+            Thử tải lại
+          </Button>
+        </div>
+      ) : data ? (
+        <>
+          <KpiGrid
+            kpis={data.kpis}
+            permissions={data.permissions}
+            range={data.range}
+            onInspectViews={() => openViewsDrilldown({})}
+            onInspectPosts={() => setActiveTab('content')}
+            onInspectSeo={() => setSeoModalIssue('all')}
+            onInspectEngagement={() => setActiveTab('system')}
+            onInspectAi={() => setActiveTab('system')}
+          />
+
+          {activeTab === 'overview' ? (
+            <OverviewTab
+              data={data}
+              external={external}
+              onSwitchTab={setActiveTab}
+              onOpenGlobalViews={() => openViewsDrilldown({})}
+              onOpenPostViews={setSelectedPostViews}
+              onOpenSeoModal={(issue = 'all') => setSeoModalIssue(issue)}
+            />
+          ) : null}
+
+          {activeTab === 'traffic' ? (
+            <TrafficTab
+              data={data}
+              onOpenViewsDrilldown={openViewsDrilldown}
+              onOpenPostViews={setSelectedPostViews}
+            />
+          ) : null}
+
+          {activeTab === 'content' ? (
+            <ContentSeoTab
+              data={data}
+              onOpenSeoModal={(issue) => setSeoModalIssue(issue)}
+            />
+          ) : null}
+
+          {activeTab === 'system' ? (
+            <SystemEngagementTab data={data} external={external} />
+          ) : null}
+        </>
+      ) : null}
+
+      {/* Per-Post Viewer Details Modal */}
+      {selectedPostViews ? (
+        <PostViews
+          key={selectedPostViews.id}
+          postId={selectedPostViews.id}
+          title={selectedPostViews.title}
+          onClose={() => setSelectedPostViews(null)}
+        />
+      ) : null}
+
+      {/* Global Viewer Log Drill-down Modal */}
+      {viewsModalFilter ? (
+        <ViewsDrilldownModal
+          key={JSON.stringify(viewsModalFilter)}
+          isOpen
+          initialFilter={viewsModalFilter}
+          onClose={() => setViewsModalFilter(null)}
+        />
+      ) : null}
+
+      {/* SEO Audit Drill-down Modal */}
+      {seoModalIssue ? (
+        <SeoDrilldownModal
+          key={seoModalIssue}
+          isOpen
+          initialIssue={seoModalIssue}
+          onClose={() => setSeoModalIssue(null)}
+        />
+      ) : null}
+    </div>
+  )
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-6" aria-busy="true" aria-label="Đang tải thống kê">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-40 animate-pulse rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-5"
+          />
         ))}
-      </motion.div>
-
-      <div className="grid gap-8 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Recent Posts</CardTitle>
-              <Typography variant="muted" className="text-xs">List of the latest updated articles.</Typography>
-            </div>
-            <Button variant="ghost" size="sm" className="text-xs">
-              View All
-              <ArrowUpRight className="ml-1 h-3 w-3" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <Table pagination={{ list, total: data?.meta.total ?? 0, loading: isFetching }} error={error}>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="hidden sm:table-cell">Date</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? <TableRow><TableCell colSpan={4}>Loading posts…</TableCell></TableRow> : (data?.data ?? []).map(post => (
-                  <TableRow key={post.id}>
-                    <TableCell className="font-medium">#{post.id} · {post.title}</TableCell>
-                    <TableCell><Tag variant={post.status === 'PUBLISHED' ? 'success' : 'warning'}>{post.status}</Tag></TableCell>
-                    <TableCell className="hidden sm:table-cell">{formatDateTime(post.publishedAt)}</TableCell>
-                    <TableCell className="text-right"><Link href={`/posts/${post.id}`}>Edit</Link></TableCell>
-                  </TableRow>
-                ))}
-                {!isLoading && !data?.data.length ? <TableRow><TableCell colSpan={4}>No posts found.</TableCell></TableRow> : null}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <Button variant="outline" className="w-full justify-start text-sm">
-                <Plus className="mr-2 h-4 w-4" />
-                Write New Post
-              </Button>
-              <Button variant="outline" className="w-full justify-start text-sm">
-                <Briefcase className="mr-2 h-4 w-4" />
-                Add New Project
-              </Button>
-              <Button variant="outline" className="w-full justify-start text-sm">
-                <Users className="mr-2 h-4 w-4" />
-                Manage Users
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="relative overflow-hidden border-none bg-[var(--app-card-inverse-bg)] text-[var(--app-card-inverse-fg)]">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-              <TrendingUp className="h-24 w-24" />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-[var(--app-card-inverse-fg)]">Tips for you</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Typography className="text-sm leading-relaxed text-[var(--app-card-inverse-muted)]">
-                Optimize SEO by adding meta descriptions and keywords to each post to increase organic traffic.
-              </Typography>
-              <Button variant="link" className="text-indigo-400 p-0 h-auto mt-4 text-xs font-bold hover:text-indigo-300">
-                Learn more
-                <ArrowUpRight className="ml-1 h-3 w-3" />
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+      </div>
+      <div className="grid gap-6 xl:grid-cols-3">
+        <div className="h-96 animate-pulse rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] xl:col-span-2" />
+        <div className="h-96 animate-pulse rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)]" />
       </div>
     </div>
-  );
+  )
 }

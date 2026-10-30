@@ -29,6 +29,7 @@ import settingsRoutes from './routes/settings.js'
 import questionAnswersRoutes from './routes/question_answers.js'
 import toolsRoutes from './routes/tools.js'
 import apiAccessTokensRoutes from './routes/api_access_tokens.js'
+import dashboardRoutes from './routes/dashboard.js'
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -86,5 +87,6 @@ router
     questionAnswersRoutes()
     toolsRoutes()
     apiAccessTokensRoutes()
+    dashboardRoutes()
   })
   .prefix('/api')
