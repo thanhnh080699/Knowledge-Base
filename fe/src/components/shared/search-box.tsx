@@ -212,7 +212,7 @@ export function SearchBox({
 
       {/* Post List Rendering */}
       {viewMode === "grid" ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="docs-post-grid">
           {filtered.length ? (
             filtered.map((post, index) => <PostCard key={post.id} post={post} eager={index === 0} />)
           ) : (

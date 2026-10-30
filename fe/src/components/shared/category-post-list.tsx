@@ -10,6 +10,6 @@ export function CategoryPostList({ posts, defaultSort = "roadmap" }: { posts: Po
   const [sort, setSort] = useState<ListingSort>(defaultSort)
   return <div className="space-y-4">
     <SortBar value={sort} onChange={setSort} />
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{orderPosts(posts, sort).map(post => <PostCard key={post.id} post={post} />)}</div>
+    <div className="docs-post-grid">{orderPosts(posts, sort).map(post => <PostCard key={post.id} post={post} />)}</div>
   </div>
 }

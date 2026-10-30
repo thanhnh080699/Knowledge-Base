@@ -35,6 +35,24 @@
   --font-body: "Inter", system-ui, -apple-system, sans-serif;
 }
 
+.docs-post-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 768px) {
+  .docs-post-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .docs-post-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 * {
   box-sizing: border-box;
 }
