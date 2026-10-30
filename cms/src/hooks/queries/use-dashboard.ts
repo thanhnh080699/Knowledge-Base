@@ -18,7 +18,20 @@ import type { SettingsGroup } from '@/types/settings'
 
 export function useDashboardOverview(range: DashboardRange) {
   const userId = useAuthStore((state) => state.user?.id)
-  return useQuery({
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const identity = useQuery({
+    queryKey: ['dashboard-identity'],
+    queryFn: async () => {
+      const { data } = await api.get<ApiItemResponse<NonNullable<ReturnType<typeof useAuthStore.getState>['user']>>>('/auth/me')
+      useAuthStore.getState().setUser(data.data)
+      return data.data
+    },
+    enabled: isAuthenticated && !userId,
+    retry: false,
+    staleTime: 0,
+    gcTime: 0,
+  })
+  const overview = useQuery({
     queryKey: ['dashboard', userId, 'overview', range],
     queryFn: async () => {
       const { data } = await api.get<ApiItemResponse<DashboardOverviewData>>('/admin/dashboard', {
@@ -31,6 +44,12 @@ export function useDashboardOverview(range: DashboardRange) {
     enabled: Boolean(userId),
     staleTime: 30_000,
   })
+  return {
+    ...overview,
+    isLoading: (!userId && identity.isPending) || overview.isLoading,
+    error: identity.error ?? overview.error,
+    refetch: userId ? overview.refetch : identity.refetch,
+  }
 }
 
 export function useDashboardViewsLog(filters: DashboardViewsFilter, enabled = true) {
