@@ -7,6 +7,33 @@ export function listingSort(value?: string, category?: string): ListingSort {
   return ["lpi-linux-essentials", "lpi-security-essentials", "lpi-web-development-essentials", "lpi-open-source-essentials"].includes(category ?? "") ? "roadmap" : "newest"
 }
 
+export function listingUrl(pathname: string, query: URLSearchParams): string {
+  const params = new URLSearchParams(query)
+  if (params.has("page")) {
+    const page = Number(params.get("page"))
+    if (!Number.isSafeInteger(page) || page <= 1) params.delete("page")
+    else params.set("page", String(page))
+  }
+  const category = params.get("category") ?? pathname.split("/").at(-1)
+  if (params.has("sort")) {
+    const sort = listingSort(params.get("sort") ?? undefined, category)
+    if (sort === listingSort(undefined, category)) params.delete("sort")
+    else params.set("sort", sort)
+  }
+  params.sort()
+  const search = params.toString()
+  return pathname + (search ? `?${search}` : "")
+}
+
+export function listingCanonical(pathname: string, query: URLSearchParams): string {
+  const params = new URLSearchParams()
+  for (const key of ["category", "tag", "q", "page", "sort"]) {
+    const value = query.get(key)
+    if (value) params.set(key, value)
+  }
+  return `https://thanhnh.id.vn${listingUrl(pathname, params)}`
+}
+
 export function orderPosts(posts: Post[], sort: ListingSort) {
   const timestamp = (post: Post) => Date.parse(post.publishedAt ?? post.createdAt ?? "") || 0
   return [...posts].sort((a, b) => {

@@ -15,6 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const category = await getCategory(slug)
 
   return {
+    alternates: { canonical: `https://thanhnh.id.vn/docs/categories/${slug}` },
     title: category?.name ?? "Danh mục",
     description: category?.description ?? `Danh sách tài liệu trong danh mục ${category?.name ?? slug}.`
   }

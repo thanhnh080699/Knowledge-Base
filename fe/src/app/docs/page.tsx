@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { permanentRedirect } from "next/navigation"
 import { BookOpen } from "lucide-react"
 import { Sidebar } from "@/components/shared/sidebar"
 import { SearchBox } from "@/components/shared/search-box"
@@ -8,25 +9,47 @@ import { HomeReveal } from "@/components/shared/home-motion"
 import { fallbackCategories } from "@/lib/fallback-data"
 import { getRootCategories, getPosts, getCategory } from "@/lib/api"
 import { getCategoryPosts } from "@/lib/api"
-import { listingSort, orderPosts } from "@/lib/listing"
+import { listingSort, listingUrl, listingCanonical, orderPosts } from "@/lib/listing"
 
 export const revalidate = 60
 
-export const metadata: Metadata = {
-  title: "Tài liệu kỹ thuật",
-  description: "Danh sách tài liệu SysAdmin, DevOps, Development và HelpDesk được sắp xếp khoa học, dễ tra cứu.",
-  openGraph: {
-    title: "Tài liệu kỹ thuật | thanhnh.id.vn",
-    description: "Tra cứu nhanh tài liệu kỹ thuật theo danh mục và từ khóa."
+type DocsParams = { page?: string; category?: string; tag?: string; q?: string; sort?: string; reading?: string }
+
+function queryParams(params: DocsParams) {
+  const query = new URLSearchParams()
+  for (const [key, value] of Object.entries(params)) {
+    if (Array.isArray(value)) value.forEach(item => query.append(key, item))
+    else if (value !== undefined) query.set(key, value)
+  }
+  return query
+}
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<DocsParams> }): Promise<Metadata> {
+  const canonical = listingCanonical("/docs", queryParams(await searchParams))
+  return {
+    title: "Tài liệu kỹ thuật",
+    description: "Danh sách tài liệu SysAdmin, DevOps, Development và HelpDesk được sắp xếp khoa học, dễ tra cứu.",
+    alternates: { canonical },
+    openGraph: {
+      url: canonical,
+      title: "Tài liệu kỹ thuật | thanhnh.id.vn",
+      description: "Tra cứu nhanh tài liệu kỹ thuật theo danh mục và từ khóa."
+    }
   }
 }
 
 export default async function DocsPage({
   searchParams
 }: {
-  searchParams: Promise<{ page?: string; category?: string; tag?: string; q?: string; sort?: string; reading?: string }>
+  searchParams: Promise<DocsParams>
 }) {
   const params = await searchParams
+  const query = queryParams(params)
+  const normalized = listingUrl("/docs", query)
+  const normalizedParams = new URLSearchParams(normalized.split("?")[1] ?? "")
+  if (query.get("page") !== normalizedParams.get("page") || query.get("sort") !== normalizedParams.get("sort")) {
+    permanentRedirect(normalized)
+  }
   const page = /^\d+$/.test(params.page ?? "1") ? Math.max(1, Number(params.page ?? 1)) : 1
   const sort = listingSort(params.sort, params.category)
   const [postsResponse, categoriesResponse, currentCategory] = await Promise.all([

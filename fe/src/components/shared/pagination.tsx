@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { listingUrl } from "@/lib/listing"
 
 export function Pagination({
   currentPage,
@@ -18,7 +19,7 @@ export function Pagination({
       if (value !== undefined && value !== "") params.set(key, String(value))
     })
     params.set("page", String(page))
-    return `${basePath}?${params.toString()}`
+    return listingUrl(basePath, params)
   }
 
   return (

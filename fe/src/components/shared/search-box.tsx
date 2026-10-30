@@ -10,7 +10,7 @@ import { PostListItem } from "@/components/shared/post-list-item"
 import type { Category } from "@/types/category"
 import type { Post } from "@/types/post"
 import { SortBar } from "./sort-bar"
-import { listingSort, listingStorageKey, LAST_LISTING_KEY, safeListingUrl } from "@/lib/listing"
+import { listingSort, listingStorageKey, listingUrl, LAST_LISTING_KEY } from "@/lib/listing"
 
 const VIEW_MODE_KEY = "docs_view_mode"
 function subscribeViewMode(onChange: () => void) {
@@ -42,22 +42,12 @@ export function SearchBox({
   useEffect(() => {
     try {
       const key = listingStorageKey(pathname, searchParams.toString())
-      if (!searchParams.has("page") && !searchParams.has("sort")) {
-        const saved = safeListingUrl(localStorage.getItem(key))
-        if (saved && listingStorageKey(pathname, saved.split("?")[1] ?? "") === key && saved !== pathname + (searchParams.size ? `?${searchParams}` : "")) {
-          router.replace(saved, { scroll: false })
-          return
-        }
-      }
-      const params = new URLSearchParams(searchParams.toString())
-      params.set("page", params.get("page") ?? "1")
-      params.set("sort", currentSort)
-      const url = `${pathname}?${params}`
+      const url = listingUrl(pathname, new URLSearchParams(searchParams.toString()))
       localStorage.setItem(key, url)
       localStorage.setItem(LAST_LISTING_KEY, url)
       sessionStorage.setItem(LAST_LISTING_KEY, url)
     } catch { /* Browsing still works without local storage. */ }
-  }, [pathname, searchParams, router, currentSort])
+  }, [pathname, searchParams])
   const [queryState, setQueryState] = useState({ source: initialQuery, value: initialQuery })
   if (queryState.source !== initialQuery) {
     setQueryState({ source: initialQuery, value: initialQuery })
@@ -93,7 +83,7 @@ export function SearchBox({
           params.delete("q")
         }
         params.set("page", "1")
-        router.push(`${pathname}?${params.toString()}`, { scroll: false })
+        router.push(listingUrl(pathname, params), { scroll: false })
       }
     }, 300)
 
@@ -177,7 +167,7 @@ export function SearchBox({
         params.set("sort", sort)
         params.set("page", "1")
         params.delete("reading")
-        router.push(`${pathname}?${params}`, { scroll: false })
+        router.push(listingUrl(pathname, params), { scroll: false })
       }} />
 
       {/* Subcategories (if available) */}
